@@ -1,0 +1,573 @@
+import React, { useEffect, useRef, useState } from "react";
+import { useToast } from "@chakra-ui/react";
+import Sidebar from "../../../components/Sidebar";
+import SearchBox from "../../../components/SearchBox";
+import CustomModal from "../../../components/UserEditModal";
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  useDisclosure,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { baseURL, baseUrl } from "../../../utility/baseURL";
+import { Formik, useFormik } from "formik";
+import { userEditSchima } from "../../../Schima/index";
+import { getUser } from "../../../utility/authentication";
+import DashboardLayout from "../DashboardLayout";
+// import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+
+function UserList() {
+  const toast = useToast();
+  const [customerror, setcustomerror] = useState({});
+  const [error, setErrors] = useState([]);
+  const [user, setUser] = useState([])
+  const {
+    isOpen: editIsOpen,
+    onOpen: editOnOpen,
+    onClose: editOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: statusIsOpen,
+    onOpen: statusOnOpen,
+    onClose: statusOnClose,
+  } = useDisclosure();
+  const [userSearch, setUserSearch] = useState("");
+  const [users, setusers] = useState(user);
+  const [status, setStatus] = useState(false);
+  const { access_token } = getUser();
+
+  const userid = useRef();
+  const statusCheck = useRef();
+
+  const headers = {
+    Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+  };
+
+  const fetchdata = (id, values, message) => {
+    console.log(values);
+    axios
+      .patch(baseUrl.defaults.baseURL + `/user-edit/${id}/`, values, {
+        headers: headers,
+      })
+      .then((res) => {
+        console.log(res);
+        if (message) {
+          toast({
+            title: "update Successfully",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((error) => {
+        // setcustomerror(error.response.data);
+        console.log(error);
+        if (error.response.status == 401) {
+          toast({
+            title: "you are Not Login Please login",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          router.push("/account/login");
+        }
+      });
+  };
+  useEffect(()=>{
+    axios.get(baseURL+'/all-user/',{headers:headers})
+    .then((res)=>{
+      setUser(res.data)
+      console.log(res.data)
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  },[])
+
+  const {
+    values,
+    errors,
+    setValues,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    touched,
+    setFieldValue,
+  } = useFormik({
+    initialValues: inputdata,
+    validationSchema: userEditSchima,
+    onSubmit: (values, { setSubmitting }) => {
+      console.log(userid.current.value);
+      const { value } = userid.current;
+
+      fetchdata(value, values, true);
+      onClose();
+      window.location.reload();
+    },
+  });
+
+  const statusHandler = (e) => {
+    console.log(e);
+    const { value, checked } = e.target;
+    setStatus(!checked);
+    if (value) {
+      console.log("data");
+      statusOnOpen();
+      fetchdata(value, {});
+    } else {
+      const { value } = userid.current;
+      const { checked } = statusCheck.current;
+      fetchdata(value, { is_active: !checked }, true);
+      statusOnClose();
+      console.log("save", e);
+      window.location.reload();
+    }
+  };
+  const searchHandle = (e) => {
+    // setUserSearch(e.target.value)
+    // setusers(users.filter((item)=>item.username.toLowerCase().includes(e.target.value)))
+  };
+  const handleDelete = () => {
+    const { value } = userid.current;
+
+    axios
+      .delete(baseUrl.defaults.baseURL + `/user-delete/${value}/`, {
+        headers: headers,
+      })
+      .then((res) => {
+        console.log(res);
+
+        toast({
+          title: "update Successfully",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        // setcustomerror(error.response.data);
+        console.log(error);
+        if (error.response.status == 401) {
+          toast({
+            title: "you are Not Login Please login",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          router.push("/account/login");
+        }
+      });
+    editOnClose();
+    // window.location.reload()
+  };
+
+  const handleEdit = (e) => {
+    const { value } = e.target;
+    axios
+      .patch(
+        baseUrl.defaults.baseURL + `/user-edit/${value}/`,
+        {},
+        { headers: headers }
+      )
+      .then((res) => {
+        console.log(res.data);
+        const { data } = res;
+        setValues({
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          middel_name: data.middel_name ? data.middel_name : "",
+          email: data?.email,
+          mobile_number: data?.mobile_number.slice(
+            3,
+            data.mobile_number.length
+          ),
+        });
+        editOnOpen();
+      })
+      .catch((error) => {
+        // setcustomerror(error.response.data);
+        console.log(error);
+
+        if (error.response.status == 401) {
+          toast({
+            title: "you are Not Login Please login",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          router.push("/account/login");
+        }
+      });
+  };
+
+  return (
+    <>
+      <DashboardLayout>
+        
+        <div className="py-2">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-3 px-3">
+            <div className="py-4 bg-white dark:bg-gray-900">
+              <SearchBox handler={searchHandle} />
+            </div>
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Username
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Email
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Mobile
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    User Type
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((item, i) => {
+                  return (
+                    <tr
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      key={i}
+                    >
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {item.username}
+                      </th>
+                      <td className="px-6 py-4">{item.email}</td>
+                      <td className="px-6 py-4">{item.mobile_number}</td>
+                      <td className="px-6 py-4">{item.user_type}</td>
+                      <td className="px-6 py-4">
+                        <label className="relative inline-flex items-center mb-4 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            value={item.id}
+                            onChange={statusHandler}
+                            className="sr-only peer"
+                            checked={item.is_active}
+                            ref={statusCheck}
+                          />
+                          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={handleEdit}
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                          value={item.id}
+                          ref={userid}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="px-3">
+            <nav
+              className="flex items-center justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                Showing{" "}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  1-10
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  1000
+                </span>
+              </span>
+              <ul className="inline-flex items-center -space-x-px">
+                <li>
+                  <a
+                    href="#"
+                    className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    <span className="sr-only">Previous</span>
+                    <svg
+                      className="w-5 h-5"
+                      aria-hidden="true"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    1
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    2
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    aria-current="page"
+                    className="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                  >
+                    3
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    ...
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    100
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    <span className="sr-only">Next</span>
+                    <svg
+                      className="w-5 h-5"
+                      aria-hidden="true"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </DashboardLayout>
+      <CustomModal
+        isOpen={editIsOpen}
+        onClose={editOnClose}
+        closeOnOverlayClick={false}
+        title="Edit User"
+        isFooter={true}
+        cancelBtnLabel="Cancle"
+        deleteBtnLable="Delete"
+        handleDelete={handleDelete}
+      >
+        <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
+          <div className="grid md:grid-cols-2 md:gap-3">
+            <FormControl isInvalid={errors.first_name}>
+              <FormLabel>First Name</FormLabel>
+              <Input
+                type="text"
+                name="first_name"
+                placeholder="First Name"
+                value={values.first_name}
+                onChange={handleChange}
+              />
+              {errors.first_name && touched.first_name ? (
+                <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
+              ) : null}
+              {customerror.first_name ? (
+                <p className="text-red-600">
+                  {customerror.first_name.message}.
+                </p>
+              ) : null}
+            </FormControl>
+            <FormControl isInvalid={errors.last_name}>
+              <FormLabel>Last Name</FormLabel>
+              <Input
+                type="text"
+                name="last_name"
+                placeholder="Last Name"
+                value={values.last_name}
+                onChange={handleChange}
+              />
+              {errors.last_name && touched.last_name ? (
+                <FormErrorMessage>{errors.last_name}.</FormErrorMessage>
+              ) : null}
+              {customerror.last_name ? (
+                <p className="text-red-600">{customerror.last_name.message}.</p>
+              ) : null}
+            </FormControl>
+          </div>
+
+          <div className="grid md:grid-cols-2 md:gap-3">
+            <FormControl isInvalid={errors.middel_name}>
+              <FormLabel>Middle Name</FormLabel>
+              <Input
+                type="text"
+                name="middel_name"
+                placeholder="Middle Name"
+                value={values.middel_name}
+                onChange={handleChange}
+              />
+              {errors.middel_name && touched.middel_name ? (
+                <FormErrorMessage>{errors.middel_name}.</FormErrorMessage>
+              ) : null}
+              {customerror.middel_name ? (
+                <p className="text-red-600">
+                  {customerror.middel_name.message}.
+                </p>
+              ) : null}
+            </FormControl>
+            <FormControl isInvalid={errors.email}>
+              <FormLabel>Email</FormLabel>
+              <Input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={values.email}
+                onChange={handleChange}
+              />
+              {errors.email && touched.email ? (
+                <FormErrorMessage>{errors.email}.</FormErrorMessage>
+              ) : null}
+              {customerror.email ? (
+                <p className="text-red-600">{customerror.email.message}.</p>
+              ) : null}
+            </FormControl>
+          </div>
+
+          <div className="grid md:grid-cols-2 md:gap-3">
+            <FormControl isInvalid={errors.mobile_number}>
+              <FormLabel>Mobile Number</FormLabel>
+              <Input
+                type="number"
+                name="mobile_number"
+                placeholder="Mobile Number"
+                value={values.mobile_number}
+                onChange={handleChange}
+              />
+              {errors.mobile_number && touched.mobile_number ? (
+                <FormErrorMessage>{errors.mobile_number}.</FormErrorMessage>
+              ) : null}
+              {customerror.mobile_number ? (
+                <p className="text-red-600">
+                  {customerror.mobile_number.message}.
+                </p>
+              ) : null}
+            </FormControl>
+          </div>
+
+          {/* <div className="grid md:grid-cols-2 md:gap-3">
+                <FormControl isInvalid={errors.first_name}>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    type="text"
+                    name="first_name"
+                    placeholder="First Name"
+                    value={values.first_name}
+                    onChange={handleChange}
+                  />
+                  {errors.first_name && touched.first_name ? (
+                    <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
+                  ) : null}
+                  {customerror.first_name ? (
+                    <p className="text-red-600">
+                      {customerror.first_name.message}.
+                    </p>
+                  ) : null}
+                </FormControl>
+                <FormControl isInvalid={errors.first_name}>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    type="text"
+                    name="first_name"
+                    placeholder="First Name"
+                    value={values.first_name}
+                    onChange={handleChange}
+                  />
+                  {errors.first_name && touched.first_name ? (
+                    <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
+                  ) : null}
+                  {customerror.first_name ? (
+                    <p className="text-red-600">
+                      {customerror.first_name.message}.
+                    </p>
+                  ) : null}
+                </FormControl>
+              </div> */}
+
+          <button
+            type="submit"
+            className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            // disabled={isSubmitting}
+          >
+            Update
+          </button>
+        </form>
+      </CustomModal>
+
+      <CustomModal
+        isOpen={statusIsOpen}
+        onClose={statusOnClose}
+        closeOnOverlayClick={false}
+        title="Edit User"
+        isFooter={true}
+        cancelBtnLabel="Cancle"
+        saveBtnLabel={status ? "Deactivate" : "Active"}
+        handleSave={statusHandler}
+      >
+        <p>do you want to change User Active Status</p>
+      </CustomModal>
+    </>
+  );
+}
+
+
+export default UserList
+
+
+
+
+
+const inputdata = {
+  first_name: "",
+  last_name: "",
+  middel_name: "",
+  email: "",
+  mobile_number: "",
+};
