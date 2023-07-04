@@ -23,7 +23,8 @@ import Profile from './pages/profile'
 import Property from './pages/property-list/property'
 import SingleProperty from './pages/property-list/single-property'
 import { Flex, Spinner } from '@chakra-ui/react'
-
+import ForgetPassword from './pages/account/forget-password'
+import PasswordConfirm from './pages/account/forget-password/password-confirm'
 
 
 function App() {
@@ -67,11 +68,14 @@ function App() {
       <Route element={<DefaultLayout />}>
         <Route path='/' element={<Home />} />
         <Route path='login' element={<Login />}/>
+        <Route path='/forget-password' element={<ForgetPassword />} />
         <Route path='registration' element={<Registration />}/>
         <Route path='activate/:uid/:token' element={<Activate />} />
         <Route path='/add-real-estate' element={<AddState />} />
         <Route path='/property-list/:userType' element={<Property />} />
         <Route path='/property/:id/:title' element={<SingleProperty />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/password-reset/:uid/:token' element={<PasswordConfirm />} />
       </Route>
       <Route element={<DashboardLayout />}>
         <Route path='/dashboard' element={<Dashboard />} />
@@ -81,7 +85,7 @@ function App() {
         <Route path='/asset' element={<Assert />} />
         <Route path='/membership' element={<Membership />} />
         <Route path='/user-list' element={<UserList />}/>
-        <Route path='/profile' element={<Profile />} />
+        
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />
       </Route>
     </Routes>

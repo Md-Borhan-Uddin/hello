@@ -31,8 +31,6 @@ export default function Login() {
   const [captchaMatch, setCaptchaMatch] = useState(false);
   const [captchtext, setCaptchtext] = useState("");
   const reFreshCaptcha = () => setCaptchtext(getText(6));
-  // const [token, settoken] = useState('')
-  const [pageloading, setPageLoading] = useState(true);
   const [captcha, setCaptcha] = useState("");
   
   const dispatch = useDispatch();
@@ -178,7 +176,7 @@ export default function Login() {
                 />
                 <div className="flex items-start justify-between mb-3">
                   <Link
-                    href="/account/forget-password"
+                    to="/forget-password"
                     className="ml-2 text-sm font-medium cursor-pointer text-secondary underline dark:text-gray-300"
                   >
                     Forget Password
@@ -186,7 +184,7 @@ export default function Login() {
                 </div>
                 <div className="flex flex-col-reverse gap-4 justify-between items-center sm:flex-row">
                   <Link
-                    href="/account/registration"
+                    to="/registration"
                     className=" bg-[rgb(34,220,118)] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
                   >
                     Create Account

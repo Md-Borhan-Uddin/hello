@@ -117,7 +117,7 @@ export default function WithSubnavigation() {
               >
                 <div className="px-4 py-3">
                   <span className="block text-sm text-gray-900 dark:text-white">
-                    {`${activeUser.first_name} ${activeUser.last_name}`}
+                    {`${activeUser?.first_name} ${activeUser?.last_name}`}
                   </span>
                 </div>
                 <ul className="py-2" aria-labelledby="user-menu-button">

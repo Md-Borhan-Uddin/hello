@@ -33,7 +33,7 @@ const RequireAuth = (WrappedComponent) => {
       // Check if the access token is expired
       const isTokenExpired = checkIfTokenExpired(accessToken);
       if(!accessToken){
-        router.push('/account/login');
+        router('/login');
       }
       else if (isTokenExpired && refreshToken) {
         refreshAccessToken(refreshToken)
@@ -44,10 +44,10 @@ const RequireAuth = (WrappedComponent) => {
           })
           .catch((error) => {
             console.error('Token refresh error:', error);
-            router.push('/account/login');
+            router('/login');
           });
       } else if (isTokenExpired && !refreshToken) {
-        router.push('/account/login');
+        router('/login');
       }
       else{
         setIsShow(true)

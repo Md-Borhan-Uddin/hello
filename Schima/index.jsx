@@ -1,5 +1,24 @@
 import * as Yup from 'yup'
 
+export const changePasswordSchima = Yup.object({
+  new_password: Yup.string().min(8).max(20).required('Enter Password').matches(
+    /^(?=.*[a-z])/,
+    " Must Contain One Lowercase Character"
+  )
+  .matches(
+    /^(?=.*[A-Z])/,
+    "  Must Contain One Uppercase Character"
+  )
+  .matches(
+    /^(?=.*[0-9])/,
+    "  Must Contain One Number Character"
+  )
+  .matches(
+    /^(?=.*[!@#\$%\^&\*])/,
+    "  Must Contain  One Special Case Character"
+  ),
+  confirm_password: Yup.string().min(8).max(20).oneOf([Yup.ref('new_password'),null],"Password Don't Match").required('Enter Password again').required('Enter Password again')
+})
 
 export const registrationSchima = Yup.object({
     first_name: Yup.string().max(10,"Maximum 10 Character").required('Enter First Name '),
