@@ -9,15 +9,16 @@ export const userAPI = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
       getUser: builder.query({
-        query: (access_token) => ({
+        query: (access_token) => 
+          {
+            console.log(access_token)
+            return {
             url:'/user/',
             headers:{
               'Authorization': `Bearer ${access_token}`
-            }
-
-          
-          
-        }),
+            } 
+          } 
+        },
       }),
     })
 })

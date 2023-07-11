@@ -15,8 +15,6 @@ import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { Formik, useFormik } from "formik";
 import { userEditSchima } from "../../../Schima/index";
 import { getUser } from "../../../utility/authentication";
-import DashboardLayout from "../DashboardLayout";
-// import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 function UserList() {
   const toast = useToast();
@@ -34,7 +32,7 @@ function UserList() {
     onClose: statusOnClose,
   } = useDisclosure();
   const [userSearch, setUserSearch] = useState("");
-  const [users, setusers] = useState(user);
+  const [users, setusers] = useState([]);
   const [status, setStatus] = useState(false);
   const { access_token } = getUser();
 
@@ -80,7 +78,7 @@ function UserList() {
     axios.get(baseURL+'/all-user/',{headers:headers})
     .then((res)=>{
       setUser(res.data)
-      console.log(res.data)
+      console.log('data',res.data)
     })
     .catch(err=>{
       console.log(err)
@@ -203,10 +201,11 @@ function UserList() {
         }
       });
   };
+  // console.log('user',user)
 
   return (
     <>
-      <DashboardLayout>
+      
         
         <div className="py-2">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-3 px-3">
@@ -237,7 +236,7 @@ function UserList() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((item, i) => {
+                {user.map((item, i) => {
                   return (
                     <tr
                       className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -385,7 +384,6 @@ function UserList() {
             </nav>
           </div>
         </div>
-      </DashboardLayout>
       <CustomModal
         isOpen={editIsOpen}
         onClose={editOnClose}

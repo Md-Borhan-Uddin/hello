@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertIcon } from "@chakra-ui/react";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate, Link } from "react-router-dom";
 import { getObjects } from "../../../utility/property";
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 
 
@@ -409,17 +410,5 @@ const months = ()=>{
   );
 };
 
-export default AddState;
-
-
-
-// export async function getServerSideProps(context) {
-//   const res = await fetch('http://127.0.0.1:8000/api/real-estate-type/')
-//   const data = await res.json()
-//   let type = [{ key: "Please select", value: "" }]
-//   data.map((item)=>type.push({ key: item.name, value: item.name }))
-//   return {
-//     props: {type}, // will be passed to the page component as props
-//   }
-// }
+export default RequireAuth(AddState);
 

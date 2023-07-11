@@ -2,6 +2,7 @@ import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import React, { useEffect, useState } from "react";
 import {
   Avatar,
+  AvatarBadge,
   Badge,
   Box,
   Button,
@@ -11,13 +12,20 @@ import {
   FormLabel,
   HStack,
   Heading,
+  IconButton,
   Input,
   Stack,
+  Tab,
+  TabIndicator,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
-  Toast,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { HiOutlineCamera } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseURL } from "../../../utility/baseURL";
@@ -25,15 +33,25 @@ import { getUser } from "../../../utility/authentication";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
 import { useSelector } from "react-redux";
 import { useChangePasswordMutation } from "../../../data/auth/service/authServices";
-import { changePasswordSchima } from "../../../Schima";
-import { Formik } from "formik";
+import { changePasswordSchima, registrationSchima } from "../../../Schima";
+import { Formik, useFormik } from "formik";
 
 function Profile() {
+  const profileData = {
+    first_name: "",
+    last_name: "",
+    middle_name: "",
+    username: "",
+    email: "",
+    mobile_number: "",
+    password: "",
+    password2: "",
+  };
   // const [user, setUser] = useState({})
   const { access_token } = getUser();
-  const { profile, isSuccess: isProfileSuccess } = useGetUserQuery({
-    data: access_token,
-  });
+  const { data:profile, isSuccess: isProfileSuccess } = useGetUserQuery(
+    access_token
+  );
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
@@ -41,15 +59,63 @@ function Profile() {
   const toast = useToast();
   const [changepassword, { isSuccess: isChangePasswordSuccess, isLoading }] =
     useChangePasswordMutation();
- 
+  console.log("profile",profile)
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setValues,
+    isSubmitting,
+  } = useFormik({
+    initialValues: profileData ,
+    validationSchema: registrationSchima ,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const res = await registerUser(values);
+        if (res.data) {
+          toast({
+            description: "Activation Link Send Your Email",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          // useDispatch(setToken(getUser()))
+          router("/login");
+        }
+        if (res.error) {
+          const e = butifyErrors(res.error.data);
+          setcustomerror(e);
+          window.scrollTo(0, 0);
+        }
+      } catch (err) {
+        console.log("errors", err);
+      }
+    },
+  });
+
+  
+
   const inputdata = {
     confirm_password: "",
     new_password: "",
   };
+  useEffect(() => {
+    setValues({
+      first_name: profile?.first_name,
+      last_name: profile?.last_name,
+      middle_name: profile?.middle_name,
+      username: profile?.username,
+      email: profile?.email,
+      mobile_number: profile?.mobile_number
+    })
+  }, []);
   return (
     <>
       <Box ml={"1rem"}>
-        <HStack>
+        <HStack alignItems={"flex-start"}>
           <Center py={6}>
             <Box
               maxW={"220px"}
@@ -62,27 +128,27 @@ function Profile() {
             >
               <Avatar
                 size={"xl"}
-                src={user.image}
+                src={profile?.image}
                 alt={"Avatar Alt"}
                 mb={4}
                 pos={"relative"}
-                _after={{
-                  content: '""',
-                  w: 4,
-                  h: 4,
-                  bg: "green.300",
-                  border: "2px solid white",
-                  rounded: "full",
-                  pos: "absolute",
-                  bottom: 0,
-                  right: 3,
-                }}
-              />
+              >
+                <AvatarBadge
+                  bg={"red"}
+                  boxSize={"1.1em"}
+                  _hover={{ borderColor: "primary.300" }}
+                >
+                  <IconButton
+                    icon={<HiOutlineCamera />}
+                    borderRadius={"full"}
+                  />
+                </AvatarBadge>
+              </Avatar>
               <Heading fontSize={"2xl"} fontFamily={"body"}>
-                {user.username}
+                {profile?.username}
               </Heading>
               <Text fontWeight={600} color={"gray.500"} mb={4}>
-                {user.user_type}
+                {profile?.user_type}
               </Text>
 
               <Stack mt={8} direction={"row"} spacing={4}>
@@ -118,8 +184,161 @@ function Profile() {
             </Box>
           </Center>
           <Box>
-            <Box bg={'white'} p={'0.5rem'}>
-              <Text fontSize={'2xl'} fontWeight={'semibold'}>Change password</Text>
+            <Box pt={6}>
+              <Tabs position="relative" variant="unstyled">
+                <TabList>
+                  <Tab>Basic Information</Tab>
+                  <Tab>Membership</Tab>
+                </TabList>
+                <TabIndicator
+                  mt="-1.5px"
+                  height="2px"
+                  bg="primary.500"
+                  borderRadius="1px"
+                />
+                <TabPanels>
+                  <TabPanel>
+                    <form
+                      className="space-y-3 md:space-y-4"
+                      onSubmit={handleSubmit}
+                    >
+                      {customerrors && (
+                        <>
+                          {customerrors.map((item, i) => (
+                            <p key={i} className="text-red-600">
+                              {item}
+                            </p>
+                          ))}
+                        </>
+                      )}
+                      <div className="grid md:grid-cols-2 md:gap-3">
+                        <FormControl
+                          isInvalid={errors.username && touched.username}
+                        >
+                          <FormLabel>Username</FormLabel>
+                          <Input
+                            type="text"
+                            name="username"
+                            placeholder="username"
+                            value={values.username}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.username && touched.username ? (
+                            <FormErrorMessage>
+                              {errors.username}.
+                            </FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+
+                        <FormControl
+                          isInvalid={errors.first_name && touched.first_name}
+                        >
+                          <FormLabel>First Name</FormLabel>
+                          <Input
+                            type="text"
+                            name="first_name"
+                            placeholder="First Name"
+                            value={values.first_name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.first_name && touched.first_name ? (
+                            <FormErrorMessage>
+                              {errors.first_name}.
+                            </FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+                      </div>
+                      <div className="grid md:grid-cols-2 md:gap-3">
+                        <FormControl
+                          isInvalid={errors.middle_name && touched.middle_name}
+                        >
+                          <FormLabel>Middle Name</FormLabel>
+                          <Input
+                            type="text"
+                            name="middle_name"
+                            placeholder="Middle Name"
+                            value={values.middle_name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.middle_name && touched.middle_name ? (
+                            <FormErrorMessage>
+                              {errors.middle_name}.
+                            </FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+                        <FormControl
+                          isInvalid={errors.last_name && touched.last_name}
+                        >
+                          <FormLabel>Last Name</FormLabel>
+                          <Input
+                            type="text"
+                            name="last_name"
+                            placeholder="Last Name"
+                            value={values.last_name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.last_name && touched.last_name ? (
+                            <FormErrorMessage>
+                              {errors.last_name}.
+                            </FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+                      </div>
+                      <div className="grid md:grid-cols-2 md:gap-3">
+                        <FormControl isInvalid={errors.email && touched.email}>
+                          <FormLabel>Email</FormLabel>
+                          <Input
+                            type="text"
+                            name="email"
+                            placeholder="Email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.email && touched.email ? (
+                            <FormErrorMessage>{errors.email}.</FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+                        <FormControl
+                          isInvalid={
+                            errors.mobile_number && touched.mobile_number
+                          }
+                        >
+                          <FormLabel>Mobile Number</FormLabel>
+                          <Input
+                            type="text"
+                            name="mobile_number"
+                            placeholder="Mobile Number"
+                            value={values.mobile_number}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                          {errors.mobile_number && touched.mobile_number ? (
+                            <FormErrorMessage>
+                              {errors.mobile_number}.
+                            </FormErrorMessage>
+                          ) : null}
+                        </FormControl>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      >
+                        Update
+                      </button>
+                      
+                    </form>
+
+
+                    <Box bg={"white"} p={"0.5rem"}>
+              <Text fontSize={"2xl"} fontWeight={"semibold"}>
+                Change password
+              </Text>
 
               <Formik
                 initialValues={inputdata}
@@ -135,7 +354,7 @@ function Profile() {
                       duration: 3000,
                       isClosable: true,
                     });
-                    resetForm()
+                    resetForm();
                   }
                   if (res.error) {
                     const e = butifyErrors(res.error.data);
@@ -184,7 +403,9 @@ function Profile() {
                     </FormControl>
 
                     <FormControl
-                      isInvalid={errors.confirm_password && touched.confirm_password}
+                      isInvalid={
+                        errors.confirm_password && touched.confirm_password
+                      }
                     >
                       <FormLabel>Confirm Password</FormLabel>
                       <Input
@@ -214,6 +435,14 @@ function Profile() {
                 )}
               </Formik>
             </Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <p>Membership</p>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Box>
+            
           </Box>
         </HStack>
       </Box>

@@ -41,7 +41,8 @@ import {
 } from "react-icons/fi";
 import { BiAnalyse } from 'react-icons/bi'
 import { MdOutlineAssuredWorkload, MdOutlineCardMembership } from 'react-icons/md'
-import { BiMessageAltAdd } from 'react-icons/bi'
+import { BiMessageAltAdd,BiUser } from 'react-icons/bi';
+
 import { Link, useNavigate } from "react-router-dom/";
 
 import { deletetUser } from "../../utility/authentication";
@@ -55,6 +56,7 @@ const LinkItems = [
       { name: "Home", icon: FiHome, href:'/', accessType:"all" },
       { name: "Add Realestate", icon: BiMessageAltAdd, href:'/add-real-estate', accessType:"all" },
       { name: "Effectiveness Report", icon: FiSettings, href:'/effectiveness-report', accessType:"all" },
+      { name: "User List", icon: BiUser, href:'/user-list', accessType:"admin" },
     ],
   },
   {

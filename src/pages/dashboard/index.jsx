@@ -27,6 +27,7 @@ import { baseURL } from "../../../utility/baseURL";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
 import { useDispatch } from "react-redux";
 import { setLoginUser } from "../../../data/auth/slice/userSlice";
+import {useGetRealestateQuery} from "../../../data/auth/service/realestateService"
 
 ChartJS.register(
   ArcElement,
@@ -97,11 +98,36 @@ function Dashboard() {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
   // console.log('changeUser',changeUser)
-
+  const {data:realestateCount, isSuccess:realestateIsSuccess} = useGetRealestateQuery()
+  
+  
+  const countryName = []
+  const countryNumber = []
+  const cityName = []
+  const cityNumber = []
+  
+  
   const {data:activeUser, isSuccess, isLoading} = useGetUserQuery(access_token);
   // console.log("active", activeUser);
   const dispatch = useDispatch();
   useEffect(() => {
+    if(realestateIsSuccess){
+
+      const country = realestateCount.country
+      const city = realeasteddata.city
+      const type = realeasteddata.type
+      const name = []
+      const total = []
+
+      country.map((item)=> {
+        countryName.push(item.country)
+        countryNumber.push(item.totalnumber)
+      })
+    //   city.map((item)=>{
+    //     // cityName.push(item.city)
+    //     // cityNumber.push(item.totalnumber)
+    //   })
+    }
     setUsertype(userType);
     dispatch(setLoginUser({user:activeUser}))
 
@@ -149,10 +175,10 @@ function Dashboard() {
           console.log(error);
         });
     }
-  }, [changeUser,activeUser, isSuccess]);
+  }, [changeUser,activeUser, isSuccess, realestateIsSuccess, realestateCount]);
   const handleChange = (e) => {
     const { value } = e.target;
-    console.log(value);
+    
 
     setChangeUser(value);
   };
@@ -171,6 +197,28 @@ function Dashboard() {
       },
     ],
   };
+
+  const countryOffRealestate = {
+    labels : countryName,
+    datasets: [
+      {
+        label: "Number Of Registered Realestate Base On Country",
+        data: countryNumber,
+        backgroundColor: "rgba(54, 162, 235, 1)",
+      },
+    ],
+  }
+
+  const cityOffRealestate = {
+    labels : cityName,
+    datasets: [
+      {
+        label: "Number Of Registered Realestate Base On City",
+        data: cityNumber,
+        backgroundColor: "rgba(54, 162, 235, 1)",
+      },
+    ],
+  }
 
   const numberOfMembership = {
     labels: [
@@ -230,8 +278,12 @@ function Dashboard() {
               </Box>
             </Flex>
             <HStack gap={"1rem"} mt={"2rem"}>
+              <CustomChart ChartType={<Bar data={countryOffRealestate} />} />
+              <CustomChart ChartType={<Bar data={cityOffRealestate} />} />
+            </HStack>
+            <HStack gap={"1rem"} mt={"2rem"}>
               <CustomChart ChartType={<Bar data={realeasteddata} />} />
-              <CustomChart ChartType={<Bar data={realeasteddata} />} />
+              
             </HStack>
           </div>
         ) : (
@@ -242,8 +294,8 @@ function Dashboard() {
               </Box>
             </Flex>
             <HStack gap={"1rem"} mt={"2rem"}>
-              <CustomChart ChartType={<Bar data={realeasteddata} />} />
-              <CustomChart ChartType={<Bar data={realeasteddata} />} />
+              <CustomChart ChartType={<Bar data={countryOffRealestate} />} />
+              <CustomChart ChartType={<Bar data={cityOffRealestate} />} />
             </HStack>
           </div>
         )}

@@ -5,6 +5,7 @@ import { userAuthAPI } from '../auth/service/authServices'
 import activeUserSlice from '../auth/slice/activeUserSlice'
 import { userAPI } from '../auth/service/userServide'
 import userSlice from '../auth/slice/userSlice'
+import { realestateAPI } from '../auth/service/realestateService'
 
 
 
@@ -14,12 +15,13 @@ export const store = configureStore({
     [userAuthAPI.reducerPath]: userAuthAPI.reducer,
     activeUser:activeUserSlice,
     [userAPI.reducerPath]:userAPI.reducer,
-    userData:userSlice
+    userData:userSlice,
+    [realestateAPI.reducerPath] : realestateAPI.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(userAuthAPI.middleware)
-    .concat(userAPI.middleware)
+    .concat(userAPI.middleware).concat(realestateAPI.middleware)
 })
 
 
