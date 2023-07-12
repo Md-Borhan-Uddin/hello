@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useToast } from "@chakra-ui/react";
-import Sidebar from "../../../components/Sidebar";
+import { Box, useToast } from "@chakra-ui/react";
 import SearchBox from "../../../components/SearchBox";
 import CustomModal from "../../../components/UserEditModal";
 import {
@@ -15,12 +14,19 @@ import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { Formik, useFormik } from "formik";
 import { userEditSchima } from "../../../Schima/index";
 import { getUser } from "../../../utility/authentication";
+import Paginator from "../../../components/Paginator";
+import {useNavigate} from 'react-router-dom'
 
 function UserList() {
+  const router = useNavigate()
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
   const [error, setErrors] = useState([]);
   const [user, setUser] = useState([])
+  const [nextUrl, setNextUrl] = useState(null)
+  const [previousUrl, setPreviousUrl] = useState(null)
+  const [totalItems, setTotalItems] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const {
     isOpen: editIsOpen,
     onOpen: editOnOpen,
@@ -42,6 +48,23 @@ function UserList() {
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
+
+  const handlePageChange = (url,action)=>{
+    console.log('change')
+    axios.get(url, {headers:headers})
+      .then((res) =>{
+        if(action==='next'){
+          setCurrentPage(currentPage+1)
+        }
+        if(action==='previous'){
+          setCurrentPage(currentPage-1)
+        }
+        setNextUrl(res.data.next)
+        setPreviousUrl(res.data.previous)
+        setTotalItems(res.data.count)
+      })
+      .catch((error) => console.log(error));
+  }
 
   const fetchdata = (id, values, message) => {
     console.log(values);
@@ -70,14 +93,17 @@ function UserList() {
             duration: 2000,
             isClosable: true,
           });
-          router.push("/account/login");
+          router("/login");
         }
       });
   };
   useEffect(()=>{
     axios.get(baseURL+'/all-user/',{headers:headers})
     .then((res)=>{
-      setUser(res.data)
+      setUser(res.data.results)
+      setNextUrl(res.data.next)
+      setPreviousUrl(res.data.previous)
+      setTotalItems(res.data.count)
       console.log('data',res.data)
     })
     .catch(err=>{
@@ -140,7 +166,7 @@ function UserList() {
         console.log(res);
 
         toast({
-          title: "update Successfully",
+          title: "Delete Successfully",
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -156,7 +182,7 @@ function UserList() {
             duration: 2000,
             isClosable: true,
           });
-          router.push("/account/login");
+          router("/login");
         }
       });
     editOnClose();
@@ -197,7 +223,7 @@ function UserList() {
             duration: 2000,
             isClosable: true,
           });
-          router.push("/account/login");
+          router("/login");
         }
       });
   };
@@ -281,108 +307,9 @@ function UserList() {
             </table>
           </div>
 
-          <div className="px-3">
-            <nav
-              className="flex items-center justify-between pt-4"
-              aria-label="Table navigation"
-            >
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                Showing{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  1-10
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  1000
-                </span>
-              </span>
-              <ul className="inline-flex items-center -space-x-px">
-                <li>
-                  <a
-                    href="#"
-                    className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    <span className="sr-only">Previous</span>
-                    <svg
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    1
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    2
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    aria-current="page"
-                    className="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                  >
-                    3
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    ...
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    100
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    <span className="sr-only">Next</span>
-                    <svg
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <Box>
+            <Paginator handleNextPage={()=>handlePageChange(nextUrl, 'next')} handlePreviousPage={()=>handlePageChange(previousUrl, 'previous')} isNext={nextUrl} isPrevious={previousUrl} totalItem={totalItems} page={currentPage} />
+          </Box>
         </div>
       <CustomModal
         isOpen={editIsOpen}
@@ -489,45 +416,6 @@ function UserList() {
               ) : null}
             </FormControl>
           </div>
-
-          {/* <div className="grid md:grid-cols-2 md:gap-3">
-                <FormControl isInvalid={errors.first_name}>
-                  <FormLabel>First Name</FormLabel>
-                  <Input
-                    type="text"
-                    name="first_name"
-                    placeholder="First Name"
-                    value={values.first_name}
-                    onChange={handleChange}
-                  />
-                  {errors.first_name && touched.first_name ? (
-                    <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
-                  ) : null}
-                  {customerror.first_name ? (
-                    <p className="text-red-600">
-                      {customerror.first_name.message}.
-                    </p>
-                  ) : null}
-                </FormControl>
-                <FormControl isInvalid={errors.first_name}>
-                  <FormLabel>First Name</FormLabel>
-                  <Input
-                    type="text"
-                    name="first_name"
-                    placeholder="First Name"
-                    value={values.first_name}
-                    onChange={handleChange}
-                  />
-                  {errors.first_name && touched.first_name ? (
-                    <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
-                  ) : null}
-                  {customerror.first_name ? (
-                    <p className="text-red-600">
-                      {customerror.first_name.message}.
-                    </p>
-                  ) : null}
-                </FormControl>
-              </div> */}
 
           <button
             type="submit"

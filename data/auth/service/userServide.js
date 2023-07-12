@@ -11,7 +11,6 @@ export const userAPI = createApi({
       getUser: builder.query({
         query: (access_token) => 
           {
-            console.log(access_token)
             return {
             url:'/user/',
             headers:{

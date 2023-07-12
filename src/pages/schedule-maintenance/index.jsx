@@ -36,10 +36,8 @@ import {
   ModalFooter,
   Textarea,
   RadioGroup,
-  Stack,
   Radio,
-  CheckboxGroup,
-  Icon,
+  Text,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { scheduleSchima } from "../../../Schima";
@@ -48,6 +46,7 @@ import { baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import Paginator from "../../../components/Paginator";
 
 const inputdata = {
   name: "",
@@ -70,6 +69,10 @@ function ScheduleMaintain() {
   const router = useNavigate();
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
+  const [nextUrl, setNextUrl] = useState(null)
+  const [previousUrl, setPreviousUrl] = useState(null)
+  const [totalItems, setTotalItems] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { access_token, userType } = getUser();
@@ -85,10 +88,31 @@ function ScheduleMaintain() {
     const res = axios.get(endpoint, { headers: headers });
     return res;
   };
-
+  const handlePageChange = (url,action)=>{
+    console.log('change')
+    axios.get(url, {headers:headers})
+      .then((res) =>{
+        if(action==='next'){
+          setCurrentPage(currentPage+1)
+        }
+        if(action==='previous'){
+          setCurrentPage(currentPage-1)
+        }
+        setSchedules(res.data.results)
+        setNextUrl(res.data.next)
+        setPreviousUrl(res.data.previous)
+        setTotalItems(res.data.count)
+      })
+      .catch((error) => console.log(error));
+  }
   useEffect(() => {
     getObject("schedule-maintain")
-      .then((res) => setSchedules(res.data))
+      .then((res) =>{
+        setSchedules(res.data.results)
+        setNextUrl(res.data.next)
+        setPreviousUrl(res.data.previous)
+        setTotalItems(res.data.count)
+      })
       .catch((error) => console.log(error));
   }, []);
 
@@ -110,17 +134,17 @@ function ScheduleMaintain() {
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
+          console.log('data',res.data);
 
           if (res.status == 201) {
             getObject("schedule-maintain")
               .then((res) => {
-                setSchedules(res.data);
+                setSchedules(res.data.results);
               })
               .catch((error) => console.log(error));
 
             toast({
-              title: "Package create successfully",
+              title: "The Schedule Maintenance is Created Successfully",
               status: "success",
               duration: 3000,
               isClosable: true,
@@ -345,7 +369,9 @@ function ScheduleMaintain() {
           </Button>
         </HStack>
         <Box>
-          <TableContainer>
+          {schedules.length>0?
+          <Box>
+            <TableContainer>
             <Table variant="simple" textAlign={"center"}>
               <Thead bg={"gray.200"}>
                 <Tr>
@@ -392,7 +418,12 @@ function ScheduleMaintain() {
                 })}
               </Tbody>
             </Table>
+            
           </TableContainer>
+          <Box>
+              <Paginator handleNextPage={()=>handlePageChange(nextUrl, 'next')} handlePreviousPage={()=>handlePageChange(previousUrl, 'previous')} isNext={nextUrl} isPrevious={previousUrl} totalItem={totalItems} page={currentPage} />
+            </Box>
+          </Box>:<Text fontSize={'2xl'} textAlign={'center'} mt={'2rem'}>You haven't Schedule</Text>}
         </Box>
       </Box>
 
