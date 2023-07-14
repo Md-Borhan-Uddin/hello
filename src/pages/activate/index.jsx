@@ -1,6 +1,5 @@
 import { useUserActivationMutation } from "../../../data/auth/service/authServices";
 
-import { setUser } from "../../../utility/authentication";
 import { baseURL } from "../../../utility/baseURL";
 import {
   Stack,
@@ -17,8 +16,6 @@ import {
   Alert,
   AlertDescription,
   CloseButton,
-  HStack,
-  Spacer,
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
