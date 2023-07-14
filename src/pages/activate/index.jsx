@@ -1,6 +1,6 @@
 import { useUserActivationMutation } from "../../../data/auth/service/authServices";
 
-// import { baseURL } from "../../../utility/baseURL";
+
 import {
   Stack,
   FormControl,
@@ -22,6 +22,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
+import { baseURL } from "../../../utility/baseURL";
 
 export default function Activate() {
   const router = useNavigate();
@@ -66,19 +67,19 @@ export default function Activate() {
     }
     getActivate();
   }, [urlData]);
-  // const handleReSendEmail = () => {
-  //   axios
-  //     .post(baseURL + "/resend-activation/", { email: email })
-  //     .then((res) => {
-  //       console.log(res);
-  //       setResend(true);
-  //     })
-  //     .catch((err) => {
-  //       const { data } = err.response;
-  //       setErrors(data.messages);
-  //       console.log(err);
-  //     });
-  // };
+  const handleReSendEmail = () => {
+    axios
+      .post(baseURL + "/resend-activation/", { email: email })
+      .then((res) => {
+        console.log(res);
+        setResend(true);
+      })
+      .catch((err) => {
+        const { data } = err.response;
+        setErrors(data.messages);
+        console.log(err);
+      });
+  };
 
   const pageContent = isLoading ? (
     <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>

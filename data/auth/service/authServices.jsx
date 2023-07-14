@@ -1,7 +1,8 @@
 // Need to use the React-specific entry point to import createApi
 import { getUser } from '../../../utility/authentication';
-import { baseURL } from '../../../utility/baseURL'
+
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { baseURL } from '../../../utility/baseURL';
 
 
 const {access_token} = getUser()
