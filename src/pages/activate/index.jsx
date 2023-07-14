@@ -26,6 +26,7 @@ import { baseURL } from "../../../utility/baseURL";
 
 export default function Activate() {
   const router = useNavigate();
+  const urlData = useParams();
   const [errors, setErrors] = useState("");
   const [email, setEmail] = useState("");
   const [resend, setResend] = useState(false);
@@ -33,7 +34,7 @@ export default function Activate() {
   const { isOpen: isVisible, onClose, onOpen } = useDisclosure();
 
   const [activate, { isLoading }] = useUserActivationMutation();
-  const urlData = useParams();
+  
 
   useEffect(() => {
     const { uid, token } = urlData;
@@ -72,6 +73,15 @@ export default function Activate() {
       .then((res) => {
         console.log(res);
         setResend(true);
+        setEmail('')
+        setErrors('')
+        onClose()
+        toast({
+          description: "Activation link Send this email.Check Your Email",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       })
       .catch((err) => {
         const { data } = err.response;
@@ -79,6 +89,7 @@ export default function Activate() {
         console.log(err);
       });
   };
+  console.log('resend',resend)
 
   const pageContent = isLoading ? (
     <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>
@@ -99,7 +110,7 @@ export default function Activate() {
       bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Container maxW={"lg"} mb={"1rem"}>
-        {isVisible && (
+        {isVisible && errors && (
           <Alert status="error" justifyContent={"space-between"}>
             <AlertDescription>{errors}</AlertDescription>
 
