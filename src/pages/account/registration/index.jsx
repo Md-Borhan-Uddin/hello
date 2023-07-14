@@ -288,7 +288,7 @@ export default function Registration() {
                       borderRadius={"base"}
                       hasArrow
                       label={
-                        'Example: yourmsil.daimn.com'
+                        'Example: yourmail.daimn.com'
                       }
                     >
                       <InfoIcon />
