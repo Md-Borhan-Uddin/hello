@@ -63,7 +63,6 @@ export default function Activate() {
         });
       }
       console.log(res);
-      console.log("logging", state);
     }
     getActivate();
   }, [urlData]);
