@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { deleteActiveUser } from "../data/auth/slice/activeUserSlice";
+import { deleteActiveUser } from "../data/auth/slice/userSlice";
 
 export default function WithSubnavigation() {
   const [user, setUser] = useState("");
