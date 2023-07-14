@@ -165,8 +165,9 @@ function Dashboard() {
       fetch(baseURL + "/all-user/", { headers: headers })
         .then((res) => res.json())
         .then((data) => {
+          console.log('data',data)
           let u = [];
-          data.map((item) =>
+          data.results.map((item) =>
             u.push({ key: item.username, value: item.id.toString() })
           );
           setUsers(u);
@@ -175,7 +176,7 @@ function Dashboard() {
           console.log(error);
         });
     }
-  }, [changeUser,activeUser, isSuccess, realestateIsSuccess, realestateCount]);
+  }, [changeUser, realestateCount, activeUser]);
   const handleChange = (e) => {
     const { value } = e.target;
     

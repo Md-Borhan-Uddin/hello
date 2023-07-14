@@ -18,7 +18,6 @@ import { FaBed, FaBath } from "react-icons/fa";
 import { CgMenuGridR } from "react-icons/cg";
 
 export default function PropertyItem({ data }) {
-  console.log("data", data);
   return (
     <LinkBox>
       <Center mt={5}>

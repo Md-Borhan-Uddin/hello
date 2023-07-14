@@ -21,8 +21,10 @@ import {
   Avatar,
   Badge,
 } from '@chakra-ui/react';
-import {Link} from 'react-router-dom';
-import { useState } from 'react';
+import {Link, useParams} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getUser } from '../../../../utility/authentication';
+import { baseURL } from '../../../../utility/baseURL';
 
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipisicing elit.Ad
@@ -35,62 +37,43 @@ reprehenderit velit? Natus, totam.`
 
 
 export default function SingleProperty() {
+  const query = useParams()
   const [lessText, setLessText] = useState(true)
+  const [realestate, setRealestate] = useState({})
   const hideText = () =>{
     setLessText(!lessText)
   }
+  const { userType, access_token } = getUser();
+  const headers = {
+    Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+  };
+  useEffect(()=>{
+    fetch(baseURL + `/realestate/${query.id}/detail/`, { headers: headers })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data', data)
+        setRealestate(data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },[])
   const desc = lessText ? text.slice(0,200):text
   return (
     <Container maxW={'7xl'} mt={7}>
       <Box>
-      <Grid
-        templateRows='repeat(2, 1fr)'
-        templateColumns='repeat(4, 1fr)'
-        gap={2}
-      >
-        <GridItem rowSpan={2} colSpan={3}>
-            <Image
-                loading='lazy'
-                rounded={'md'}
-                alt={'product image'}
-                src={
-                  "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-                }
-                fit={'cover'}
-                align={'center'}
-                w={'100%'}
-                h={'100%'}
-              />
-        </GridItem>
-        <GridItem>
-          <Image
-                loading='lazy'
-              rounded={'md'}
-              alt={'product image'}
-              src={
-                "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-              }
-              fit={'cover'}
-              align={'center'}
-              w={'100%'}
-              h={'100%'}
-            />
-        </GridItem>
-        <GridItem>
-          <Image
-                loading='lazy'
-              rounded={'md'}
-              alt={'product image'}
-              src={
-                "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-              }
-              fit={'cover'}
-              align={'center'}
-              w={'100%'}
-              h={'100%'}
-            />
-        </GridItem>
-      </Grid>
+      <Image
+        loading='lazy'
+        rounded={'md'}
+        alt={'product image'}
+        src={
+          realestate?.photo
+        }
+        fit={'cover'}
+        align={'center'}
+        w={'100%'}
+        h={'100%'}
+      />
       </Box>
       <Flex
         columns={{ base: 1, lg: 2 }}
@@ -102,7 +85,7 @@ export default function SingleProperty() {
               lineHeight={1.1}
               fontWeight={600}
               fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-              Beautifull Villa
+              {realestate?.name}
             </Heading>
             <Text
               color={useColorModeValue('gray.500', 'gray.400')}
@@ -215,7 +198,7 @@ export default function SingleProperty() {
         </Stack>
         <VStack w={'30%'}>
           <Box border={'2px solid gray'}>
-          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14607.610861801386!2d90.40310325!3d23.75084835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1681135845885!5m2!1sen!2sbd" width="300" height="200" style={{border:'0'}} allowFullscreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14607.610861801386!2d90.40310325!3d23.75084835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1681135845885!5m2!1sen!2sbd" width="300" height="200" style={{border:'0'}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
           </Box>
           <Box
         maxW={'320px'}
