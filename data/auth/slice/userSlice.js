@@ -18,6 +18,6 @@ const userSlice = createSlice({
 })
 
 
-export const { setLoginUser, deleteActiveUser } = userSlice.actions
+export const { setLoginUser, deleteLoginUser } = userSlice.actions
 
 export default userSlice.reducer

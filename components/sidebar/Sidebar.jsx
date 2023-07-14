@@ -47,7 +47,8 @@ import { Link, useNavigate } from "react-router-dom/";
 
 import { deletetUser } from "../../utility/authentication";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteActiveUser } from "../../data/auth/slice/userSlice";
+import { deleteLoginUser } from "../../data/auth/slice/userSlice";
+import { deleteActiveUser } from "../../data/auth/slice/activeUserSlice";
 
 const LinkItems = [
   {
@@ -182,6 +183,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
   const handleLogout = () => {
     deletetUser()
     dispatch(deleteActiveUser())
+    dispatch(deleteLoginUser())
     router('/login')
     
   };
