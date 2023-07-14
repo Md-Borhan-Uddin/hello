@@ -10,6 +10,7 @@ import RequireAuth from "../../../../components/auth/TokenExpaireCheck";
 import { changePasswordSchima } from "../../../../Schima";
 import { usePasswordResetMutation } from "../../../../data/auth/service/authServices";
 import { useNavigate, useParams } from "react-router-dom";
+import { butifyErrors } from "../../../../utility/utlity";
 
 export default function PasswordConfirm() {
   const router = useNavigate()
