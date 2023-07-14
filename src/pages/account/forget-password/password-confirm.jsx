@@ -36,7 +36,7 @@ export default function PasswordConfirm() {
             
             if (res.data) {
               console.log(res.data);
-              router('/login')
+              
               toast({
                 description: `${res.data.message}`,
                 status: "success",
