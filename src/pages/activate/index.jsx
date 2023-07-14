@@ -23,11 +23,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
 import { baseURL } from "../../../utility/baseURL";
+import { butifyErrors } from "../../../utility/utlity";
 
 export default function Activate() {
   const router = useNavigate();
   const urlData = useParams();
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState([]);
   const [email, setEmail] = useState("");
   const [resend, setResend] = useState(false);
   const toast = useToast();
@@ -53,9 +54,9 @@ export default function Activate() {
         router("/login");
       }
       if (res.error) {
-        setErrors(res.error.data[0]);
+        setErrors(butifyErrors(res.error.data));
         onOpen();
-        console.log("error", res.error.data[0]);
+        console.log("error", res.error);
         toast({
           description: "Token is expair or Invalid",
           status: "error",
@@ -86,7 +87,8 @@ export default function Activate() {
       .catch((err) => {
         const { data } = err.response;
         setErrors(data.messages);
-        console.log(err);
+        setResend(false);
+        console.log('error',err);
       });
   };
   console.log('resend',resend)
