@@ -105,28 +105,35 @@ function Dashboard() {
   const countryNumber = []
   const cityName = []
   const cityNumber = []
+  const typeName = []
+  const typeNumber = []
   
   
   const {data:activeUser, isSuccess, isLoading} = useGetUserQuery(access_token);
-  // console.log("active", activeUser);
+  
   const dispatch = useDispatch();
   useEffect(() => {
     if(realestateIsSuccess){
-
+      
       const country = realestateCount.country
-      const city = realeasteddata.city
-      const type = realeasteddata.type
+      const city = realestateCount.city
+      const type = realestateCount.type
       const name = []
       const total = []
-
+      // console.log('success realestate',country,city,type)
       country.map((item)=> {
         countryName.push(item.country)
         countryNumber.push(item.totalnumber)
       })
-    //   city.map((item)=>{
-    //     // cityName.push(item.city)
-    //     // cityNumber.push(item.totalnumber)
-    //   })
+      type.map((item)=>{
+        typeName.push(item.type)
+        typeNumber.push(item.totalnumber)
+      })
+
+      city.map((item)=>{
+        cityName.push(item.city)
+        cityNumber.push(item.totalnumber)
+      })
     }
     setUsertype(userType);
     dispatch(setLoginUser({user:activeUser}))
