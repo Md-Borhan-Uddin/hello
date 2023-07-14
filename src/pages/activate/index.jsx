@@ -19,77 +19,69 @@ import {
   CloseButton,
   HStack,
   Spacer,
-  Spinner
-
-  
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import React, { useEffect, useState } from "react";
 
-
 export default function Activate() {
   const router = useNavigate();
-  const [errors, setErrors] = useState('');
-  const [email, setEmail] = useState('');
-  const [resend, setResend] = useState(false)
-  const toast = useToast()
-  const {
-    isOpen: isVisible,
-    onClose,
-    onOpen,
-  } = useDisclosure()
+  const [errors, setErrors] = useState("");
+  const [email, setEmail] = useState("");
+  const [resend, setResend] = useState(false);
+  const toast = useToast();
+  const { isOpen: isVisible, onClose, onOpen } = useDisclosure();
 
-  const [activate, {isLoading}] = useUserActivationMutation()
-  const urlData = useParams()
+  const [activate, { isLoading }] = useUserActivationMutation();
+  const urlData = useParams();
 
   useEffect(() => {
- 
     const { uid, token } = urlData;
     console.log(uid, token);
-    const data = {'uid':uid,'token':token}
-    async function getActivate(){
-      const res = await activate(data)
-      if(res.data){
-        console.log(res.data)
-        toast({  
+    const data = { uid: uid, token: token };
+    async function getActivate() {
+      const res = await activate(data);
+      if (res.data) {
+        console.log(res.data);
+        toast({
           description: "Account Activate",
-          status: 'success',
+          status: "success",
           duration: 3000,
           isClosable: true,
-        })
-        router('/login')
+        });
+        router("/login");
       }
-      if(res.error){
-        setErrors(res.error.data[0])
-        onOpen()
-        console.log("error", res.error.data[0])
-        toast({  
+      if (res.error) {
+        setErrors(res.error.data[0]);
+        onOpen();
+        console.log("error", res.error.data[0]);
+        toast({
           description: "Token is expair or Invalid",
-          status: 'error',
+          status: "error",
           duration: 3000,
           isClosable: true,
-        })
+        });
       }
-      console.log(res)
-      console.log("logging", state)
+      console.log(res);
+      console.log("logging", state);
     }
-    getActivate()
+    getActivate();
   }, [urlData]);
-  const handleReSendEmail = ()=>{
+  const handleReSendEmail = () => {
     axios
-      .post(baseURL + "/resend-activation/", {'email':email})
+      .post(baseURL + "/resend-activation/", { email: email })
       .then((res) => {
-        console.log(res)
-        setResend(true)
+        console.log(res);
+        setResend(true);
       })
       .catch((err) => {
         const { data } = err.response;
         setErrors(data.messages);
         console.log(err);
       });
-  }
+  };
 
   const pageContent = isLoading ? (
     <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>
@@ -101,118 +93,107 @@ export default function Activate() {
         size="xl"
       />
     </Flex>
-  ):(
-      <Flex
-        minH={"100vh"}
-        align={"center"}
-        justify={"center"}
-        flexDirection={'column'}
-        bg={useColorModeValue("gray.50", "gray.800")}
-      >
-        <Container maxW={"lg"} mb={'1rem'}>
-        {isVisible&&<Alert status='error' justifyContent={"space-between"}>
-          
-            <AlertDescription>
-              {errors}
-            </AlertDescription>
-            
+  ) : (
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      flexDirection={"column"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Container maxW={"lg"} mb={"1rem"}>
+        {isVisible && (
+          <Alert status="error" justifyContent={"space-between"}>
+            <AlertDescription>{errors}</AlertDescription>
+
             <CloseButton
-              alignSelf='flex-start'
-              position='relative'
+              alignSelf="flex-start"
+              position="relative"
               right={-1}
               top={-1}
               onClick={onClose}
             />
-            
-          </Alert>}
-        </Container>
-        <Container
-          maxW={"lg"}
-          bg={useColorModeValue("white", "whiteAlpha.100")}
-          boxShadow={"xl"}
-          rounded={"lg"}
-          p={6}
-          direction={"column"}
-        >
-          
-          
-
-            {errors?<Stack
-          direction={'column'}
-          as={'form'}
-          spacing={'12px'}>
-            <Text
-            mt={2}
-            textAlign={"center"}
-            color="gray.500"
+          </Alert>
+        )}
+      </Container>
+      <Container
+        maxW={"lg"}
+        bg={useColorModeValue("white", "whiteAlpha.100")}
+        boxShadow={"xl"}
+        rounded={"lg"}
+        p={6}
+        direction={"column"}
+      >
+        {errors ? (
+          <Stack direction={"column"} as={"form"} spacing={"12px"}>
+            <Text mt={2} textAlign={"center"} color="gray.500">
+              Resend Activation Link Give Your Register Email
+            </Text>
+            <Flex gap={"0.5rem"}>
+              <FormControl>
+                <Input
+                  variant={"solid"}
+                  borderWidth={1}
+                  color={"gray.800"}
+                  _placeholder={{
+                    color: "gray.400",
+                  }}
+                  borderColor={useColorModeValue("gray.300", "gray.700")}
+                  id={"email"}
+                  type={"email"}
+                  required
+                  placeholder={"Your Email"}
+                  aria-label={"Your Email"}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
+              <FormControl w={{ base: "100%", md: "40%" }}>
+                <Button
+                  colorScheme="primary"
+                  onClick={handleReSendEmail}
+                  w="100%"
+                >
+                  Resend
+                </Button>
+              </FormControl>
+            </Flex>
+          </Stack>
+        ) : resend ? (
+          <Flex
+            alignItems={"center"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            mt={"0.5rem"}
           >
-            Resend Activation Link Give Your Register Email 
-          </Text>
-          <Flex gap={'0.5rem'}>
-          <FormControl>
-            <Input
-              variant={'solid'}
-              borderWidth={1}
-              color={'gray.800'}
-              _placeholder={{
-                color: 'gray.400',
-              }}
-              borderColor={useColorModeValue('gray.300', 'gray.700')}
-              id={'email'}
-              type={'email'}
-              required
-              placeholder={'Your Email'}
-              aria-label={'Your Email'}
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-            />
-          </FormControl>
-          <FormControl w={{ base: '100%', md: '40%' }}>
-            <Button
-              colorScheme="primary"
-              onClick={handleReSendEmail}
-              w="100%">
-              Resend
-            </Button>
-          </FormControl>
+            <Text mt={2} textAlign={"center"} color="gray.500">
+              Resend Activation Link On Email
+            </Text>
           </Flex>
-        </Stack>:resend?<Flex alignItems={"center"} flexDirection={'column'} justifyContent={"center"} mt={"0.5rem"}>
-        <Text
-            mt={2}
-            textAlign={"center"}
-            color="gray.500"
+        ) : (
+          <Flex
+            alignItems={"center"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            mt={"0.5rem"}
           >
-            Resend Activation Link On Email
-          </Text>
-            
-          </Flex>:<Flex alignItems={"center"} flexDirection={'column'} justifyContent={"center"} mt={"0.5rem"}>
-        <Text
-            mt={2}
-            textAlign={"center"}
-            color="gray.500"
-          >
-            your account active now you go with us
-          </Text>
-              <Button
-                backgroundColor={"rgb(38,220,118)"}
-                color={"whiteAlpha.900"}
-                _hover={{ backgroundColor: "rgb(78, 228, 143)" }}
-              >
-                <Link to="/login">Login</Link>
-              </Button>
-            
-          </Flex>}
-
-
-
-          
-        </Container>
-      </Flex>
+            <Text mt={2} textAlign={"center"} color="gray.500">
+              your account active now you go with us
+            </Text>
+            <Button
+              backgroundColor={"rgb(38,220,118)"}
+              color={"whiteAlpha.900"}
+              _hover={{ backgroundColor: "rgb(78, 228, 143)" }}
+            >
+              <Link to="/login">Login</Link>
+            </Button>
+          </Flex>
+        )}
+      </Container>
+    </Flex>
   );
 
-  return pageContent
+  return pageContent;
 }
 
-// export default Activate;
+// export default ;
