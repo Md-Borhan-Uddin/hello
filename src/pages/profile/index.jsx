@@ -14,6 +14,8 @@ import {
   Heading,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Stack,
   Tab,
   TabIndicator,
@@ -43,9 +45,7 @@ function Profile() {
     middle_name: "",
     username: "",
     email: "",
-    mobile_number: "",
-    password: "",
-    password2: "",
+    mobile_number: ""
   };
   // const [user, setUser] = useState({})
   const { access_token } = getUser();
@@ -59,7 +59,6 @@ function Profile() {
   const toast = useToast();
   const [changepassword, { isSuccess: isChangePasswordSuccess, isLoading }] =
     useChangePasswordMutation();
-  console.log("profile",profile)
   const {
     values,
     errors,
@@ -138,10 +137,14 @@ function Profile() {
                   boxSize={"1.1em"}
                   _hover={{ borderColor: "primary.300" }}
                 >
-                  <IconButton
-                    icon={<HiOutlineCamera />}
-                    borderRadius={"full"}
-                  />
+                  <InputGroup>
+                    <InputRightElement pointerEvents='none'>
+                    
+                    <HiOutlineCamera />
+                    
+                    </InputRightElement>
+                    <Input />
+                  </InputGroup>
                 </AvatarBadge>
               </Avatar>
               <Heading fontSize={"2xl"} fontFamily={"body"}>
@@ -370,10 +373,10 @@ function Profile() {
                   touched,
                   handleChange,
                   handleBlur,
-                  handleSubmit,
+                  handleSubmit:passwordSubmit,
                   isSubmitting,
                 }) => (
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={passwordSubmit}>
                     {customerrors && (
                       <>
                         {customerrors.map((item, i) => (

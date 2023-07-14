@@ -120,7 +120,7 @@ function Dashboard() {
       const type = realestateCount.type
       const name = []
       const total = []
-      // console.log('success realestate',country,city,type)
+      
       country.map((item)=> {
         countryName.push(item.country)
         countryNumber.push(item.totalnumber)
@@ -172,7 +172,6 @@ function Dashboard() {
       fetch(baseURL + "/all-user/", { headers: headers })
         .then((res) => res.json())
         .then((data) => {
-          console.log('data',data)
           let u = [];
           data.results.map((item) =>
             u.push({ key: item.username, value: item.id.toString() })

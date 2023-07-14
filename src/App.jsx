@@ -67,10 +67,10 @@ function App() {
     <Routes>
       <Route element={<DefaultLayout />}>
         <Route path='/' element={<Home />} />
-        <Route path='login' element={<Login />}/>
+        <Route path='/login' element={<Login />}/>
         <Route path='/forget-password' element={<ForgetPassword />} />
-        <Route path='registration' element={<Registration />}/>
-        <Route path='activate/:uid/:token' element={<Activate />} />
+        <Route path='/registration' element={<Registration />}/>
+        <Route path='/activate/:uid/:token' element={<Activate />} />
         <Route path='/add-real-estate' element={<AddState />} />
         <Route path='/property-list/:userType' element={<Property />} />
         <Route path='/property/:id/:title' element={<SingleProperty />} />

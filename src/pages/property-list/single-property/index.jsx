@@ -20,6 +20,7 @@ import {
   GridItem,
   Avatar,
   Badge,
+  Collapse,
 } from '@chakra-ui/react';
 import {Link, useParams} from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -38,7 +39,7 @@ reprehenderit velit? Natus, totam.`
 
 export default function SingleProperty() {
   const query = useParams()
-  const [lessText, setLessText] = useState(true)
+  const [lessText, setLessText] = useState(false)
   const [realestate, setRealestate] = useState({})
   const hideText = () =>{
     setLessText(!lessText)
@@ -110,9 +111,9 @@ export default function SingleProperty() {
                 fontWeight={'500'}>
                 Description
               </Text>
-              <Text fontSize={'lg'} color={'gray.700'}>
-                {desc}
-              </Text>
+              <Collapse startingHeight={20} in={lessText}>
+                {realestate?.description}
+              </Collapse>
               <Button colorScheme='green' mt={4} onClick={hideText} variant='outline' leftIcon={lessText?<ChevronDownIcon />:<ChevronUpIcon />}> Read More</Button>
             </Box>
             <Box>
