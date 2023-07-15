@@ -167,17 +167,34 @@ function RealestateType() {
 
  
 
-  const brandDelete = (e) => {
+  const handleDelete = (e) => {
     const { value } = e.target;
+    setId(value)
+    axios
+    .delete(`${baseURL}/real-estate-type/${value}/`, {
+      headers: headers,
+    })
+    .then((res) => {
+      const object = types.filter((e) => e.id != value);
 
-    const res = deleteItem(
-      "/assert-brand/",
-      headers,
-      value,
-      setBrands,
-      brands,
-      toast
-    );
+    //   state = object;
+      setTypes(object);
+      toast({
+        title: "Successfully Delete",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      toast({
+        title: "Something wrong try again",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    });
   };
   return (
     <>
@@ -245,7 +262,7 @@ function RealestateType() {
                         <Button
                           aria-label="deletebtn"
                           icon={<BsTrash3 />}
-                          onClick={brandDelete}
+                          onClick={handleDelete}
                           value={item.id}
                           colorScheme="red"
                         >
