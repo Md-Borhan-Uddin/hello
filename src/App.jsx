@@ -71,7 +71,6 @@ function App() {
         <Route path='/forget-password' element={<ForgetPassword />} />
         <Route path='/registration' element={<Registration />}/>
         <Route path='/activate/:uid/:token' element={<Activate />} />
-        <Route path='/add-real-estate' element={<AddState />} />
         <Route path='/property-list/:userType' element={<Property />} />
         <Route path='/property/:id/:title' element={<SingleProperty />} />
         <Route path='/profile' element={<Profile />} />
@@ -86,6 +85,7 @@ function App() {
         <Route path='/membership' element={<Membership />} />
         <Route path='/user-list' element={<UserList />}/>
         <Route path='/realestate-type' element={<RealestateType />} />
+        <Route path='/add-real-estate' element={<AddState />} />
         
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />
       </Route>
