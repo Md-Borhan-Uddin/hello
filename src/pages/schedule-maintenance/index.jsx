@@ -364,7 +364,7 @@ function ScheduleMaintain() {
             Schedule List
           </Heading>
           <Spacer />
-          <Button colorScheme="teal" onClick={handleAdd}>
+          <Button colorScheme="primary" onClick={handleAdd}>
             Add Package
           </Button>
         </HStack>

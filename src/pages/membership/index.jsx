@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
 import {
   Box,
   Button,
@@ -336,13 +335,12 @@ function Membership() {
 
   if (userType === "Admin") {
     return (
-      <DashboardLayout>
-        {console.log("admin user")}
+      <>
         <Box py={12} px={4}>
           <HStack spacing={2} textAlign="center" mb="1rem">
             <Heading fontSize="4xl">All Membership</Heading>
             {/* <Spacer />
-          <Button colorScheme="teal" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
+          <Button colorScheme="primary" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
             Add Package
           </Button> */}
           </HStack>
@@ -422,12 +420,12 @@ function Membership() {
             </TableContainer>
           </Box>
         </Box>
-      </DashboardLayout>
+      </>
     );
   } else {
     return (
       <>
-        {console.log("regular user")}
+        
         <Box py={12} px={4}>
           <HStack spacing={2} mb="1rem" alignItems={"flex-start"}>
             <Box width={"50%"}>

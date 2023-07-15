@@ -16,6 +16,7 @@ import { userEditSchima } from "../../../Schima/index";
 import { getUser } from "../../../utility/authentication";
 import Paginator from "../../../components/Paginator";
 import {useNavigate} from 'react-router-dom'
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 function UserList() {
   const router = useNavigate()
@@ -27,6 +28,7 @@ function UserList() {
   const [previousUrl, setPreviousUrl] = useState(null)
   const [totalItems, setTotalItems] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
+  const [userID, setUserID] = useState(null)
   const {
     isOpen: editIsOpen,
     onOpen: editOnOpen,
@@ -42,7 +44,7 @@ function UserList() {
   const [status, setStatus] = useState(false);
   const { access_token } = getUser();
 
-  const userid = useRef();
+  const userid = useRef()
   const statusCheck = useRef();
 
   const headers = {
@@ -50,7 +52,6 @@ function UserList() {
   };
 
   const handlePageChange = (url,action)=>{
-    console.log('change')
     axios.get(url, {headers:headers})
       .then((res) =>{
         if(action==='next'){
@@ -67,13 +68,17 @@ function UserList() {
   }
 
   const fetchdata = (id, values, message) => {
-    console.log(values);
+    
     axios
       .patch(baseUrl.defaults.baseURL + `/user-edit/${id}/`, values, {
         headers: headers,
       })
       .then((res) => {
         console.log(res);
+        
+        const obj = user.filter(item=>item.username!=res.data.username)
+        
+        setUser([...obj,res.data])
         if (message) {
           toast({
             title: "update Successfully",
@@ -125,45 +130,44 @@ function UserList() {
     initialValues: inputdata,
     validationSchema: userEditSchima,
     onSubmit: (values, { setSubmitting }) => {
-      console.log(userid.current.value);
-      const { value } = userid.current;
+      const data = user.filter(item=>item.id==userID)
 
-      fetchdata(value, values, true);
-      onClose();
-      window.location.reload();
+      fetchdata(data[0].username, values, true);
+      editOnClose();
+      setUserID(null)
+      // window.location.reload();
     },
   });
 
+  const searchHandle = ()=>{
+    
+  }
+
   const statusHandler = (e) => {
-    console.log(e);
     const { value, checked } = e.target;
+    const data = user.filter(item=>item.id==value)
     setStatus(!checked);
     if (value) {
-      console.log("data");
       statusOnOpen();
-      fetchdata(value, {});
+      fetchdata(data[0]?.username, {});
     } else {
-      const { value } = userid.current;
+      const {value} = statusCheck.current
+      const data = user.filter(item=>item.id==value)
       const { checked } = statusCheck.current;
-      fetchdata(value, { is_active: !checked }, true);
+      fetchdata(data[0]?.username, { is_active: !checked }, true);
       statusOnClose();
-      console.log("save", e);
-      window.location.reload();
     }
   };
-  const searchHandle = (e) => {
-    // setUserSearch(e.target.value)
-    // setusers(users.filter((item)=>item.username.toLowerCase().includes(e.target.value)))
-  };
   const handleDelete = () => {
-    const { value } = userid.current;
-
     axios
-      .delete(baseUrl.defaults.baseURL + `/user-delete/${value}/`, {
+      .delete(baseUrl.defaults.baseURL + `/user-delete/${userID}/`, {
         headers: headers,
       })
       .then((res) => {
         console.log(res);
+        const obj = user.filter(item=>item.id!=userID)
+        
+        setUser(obj)
 
         toast({
           title: "Delete Successfully",
@@ -227,7 +231,20 @@ function UserList() {
         }
       });
   };
-  // console.log('user',user)
+  
+  const openEditForm = (e)=>{
+    editOnOpen()
+    const {value} = e.target
+    const data = user.filter(item=>item.id==value)
+    setUserID(value)
+    setValues({
+      first_name: data[0]?.first_name,
+      last_name: data[0]?.last_name,
+      middel_name: data[0]?.middel_name ? data[0]?.middel_name : "",
+      email: data[0]?.email,
+      mobile_number: data[0]?.mobile_number,
+    })
+  }
 
   return (
     <>
@@ -292,7 +309,7 @@ function UserList() {
                       </td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={handleEdit}
+                          onClick={openEditForm}
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           value={item.id}
                           ref={userid}
@@ -323,7 +340,7 @@ function UserList() {
       >
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div className="grid md:grid-cols-2 md:gap-3">
-            <FormControl isInvalid={errors.first_name}>
+            <FormControl isInvalid={errors.first_name&&touched.first_name}>
               <FormLabel>First Name</FormLabel>
               <Input
                 type="text"
@@ -331,6 +348,7 @@ function UserList() {
                 placeholder="First Name"
                 value={values.first_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
               {errors.first_name && touched.first_name ? (
                 <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
@@ -341,7 +359,7 @@ function UserList() {
                 </p>
               ) : null}
             </FormControl>
-            <FormControl isInvalid={errors.last_name}>
+            <FormControl isInvalid={errors.last_name&&touched.last_name}>
               <FormLabel>Last Name</FormLabel>
               <Input
                 type="text"
@@ -349,6 +367,7 @@ function UserList() {
                 placeholder="Last Name"
                 value={values.last_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
               {errors.last_name && touched.last_name ? (
                 <FormErrorMessage>{errors.last_name}.</FormErrorMessage>
@@ -360,7 +379,7 @@ function UserList() {
           </div>
 
           <div className="grid md:grid-cols-2 md:gap-3">
-            <FormControl isInvalid={errors.middel_name}>
+            <FormControl isInvalid={errors.middel_name&&touched.middel_name}>
               <FormLabel>Middle Name</FormLabel>
               <Input
                 type="text"
@@ -368,6 +387,7 @@ function UserList() {
                 placeholder="Middle Name"
                 value={values.middel_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
               {errors.middel_name && touched.middel_name ? (
                 <FormErrorMessage>{errors.middel_name}.</FormErrorMessage>
@@ -378,7 +398,7 @@ function UserList() {
                 </p>
               ) : null}
             </FormControl>
-            <FormControl isInvalid={errors.email}>
+            <FormControl isInvalid={errors.email&&touched.email}>
               <FormLabel>Email</FormLabel>
               <Input
                 type="email"
@@ -386,6 +406,7 @@ function UserList() {
                 placeholder="Email"
                 value={values.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
               {errors.email && touched.email ? (
                 <FormErrorMessage>{errors.email}.</FormErrorMessage>
@@ -397,14 +418,15 @@ function UserList() {
           </div>
 
           <div className="grid md:grid-cols-2 md:gap-3">
-            <FormControl isInvalid={errors.mobile_number}>
+            <FormControl isInvalid={errors.mobile_number&&touched.mobile_number}>
               <FormLabel>Mobile Number</FormLabel>
               <Input
-                type="number"
+                type="tel"
                 name="mobile_number"
                 placeholder="Mobile Number"
                 value={values.mobile_number}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
               {errors.mobile_number && touched.mobile_number ? (
                 <FormErrorMessage>{errors.mobile_number}.</FormErrorMessage>
@@ -444,7 +466,7 @@ function UserList() {
 }
 
 
-export default UserList
+export default RequireAuth(UserList)
 
 
 

@@ -413,7 +413,7 @@ function countryCity() {
         isOpen={countryIsOpen}
         onClose={countryOnClose}
         closeOnOverlayClick={false}
-        title="Edit User"
+        title="Edit Country"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >

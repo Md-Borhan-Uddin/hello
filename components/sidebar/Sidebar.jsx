@@ -115,6 +115,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
       w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
+      overflowY={'auto'}
+      py={'1rem'}
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">

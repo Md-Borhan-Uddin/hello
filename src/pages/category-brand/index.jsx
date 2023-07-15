@@ -462,7 +462,7 @@ function CategoryBrand() {
         isOpen={categoryIsOpen}
         onClose={categoryOnClose}
         closeOnOverlayClick={false}
-        title="Edit User"
+        title="Edit Category"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >
@@ -528,7 +528,7 @@ function CategoryBrand() {
         isOpen={brandIsOpen}
         onClose={brandOnClose}
         closeOnOverlayClick={false}
-        title="Edit User"
+        title="Edit Brand"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >

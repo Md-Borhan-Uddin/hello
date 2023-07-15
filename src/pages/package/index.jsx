@@ -298,7 +298,7 @@ function Package() {
             All Packages
           </Heading>
           <Spacer />
-          <Button colorScheme="teal" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
+          <Button colorScheme="primary" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
             Add Package
           </Button>
         </HStack>

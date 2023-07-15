@@ -26,6 +26,12 @@ import { Flex, Spinner } from '@chakra-ui/react'
 import ForgetPassword from './pages/account/forget-password'
 import PasswordConfirm from './pages/account/forget-password/password-confirm'
 import RealestateType from './pages/realestate-type'
+import EffectivReport from './pages/effectiveness-report'
+
+
+
+
+
 
 function App() {
   let access_token;
@@ -86,7 +92,7 @@ function App() {
         <Route path='/user-list' element={<UserList />}/>
         <Route path='/realestate-type' element={<RealestateType />} />
         <Route path='/add-real-estate' element={<AddState />} />
-        
+        <Route path='/effectiveness-report' element={<EffectivReport />} />
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />
       </Route>
     </Routes>

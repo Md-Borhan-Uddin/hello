@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
 import {
   Box,
   Button,
@@ -44,15 +43,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { packageSchima } from "@/Schima";
+import { packageSchima } from "../../../Schima";
 import axios from "axios";
-import { baseURL } from "@/utility/baseURL";
-import { getUser } from "@/utility/authentication";
-import { useRouter } from "next/router";
-import { months } from "@/utility/utlity";
-import Image from "next/image";
-import GeneratePDF from "@/components/GeneratePDF";
-import RequireAuth from "@/components/auth/TokenExpaireCheck";
+import { baseURL } from "../../../utility/baseURL";
+import { getUser } from "../../../utility/authentication";
+import { Link,useNavigate } from "react-router-dom";
+import { months } from "../../../utility/utlity";
+import GeneratePDF from "../../../components/GeneratePDF";
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 
 const inputdata = {
@@ -75,7 +73,7 @@ function EffectReport() {
   const [isEdit, setIsEdit] = useState(false);
   const [realestate, setRealesate] = useState([]);
   const [id, setId] = useState();
-  const router = useRouter();
+  const router = useNavigate();
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
 
@@ -161,7 +159,7 @@ function EffectReport() {
             duration: 2000,
             isClosable: true,
           });
-          router.push("/account/login");
+          router("/login");
         }
       })
     },
@@ -211,7 +209,7 @@ function EffectReport() {
           duration: 2000,
           isClosable: true,
         });
-        router.push("/account/login");
+        router("/login");
       }
     })
     
@@ -247,7 +245,7 @@ function EffectReport() {
           duration: 2000,
           isClosable: true,
         });
-        router.push("/account/login");
+        router("/login");
       }
     })
 
@@ -288,25 +286,24 @@ function EffectReport() {
           duration: 2000,
           isClosable: true,
         });
-        router.push("/account/login");
+        router("/login");
       }
     })
   };
 
-  
-  // const token = access_token
+ 
   
 
   return (
-    <DashboardLayout>
+    <>
       <Box py={12} px={4}>
         <HStack spacing={2} textAlign="center" mb='1rem'>
           <Heading as="h1" fontSize="4xl">
             All Real Estate
           </Heading>
           <Spacer />
-          <Button colorScheme="teal" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
-            Add Package
+          <Button colorScheme="primary" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
+            Add Report
           </Button>
         </HStack>
         <Box>
@@ -329,10 +326,11 @@ function EffectReport() {
                         <Td>{item.realestate_id}</Td>
                       <Td>{item.name}</Td>
                       <Td>
-                        <Image src={item.photo} width={80} height={80} alt="image" />
+                        <img src={item.photo} width={80} height={80} alt="image" />
                       </Td>
                       <Td>
-                        <Text>{item.location}</Text>
+                        {/* <Text>{item.location}</Text> */}
+                        
                       </Td>
                       <Td>{item.number_of_floors}</Td>
                       <Td>
@@ -710,7 +708,7 @@ function EffectReport() {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </DashboardLayout>
+    </>
   );
 }
 
