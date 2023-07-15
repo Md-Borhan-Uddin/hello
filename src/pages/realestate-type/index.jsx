@@ -60,6 +60,7 @@ function RealestateType() {
     handleReset,
     handleBlur,
     touched,
+    resetForm
   } = useFormik({
     initialValues: inputdata,
     onSubmit: (values, { setSubmitting }) => {
@@ -68,8 +69,10 @@ function RealestateType() {
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
-          setTypes([...types,res.data])
+            console.log(res);
+            setTypes([...types,res.data])
+            resetForm();
+            onClose();
         })
         .catch((error) => {
           console.log(error);
@@ -96,8 +99,7 @@ function RealestateType() {
           // categoryHandleReset()
           // categoryOnClose();
         });
-      handleReset();
-      onClose();
+      
     },
   });
 
@@ -159,6 +161,7 @@ function RealestateType() {
     });
 
     onClose();
+    resetForm()
   };
 
   
@@ -185,6 +188,7 @@ function RealestateType() {
         duration: 2000,
         isClosable: true,
       });
+      
     })
     .catch((error) => {
       console.log(error);
