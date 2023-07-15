@@ -317,7 +317,7 @@ function UserList() {
         closeOnOverlayClick={false}
         title="Edit User"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
         deleteBtnLable="Delete"
         handleDelete={handleDelete}
       >
@@ -433,7 +433,7 @@ function UserList() {
         closeOnOverlayClick={false}
         title="Edit User"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
         saveBtnLabel={status ? "Deactivate" : "Active"}
         handleSave={statusHandler}
       >

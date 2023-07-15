@@ -66,7 +66,7 @@ const LinkItems = [
       { name: "Country/City", icon: FiTrendingUp, href:'/country-city', accessType:"admin" },
       { name: "Realestate-Type", icon: BiAddToQueue, href:'/realestate-type', accessType:"admin" },
       { name: "Category/Brand", icon: BiAnalyse, href:'/category-brand', accessType:"admin" },
-      { name: "Package", icon: FiPackage, href:'/package', accessType:"all" },
+      { name: "Package", icon: FiPackage, href:'/package', accessType:"admin" },
       { name: "Asset", icon: MdOutlineAssuredWorkload, href:'/asset', accessType:"all" },
       { name: "MemberShip", icon: MdOutlineCardMembership, href:'/membership', accessType:"all" },
       { name: "Schedule Maintenance ", icon: MdOutlineCardMembership, href:'/schedule-maintenance', accessType:"all" },

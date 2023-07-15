@@ -304,7 +304,7 @@ function Assert() {
         closeOnOverlayClick={false}
         title="Add Asset"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form
           className="space-y-3 md:space-y-4"

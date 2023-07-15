@@ -464,7 +464,7 @@ function CategoryBrand() {
         closeOnOverlayClick={false}
         title="Edit User"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form
           className="space-y-3 md:space-y-4"
@@ -530,7 +530,7 @@ function CategoryBrand() {
         closeOnOverlayClick={false}
         title="Edit User"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={brandHandleSubmit}>
           <FormControl isInvalid={brandErrors.name && brandTouched.name}>

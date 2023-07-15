@@ -35,23 +35,29 @@ import { getUser } from "../../../utility/authentication";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
 import { useSelector } from "react-redux";
 import { useChangePasswordMutation } from "../../../data/auth/service/authServices";
-import { changePasswordSchima, registrationSchima } from "../../../Schima";
+import {
+  changePasswordSchima,
+  registrationSchima,
+  userUpdateSchima,
+} from "../../../Schima";
 import { Formik, useFormik } from "formik";
+import { butifyErrors } from "../../../utility/utlity";
+
+
 
 function Profile() {
   const profileData = {
-    first_name: "",
-    last_name: "",
-    middle_name: "",
     username: "",
+    first_name: "",
+    middle_name: "",
+    last_name: "",
     email: "",
-    mobile_number: ""
+    mobile_number: "",
   };
   // const [user, setUser] = useState({})
   const { access_token } = getUser();
-  const { data:profile, isSuccess: isProfileSuccess } = useGetUserQuery(
-    access_token
-  );
+  const { data: profile, isSuccess: isProfileSuccess } =
+    useGetUserQuery(access_token);
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
@@ -69,33 +75,31 @@ function Profile() {
     setValues,
     isSubmitting,
   } = useFormik({
-    initialValues: profileData ,
-    validationSchema: registrationSchima ,
-    onSubmit: async (values, { setSubmitting }) => {
-      try {
-        const res = await registerUser(values);
-        if (res.data) {
+    initialValues: profileData,
+    validationSchema: userUpdateSchima,
+    onSubmit: (values, { setSubmitting }) => {
+      console.log("val", values);
+      axios
+        .patch(`${baseURL}/user-edit/${values.username}/`, values, {
+          headers: headers,
+        })
+        .then((res) => {
+          console.log(res);
           toast({
-            description: "Activation Link Send Your Email",
+            description: "Update Successfully",
             status: "success",
             duration: 3000,
             isClosable: true,
           });
-          // useDispatch(setToken(getUser()))
-          router("/login");
-        }
-        if (res.error) {
+        })
+        .catch((err) => {
+          console.log("errors", err);
           const e = butifyErrors(res.error.data);
           setcustomerror(e);
           window.scrollTo(0, 0);
-        }
-      } catch (err) {
-        console.log("errors", err);
-      }
+        });
     },
   });
-
-  
 
   const inputdata = {
     confirm_password: "",
@@ -108,8 +112,8 @@ function Profile() {
       middle_name: profile?.middle_name,
       username: profile?.username,
       email: profile?.email,
-      mobile_number: profile?.mobile_number
-    })
+      mobile_number: profile?.mobile_number,
+    });
   }, []);
   return (
     <>
@@ -138,10 +142,8 @@ function Profile() {
                   _hover={{ borderColor: "primary.300" }}
                 >
                   <InputGroup>
-                    <InputRightElement pointerEvents='none'>
-                    
-                    <HiOutlineCamera />
-                    
+                    <InputRightElement pointerEvents="none">
+                      <HiOutlineCamera />
                     </InputRightElement>
                     <Input />
                   </InputGroup>
@@ -201,243 +203,124 @@ function Profile() {
                 />
                 <TabPanels>
                   <TabPanel>
-                    <form
-                      className="space-y-3 md:space-y-4"
-                      onSubmit={handleSubmit}
-                    >
-                      {customerrors && (
-                        <>
-                          {customerrors.map((item, i) => (
-                            <p key={i} className="text-red-600">
-                              {item}
-                            </p>
-                          ))}
-                        </>
-                      )}
-                      <div className="grid md:grid-cols-2 md:gap-3">
-                        <FormControl
-                          isInvalid={errors.username && touched.username}
-                        >
-                          <FormLabel>Username</FormLabel>
-                          <Input
-                            type="text"
-                            name="username"
-                            placeholder="username"
-                            value={values.username}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.username && touched.username ? (
-                            <FormErrorMessage>
-                              {errors.username}.
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-
-                        <FormControl
-                          isInvalid={errors.first_name && touched.first_name}
-                        >
-                          <FormLabel>First Name</FormLabel>
-                          <Input
-                            type="text"
-                            name="first_name"
-                            placeholder="First Name"
-                            value={values.first_name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.first_name && touched.first_name ? (
-                            <FormErrorMessage>
-                              {errors.first_name}.
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </div>
-                      <div className="grid md:grid-cols-2 md:gap-3">
-                        <FormControl
-                          isInvalid={errors.middle_name && touched.middle_name}
-                        >
-                          <FormLabel>Middle Name</FormLabel>
-                          <Input
-                            type="text"
-                            name="middle_name"
-                            placeholder="Middle Name"
-                            value={values.middle_name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.middle_name && touched.middle_name ? (
-                            <FormErrorMessage>
-                              {errors.middle_name}.
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                        <FormControl
-                          isInvalid={errors.last_name && touched.last_name}
-                        >
-                          <FormLabel>Last Name</FormLabel>
-                          <Input
-                            type="text"
-                            name="last_name"
-                            placeholder="Last Name"
-                            value={values.last_name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.last_name && touched.last_name ? (
-                            <FormErrorMessage>
-                              {errors.last_name}.
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </div>
-                      <div className="grid md:grid-cols-2 md:gap-3">
-                        <FormControl isInvalid={errors.email && touched.email}>
-                          <FormLabel>Email</FormLabel>
-                          <Input
-                            type="text"
-                            name="email"
-                            placeholder="Email"
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.email && touched.email ? (
-                            <FormErrorMessage>{errors.email}.</FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                        <FormControl
-                          isInvalid={
-                            errors.mobile_number && touched.mobile_number
-                          }
-                        >
-                          <FormLabel>Mobile Number</FormLabel>
-                          <Input
-                            type="text"
-                            name="mobile_number"
-                            placeholder="Mobile Number"
-                            value={values.mobile_number}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                          {errors.mobile_number && touched.mobile_number ? (
-                            <FormErrorMessage>
-                              {errors.mobile_number}.
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </div>
-
-                      <button
-                        type="submit"
-                        className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                      >
-                        Update
-                      </button>
-                      
-                    </form>
-
-
                     <Box bg={"white"} p={"0.5rem"}>
-              <Text fontSize={"2xl"} fontWeight={"semibold"}>
-                Change password
-              </Text>
-
-              <Formik
-                initialValues={inputdata}
-                validationSchema={changePasswordSchima}
-                onSubmit={async (values, { setSubmitting, resetForm }) => {
-                  const res = await changepassword(values);
-                  if (res.data) {
-                    console.log(res.data);
-
-                    toast({
-                      description: `${res.data.message}`,
-                      status: "success",
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                    resetForm();
-                  }
-                  if (res.error) {
-                    const e = butifyErrors(res.error.data);
-                    console.log(res.error);
-                    setcustomerror(e);
-                    window.scrollTo(0, 0);
-                  }
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit:passwordSubmit,
-                  isSubmitting,
-                }) => (
-                  <form onSubmit={passwordSubmit}>
-                    {customerrors && (
-                      <>
-                        {customerrors.map((item, i) => (
-                          <p key={i} className="text-red-600">
-                            {item}
-                          </p>
-                        ))}
-                      </>
-                    )}
-                    <FormControl
-                      isInvalid={errors.new_password && touched.new_password}
-                    >
-                      <FormLabel>New Password</FormLabel>
-                      <Input
-                        type="password"
-                        name="new_password"
-                        placeholder="new password"
-                        value={values.new_password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                      <UpdateForm 
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        handleSubmit={handleSubmit}
+                        setValues={setValues}
+                        isSubmitting={isSubmitting}
+                        customerrors={customerrors}
                       />
-                      {errors.new_password && touched.new_password ? (
-                        <FormErrorMessage>
-                          {errors.new_password}.
-                        </FormErrorMessage>
-                      ) : null}
-                    </FormControl>
+                      <Text fontSize={"2xl"} fontWeight={"semibold"}>
+                        Change password
+                      </Text>
 
-                    <FormControl
-                      isInvalid={
-                        errors.confirm_password && touched.confirm_password
-                      }
-                    >
-                      <FormLabel>Confirm Password</FormLabel>
-                      <Input
-                        type="password"
-                        name="confirm_password"
-                        placeholder="confirm password"
-                        value={values.confirm_password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {errors.confirm_password && touched.confirm_password ? (
-                        <FormErrorMessage>
-                          {errors.confirm_password}.
-                        </FormErrorMessage>
-                      ) : null}
-                    </FormControl>
+                      <Formik
+                        initialValues={inputdata}
+                        validationSchema={changePasswordSchima}
+                        onSubmit={async (
+                          values,
+                          { setSubmitting, resetForm }
+                        ) => {
+                          const res = await changepassword(values);
+                          if (res.data) {
+                            console.log(res.data);
 
-                    <div className="flex flex-col-reverse mt-4 gap-4 justify-between items-center sm:flex-row">
-                      <button
-                        type="submit"
-                        className="text-secondary bg-[rgb(34,220,118)] hover:bg-primary font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+                            toast({
+                              description: `${res.data.message}`,
+                              status: "success",
+                              duration: 3000,
+                              isClosable: true,
+                            });
+                            resetForm();
+                          }
+                          if (res.error) {
+                            const e = butifyErrors(res.error.data);
+                            console.log(res.error);
+                            setcustomerror(e);
+                            window.scrollTo(0, 0);
+                          }
+                        }}
                       >
-                        change
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </Formik>
-            </Box>
+                        {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit: passwordSubmit,
+                          isSubmitting,
+                        }) => (
+                          <form onSubmit={passwordSubmit}>
+                            {customerrors && (
+                              <>
+                                {customerrors.map((item, i) => (
+                                  <p key={i} className="text-red-600">
+                                    {item}
+                                  </p>
+                                ))}
+                              </>
+                            )}
+                            <FormControl
+                              isInvalid={
+                                errors.new_password && touched.new_password
+                              }
+                            >
+                              <FormLabel>New Password</FormLabel>
+                              <Input
+                                type="password"
+                                name="new_password"
+                                placeholder="new password"
+                                value={values.new_password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                              {errors.new_password && touched.new_password ? (
+                                <FormErrorMessage>
+                                  {errors.new_password}.
+                                </FormErrorMessage>
+                              ) : null}
+                            </FormControl>
+
+                            <FormControl
+                              isInvalid={
+                                errors.confirm_password &&
+                                touched.confirm_password
+                              }
+                            >
+                              <FormLabel>Confirm Password</FormLabel>
+                              <Input
+                                type="password"
+                                name="confirm_password"
+                                placeholder="confirm password"
+                                value={values.confirm_password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                              {errors.confirm_password &&
+                              touched.confirm_password ? (
+                                <FormErrorMessage>
+                                  {errors.confirm_password}.
+                                </FormErrorMessage>
+                              ) : null}
+                            </FormControl>
+
+                            <div className="flex flex-col-reverse mt-4 gap-4 justify-between items-center sm:flex-row">
+                              <button
+                                type="submit"
+                                className="text-secondary bg-[rgb(34,220,118)] hover:bg-primary font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+                              >
+                                change
+                              </button>
+                            </div>
+                          </form>
+                        )}
+                      </Formik>
+                    </Box>
                   </TabPanel>
                   <TabPanel>
                     <p>Membership</p>
@@ -445,7 +328,6 @@ function Profile() {
                 </TabPanels>
               </Tabs>
             </Box>
-            
           </Box>
         </HStack>
       </Box>
@@ -454,3 +336,132 @@ function Profile() {
 }
 
 export default RequireAuth(Profile);
+
+
+
+
+
+const UpdateForm = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+  handleBlur,
+  handleSubmit,
+  setValues,
+  isSubmitting,
+  customerrors
+})=> {
+  console.log(errors)
+  return (
+    <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
+      {customerrors && (
+        <>
+          {customerrors.map((item, i) => (
+            <p key={i} className="text-red-600">
+              {item}
+            </p>
+          ))}
+        </>
+      )}
+      <div className="grid md:grid-cols-2 md:gap-3">
+        <FormControl isInvalid={errors.username && touched.username}>
+          <FormLabel>Username</FormLabel>
+          <Input
+            type="text"
+            name="username"
+            placeholder="username"
+            value={values.username}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.username && touched.username ? (
+            <FormErrorMessage>{errors.username}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+
+        <FormControl isInvalid={errors.first_name && touched.first_name}>
+          <FormLabel>First Name</FormLabel>
+          <Input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={values.first_name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.first_name && touched.first_name ? (
+            <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+      </div>
+      <div className="grid md:grid-cols-2 md:gap-3">
+        <FormControl isInvalid={errors.middle_name && touched.middle_name}>
+          <FormLabel>Middle Name</FormLabel>
+          <Input
+            type="text"
+            name="middle_name"
+            placeholder="Middle Name"
+            value={values.middle_name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.middle_name && touched.middle_name ? (
+            <FormErrorMessage>{errors.middle_name}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+        <FormControl isInvalid={errors.last_name && touched.last_name}>
+          <FormLabel>Last Name</FormLabel>
+          <Input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={values.last_name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.last_name && touched.last_name ? (
+            <FormErrorMessage>{errors.last_name}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+      </div>
+      <div className="grid md:grid-cols-2 md:gap-3">
+        <FormControl isInvalid={errors.email && touched.email}>
+          <FormLabel>Email</FormLabel>
+          <Input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.email && touched.email ? (
+            <FormErrorMessage>{errors.email}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+        <FormControl isInvalid={errors.mobile_number && touched.mobile_number}>
+          <FormLabel>Mobile Number</FormLabel>
+          <Input
+            type="text"
+            name="mobile_number"
+            placeholder="Mobile Number"
+            value={values.mobile_number}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.mobile_number && touched.mobile_number ? (
+            <FormErrorMessage>{errors.mobile_number}.</FormErrorMessage>
+          ) : null}
+        </FormControl>
+      </div>
+
+      <button
+        type="submit"
+        className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      >
+        Update
+      </button>
+    </form>
+  );
+}

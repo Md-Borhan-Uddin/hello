@@ -415,7 +415,7 @@ function countryCity() {
         closeOnOverlayClick={false}
         title="Edit User"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form
           className="space-y-3 md:space-y-4"
@@ -463,7 +463,7 @@ function countryCity() {
         closeOnOverlayClick={false}
         title="Edit City"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={cityHandleSubmit}>
             <FormControl isInvalid={citiesErrors.country_id}>

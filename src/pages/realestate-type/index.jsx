@@ -289,7 +289,7 @@ function RealestateType() {
         closeOnOverlayClick={false}
         title="Realestate Type"
         isFooter={true}
-        cancelBtnLabel="Cancle"
+        cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <FormControl isInvalid={errors.name && touched.name}>
