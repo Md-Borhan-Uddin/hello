@@ -25,7 +25,7 @@ import SingleProperty from './pages/property-list/single-property'
 import { Flex, Spinner } from '@chakra-ui/react'
 import ForgetPassword from './pages/account/forget-password'
 import PasswordConfirm from './pages/account/forget-password/password-confirm'
-
+import RealestateType from './pages/realestate-type'
 
 function App() {
   let access_token;
@@ -85,6 +85,7 @@ function App() {
         <Route path='/asset' element={<Assert />} />
         <Route path='/membership' element={<Membership />} />
         <Route path='/user-list' element={<UserList />}/>
+        <Route path='/realestate-type' element={<RealestateType />} />
         
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />
       </Route>

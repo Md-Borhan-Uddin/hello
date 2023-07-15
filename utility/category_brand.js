@@ -63,7 +63,6 @@ export const editItem = (
       headers: headers,
     })
     .then((res) => {
-      console.log(res);
       const { data } = res;
       state.map((item) => {
         if (item.id == data.id) {

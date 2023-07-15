@@ -41,7 +41,7 @@ import {
 } from "react-icons/fi";
 import { BiAnalyse } from 'react-icons/bi'
 import { MdOutlineAssuredWorkload, MdOutlineCardMembership } from 'react-icons/md'
-import { BiMessageAltAdd,BiUser } from 'react-icons/bi';
+import { BiMessageAltAdd,BiUser, BiAddToQueue } from 'react-icons/bi';
 
 import { Link, useNavigate } from "react-router-dom/";
 
@@ -64,6 +64,7 @@ const LinkItems = [
     lable: "Settings",
     children: [
       { name: "Country/City", icon: FiTrendingUp, href:'/country-city', accessType:"admin" },
+      { name: "Realestate-Type", icon: BiAddToQueue, href:'/realestate-type', accessType:"admin" },
       { name: "Category/Brand", icon: BiAnalyse, href:'/category-brand', accessType:"admin" },
       { name: "Package", icon: FiPackage, href:'/package', accessType:"all" },
       { name: "Asset", icon: MdOutlineAssuredWorkload, href:'/asset', accessType:"all" },
