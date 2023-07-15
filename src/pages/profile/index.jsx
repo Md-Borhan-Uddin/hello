@@ -43,8 +43,6 @@ import {
 import { Formik, useFormik } from "formik";
 import { butifyErrors } from "../../../utility/utlity";
 
-
-
 function Profile() {
   const profileData = {
     username: "",
@@ -55,6 +53,7 @@ function Profile() {
     mobile_number: "",
   };
   // const [user, setUser] = useState({})
+  
   const { access_token } = getUser();
   const { data: profile, isSuccess: isProfileSuccess } =
     useGetUserQuery(access_token);
@@ -73,6 +72,7 @@ function Profile() {
     handleBlur,
     handleSubmit,
     setValues,
+    setFieldValue,
     isSubmitting,
   } = useFormik({
     initialValues: profileData,
@@ -204,7 +204,7 @@ function Profile() {
                 <TabPanels>
                   <TabPanel>
                     <Box bg={"white"} p={"0.5rem"}>
-                      <UpdateForm 
+                      <UpdateForm
                         values={values}
                         errors={errors}
                         touched={touched}
@@ -214,6 +214,7 @@ function Profile() {
                         setValues={setValues}
                         isSubmitting={isSubmitting}
                         customerrors={customerrors}
+                        setFieldValue={setFieldValue}
                       />
                       <Text fontSize={"2xl"} fontWeight={"semibold"}>
                         Change password
@@ -337,10 +338,6 @@ function Profile() {
 
 export default RequireAuth(Profile);
 
-
-
-
-
 const UpdateForm = ({
   values,
   errors,
@@ -349,10 +346,14 @@ const UpdateForm = ({
   handleBlur,
   handleSubmit,
   setValues,
-  isSubmitting,
-  customerrors
-})=> {
-  console.log(errors)
+  setFieldValue,
+  customerrors,
+}) => {
+  console.log(errors);
+  const [midname, setMidname] = useState('')
+  useEffect(()=>{
+    setFieldValue('middle_name',midname)
+  },[midname])
   return (
     <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
       {customerrors && (
@@ -402,8 +403,8 @@ const UpdateForm = ({
             type="text"
             name="middle_name"
             placeholder="Middle Name"
-            value={values.middle_name}
-            onChange={handleChange}
+            onChange={(e)=>setMidname(e.target.value)}
+            value={midname}
             onBlur={handleBlur}
           />
           {errors.middle_name && touched.middle_name ? (
@@ -464,4 +465,4 @@ const UpdateForm = ({
       </button>
     </form>
   );
-}
+};
