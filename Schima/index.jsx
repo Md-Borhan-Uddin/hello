@@ -194,7 +194,7 @@ export const categoryANDBrandSchima = Yup.object({
 })
 
 export const countrySchima = Yup.object({
-  name:Yup.string(),
+  name:Yup.string().max(20),
 })
 
 export const citySchima = Yup.object({
