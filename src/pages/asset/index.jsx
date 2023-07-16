@@ -56,13 +56,13 @@ function Assert() {
   };
 
   const {
-    values: values,
-    errors: errors,
-    setValues: setValues,
-    handleChange: handleChange,
-    handleSubmit: handleSubmit,
-    handleReset: handleReset,
-    touched: touched,
+    values,
+    errors,
+    setValues,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    touched
   } = useFormik({
     initialValues: inputdata,
     onSubmit: (values, { setSubmitting }) => {
@@ -74,6 +74,7 @@ function Assert() {
         .then((res) => {
           console.log(res);
           // setBrands([...brands, res.data]);
+          setAssets([...assets,res.data])
           
         })
         .catch((error) => {
@@ -109,114 +110,80 @@ function Assert() {
 
   useEffect(() => {
     getObjects("/asset/", headers, setAssets);
+    getObjects("/assert-type/", headers, setCategories);
+    getObjects("/assert-brand/", headers, setBrands);
     
   }, []);
   
 
   const handleAdd = ()=>{
-    getObjects("/assert-type/", headers, setCategories);
-    getObjects("/assert-brand/", headers, setBrands);
+    // getObjects("/assert-type/", headers, setCategories);
+    // getObjects("/assert-brand/", headers, setBrands);
     handleReset();
     setIsEdit(false); 
     onOpen()
   }
 
-  const categoryEdit = (e) => {
+  const assetEdit = (e) => {
     setIsEdit(true);
     const { value } = e.target;
     setId(value)
-    const cat = categories.filter((e) => e.id == value);
-    categoryOnOpen();
-    categorySetValues({
-      name: cat[0]?.name,
-      is_active: cat[0]?.is_active,
+    const cat = assets.filter((e) => e.id == value);
+    onOpen();
+    setValues({
+      brand_id: cat[0]?.brand.id,
+      type_id: cat[0]?.type.id,
     });
   };
 
-  const brandEdit = (e) => {
-    setIsEdit(true);
-    const { value } = e.target;
-    setId(value)
-    const cat = brands.filter((e) => e.id == value);
-
-    brandOnOpen();
-    brandSetValues({
-      name: cat[0]?.name,
-      is_active: cat[0]?.is_active,
-    });
-  };
-
-  const brandUpdate = (e) => {
-    e.preventDefault();
-    // const { value } = brandid.current;
-    const res = editItem(
-      "/assert-brand/",
-      headers,
-      id,
-      brandValues,
-      brandSetValues,
-      brands,
-      toast
-    );
-    
-    brandOnClose();
-  };
-
-  const categoryUpdate = (e) => {
+ 
+  const assetUpdate = (e) => {
     e.preventDefault();
     // const { value } = categoryId.current;
-    const res = editItem(
-      "/assert-type/",
-      headers,
-      id,
-      categoryValues,
-      categorySetValues,
-      categorys,
-      toast
-    );
+    axios
+    .patch(`${baseURL}/asset/${id}/`, values, {
+      headers: headers,
+    })
+    .then((res) => {
+      const { data } = res;
+      
+      assets.map((item) => {
+        if (item.id == data.id) {
+          item.brand.name = data.brand.name;
+          item.type.name = data.type.name;
+        }
+      });
+      onClose();
+      toast({
+        title: "Successfully Update",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    })
+    .catch((error) => {
+      toast({
+        title: "Something wrong try again",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      console.log(error);
+    });
     
-    categoryOnClose();
-  };
-
-  const statusHandler = (e) => {
-    const { value, checked } = e.target;
-    setStatus(!checked);
-    if (value) {
-      statusOnOpen();
-      fetchdata(value, {});
-    } else {
-      const { value } = userid.current;
-      const { checked } = statusCheck.current;
-      fetchdata(value, { is_active: !checked }, true);
-      statusOnClose();
-      window.location.reload();
-    }
-  };
-
-  const categoryDelete = (e) => {
-    const { value } = e.target;
-
-    const res = deleteItem(
-      "/assert-type/",
-      headers,
-      value,
-      setCategorys,
-      categorys,
-      toast
-    );
     
   };
 
-  const brandDelete = (e) => {
+ 
+  const assetDelete = (e) => {
     const { value } = e.target;
 
-    const res = deleteItem("/assert-brand/", headers, value, setBrands, brands,toast);
+    const res = deleteItem("/asset/", headers, value, setAssets, assets,toast);
     
   };
   return (
     <>
-      <Flex gap={3}>
-      <div className="relative overflow-x-auto w-1/2 mt-3 pr-3">
+      <div className="relative overflow-x-auto mt-3 pr-3">
           <Flex
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -267,7 +234,7 @@ function Assert() {
                       <HStack alignItems={"center"} justifyContent={"center"}>
                         <Button
                           aria-label="editbtn"
-                          onClick={brandEdit}
+                          onClick={assetEdit}
                           value={item.id}
                           colorScheme="teal"
                           icon={<BiEdit />}
@@ -278,7 +245,7 @@ function Assert() {
                         <Button
                           aria-label="deletebtn"
                           icon={<BsTrash3 />}
-                          onClick={brandDelete}
+                          onClick={assetDelete}
                           value={item.id}
                           colorScheme="red"
                         >
@@ -295,14 +262,13 @@ function Assert() {
         <div className="relative overflow-x-auto w-1/2 mt-3 pr-3">
           
         </div>
-      </Flex>
 
       {/* category modal */}
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
         closeOnOverlayClick={false}
-        title="Add Asset"
+        title="Asset Form"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >
@@ -340,7 +306,7 @@ function Assert() {
           {isEdit ? (
             <button
               className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-              onClick={categoryUpdate}
+              onClick={assetUpdate}
             >
               Update
             </button>

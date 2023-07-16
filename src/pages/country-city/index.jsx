@@ -9,10 +9,9 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Icon,
-  IconButton,
   Input,
   Select,
+  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -26,11 +25,13 @@ import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, editItem, getObjects } from "../../../utility/country_city";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import { FcApproval } from "react-icons/fc";
 
 
 
 const countrydata = {
   name: "",
+  is_active: false
 };
 
 const citydata = {
@@ -188,6 +189,7 @@ function countryCity() {
     countryOnOpen();
     countriesSetValues({
       name: cat[0]?.name,
+      is_active:cat[0]?.is_active
     });
   };
 
@@ -201,14 +203,15 @@ function countryCity() {
     citySetValues({
       name: cat[0]?.name,
       country_id: cat[0]?.country.id,
+      is_active:cat[0]?.is_active
     });
   };
 
   const cityUpdate = (e) => {
     e.preventDefault();
-    // const { value } = citiesid.current;
+    const { value } = e.target;
     const res = editItem(
-      "/city/",
+      `/city/edit/`,
       headers,
       id,
       citiesValues,
@@ -247,14 +250,15 @@ function countryCity() {
       countries,
       toast
     );
-    setCities(cities)
+    const obj = cities.filter(item=>item.country.id!=value)
+    setCities(obj)
     
   };
 
   const cityDelete = (e) => {
     const { value } = e.target;
 
-    const res = deleteItem("/city/", headers, value, setCities, cities,toast);
+    const res = deleteItem(`/city/delete/`, headers, value, setCities, cities,toast);
     
   };
   return (
@@ -288,6 +292,9 @@ function countryCity() {
                   name
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -299,12 +306,16 @@ function countryCity() {
                     className="bg-white text-center border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     key={i}
                   >
-                    <th
+                    <td
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {item.name}
-                    </th>
+                    </td>
+                    <td className="px-6 py-4 flex items-center justify-center">
+                      {item.is_active? <FcApproval />:<Switch disabled/>}
+                        
+                    </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
                         <Button
@@ -359,6 +370,9 @@ function countryCity() {
                   country
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -375,6 +389,10 @@ function countryCity() {
                       className="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {item.name}
+                    </td>
+                    <td className="px-6 py-4 flex items-center justify-center">
+                      {item.is_active? <FcApproval />:<Switch disabled/>}
+                        
                     </td>
                     <td className="px-6 py-4">
                       {item.country.name}
@@ -413,7 +431,7 @@ function countryCity() {
         isOpen={countryIsOpen}
         onClose={countryOnClose}
         closeOnOverlayClick={false}
-        title="Edit Country"
+        title="Country Form"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >
@@ -435,6 +453,22 @@ function countryCity() {
             ) : null}
             {customerror.name ? (
               <p className="text-red-600">{customerror.name.message}.</p>
+            ) : null}
+          </FormControl>
+          <FormControl isInvalid={countriesErrors.is_active}>
+            <Checkbox
+              onChange={countryHandleChange}
+              name="is_active"
+              isChecked={countriesValues.is_active ? countriesValues.is_active : false}
+              value={countriesValues.is_active}
+            >
+              Active
+            </Checkbox>
+            {countriesErrors.is_active && countryTouched.is_active ? (
+              <FormErrorMessage>{countriesErrors.is_active}.</FormErrorMessage>
+            ) : null}
+            {customerror.is_active ? (
+              <p className="text-red-600">{customerror.is_active.message}.</p>
             ) : null}
           </FormControl>
           {isEdit ? (
@@ -466,19 +500,19 @@ function countryCity() {
         cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={cityHandleSubmit}>
-            <FormControl isInvalid={citiesErrors.country_id}>
+            <FormControl isInvalid={citiesErrors.country_id&&cityTouched.country_id}>
                 <Select placeholder='Select Country' name="country_id" value={citiesValues.country_id} onChange={cityHandleChange}>
                     {countries.map((item)=><option key={item.id} value={item.id}>{item.name}</option>)}
                     
                 </Select>
-                {citiesErrors.country && citiesTouched.country ? (
+                {citiesErrors.country && cityTouched.country ? (
                 <FormErrorMessage>{citiesErrors.country}.</FormErrorMessage>
                 ) : null}
                 {customerror.country ? (
                 <p className="text-red-600">{customerror.country.message}.</p>
                 ) : null}
           </FormControl>
-          <FormControl isInvalid={citiesErrors.name}>
+          <FormControl isInvalid={citiesErrors.name&&cityTouched.name}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
@@ -492,6 +526,23 @@ function countryCity() {
             ) : null}
             {customerror.name ? (
               <p className="text-red-600">{customerror.name.message}.</p>
+            ) : null}
+          </FormControl>
+
+          <FormControl isInvalid={citiesErrors.is_active&&cityTouched}>
+            <Checkbox
+              onChange={cityHandleChange}
+              name="is_active"
+              isChecked={citiesValues.is_active ? citiesValues.is_active : false}
+              value={citiesValues.is_active}
+            >
+              Active
+            </Checkbox>
+            {citiesErrors.is_active && cityTouched.is_active ? (
+              <FormErrorMessage>{citiesErrors.is_active}.</FormErrorMessage>
+            ) : null}
+            {customerror.is_active ? (
+              <p className="text-red-600">{customerror.is_active.message}.</p>
             ) : null}
           </FormControl>
           

@@ -64,14 +64,14 @@ export const editItem = (
     })
     .then((res) => {
       const { data } = res;
+      
       state.map((item) => {
         if (item.id == data.id) {
           item.name = data.name;
           item.is_active = data.is_active;
         }
       });
-      
-      setState(state);
+      console.log("state", state)
       toast({
         title: "Successfully Update",
         status: "success",

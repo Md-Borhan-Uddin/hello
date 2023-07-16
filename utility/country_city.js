@@ -69,6 +69,7 @@ export const editItem = (
         if (item.id == data.id) {
           item.name = data.name;
           item.country = data.country;
+          item.is_active = data.is_active
         }
       });
       

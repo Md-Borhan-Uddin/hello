@@ -9,9 +9,8 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Icon,
-  IconButton,
   Input,
+  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -27,6 +26,7 @@ import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import { FcApproval } from "react-icons/fc";
 
 // const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
@@ -412,18 +412,9 @@ function CategoryBrand() {
                     >
                       {item.name}
                     </td>
-                    <td className="px-6 py-4">
-                      <label className="relative inline-flex items-center mb-4 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value={item.is_active}
-                          onChange={statusHandler}
-                          className="sr-only peer"
-                          checked={item.is_active}
-                          ref={statusCheck}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                      </label>
+                    <td className="px-6 py-4 flex items-center justify-center">
+                      {item.is_active? <FcApproval />:<Switch disabled/>}
+                        
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -462,7 +453,7 @@ function CategoryBrand() {
         isOpen={categoryIsOpen}
         onClose={categoryOnClose}
         closeOnOverlayClick={false}
-        title="Edit Category"
+        title="Category Form"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >
@@ -528,7 +519,7 @@ function CategoryBrand() {
         isOpen={brandIsOpen}
         onClose={brandOnClose}
         closeOnOverlayClick={false}
-        title="Edit Brand"
+        title="Brand From"
         isFooter={true}
         cancelBtnLabel="Cancel"
       >

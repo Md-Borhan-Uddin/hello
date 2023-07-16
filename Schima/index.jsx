@@ -189,17 +189,19 @@ export const propertyEditSchima = Yup.object({
 
 
 export const categoryANDBrandSchima = Yup.object({
-  name:Yup.string().max(20),
+  name:Yup.string().max(20).required('Must Fill Name Field'),
   is_active: Yup.bool().optional()
 })
 
 export const countrySchima = Yup.object({
-  name:Yup.string().max(20),
+  name:Yup.string().max(20).required('Must Fill Name Field'),
+  is_active:Yup.bool().optional()
 })
 
 export const citySchima = Yup.object({
-  name:Yup.string(),
+  name:Yup.string().max(20).required('Must Fill Name Field'),
   country_id:Yup.number(),
+  is_active:Yup.bool().optional()
 })
 
 
