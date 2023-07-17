@@ -184,10 +184,7 @@ const AddState = () => {
     handleChange(e);
     const { value } = e.target;
     setFieldValue("country", value);
-    // // const state = country_state.find((val)=>val.country_name==value).states
-    // let st = [...city]
-    // // state.map(item=>st.push({key:item.state_name,value:item.state_name}))
-    // setCity(st)
+
 
     axios
       .get(`${baseURL}/city/${value}/`, { headers: headers })

@@ -16,6 +16,7 @@ import Image from "next/image";
 import DefaultLayout from "../DefaultLayout";
 import RequireAuth from "@/components/auth/TokenExpaireCheck";
 import { getObjects } from "@/utility/property";
+import { blobUrlToFile } from "../../../utility/utlity";
 
 
 
@@ -37,18 +38,7 @@ function EditState() {
   }
   
   
-  const blobUrlToFile = (blobUrl) => new Promise((resolve) => {
-    fetch(blobUrl).then((res) => {
-      res.blob().then((blob) => {
-        // please change the file.extension with something more meaningful
-        // or create a utility function to parse from URL
-        const file = new File([blob], 'image.jpeg', {type: blob.type})
-        resolve(file)
-        return file
-      })
-    })
-    
-  })
+  
   
   const inputField = {
     name : "",

@@ -175,6 +175,42 @@ function CategoryBrand() {
     },
   });
 
+  const fetchdata = (id, values, message) => {
+    
+    axios
+      .patch(baseUrl.defaults.baseURL + `/user-edit/${id}/`, values, {
+        headers: headers,
+      })
+      .then((res) => {
+        console.log(res);
+        
+        const obj = user.filter(item=>item.username!=res.data.username)
+        
+        setUser([...obj,res.data])
+        if (message) {
+          toast({
+            title: "update Successfully",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((error) => {
+        // setcustomerror(error.response.data);
+        console.log(error);
+        if (error.response.status == 401) {
+          toast({
+            title: "you are Not Login Please login",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          router("/login");
+        }
+      });
+  };
+
 
   useEffect(() => {
     getObjects("/assert-type/", headers, setCategorys);
@@ -238,21 +274,30 @@ function CategoryBrand() {
     categoryOnClose();
   };
 
-  const statusHandler = (e) => {
+  const categoryStatus = (e) => {
     const { value, checked } = e.target;
-    // setStatus(!checked);
-    if (value) {
-      console.log("data");
-      // statusOnOpen();
-      fetchdata(value, {});
-    } else {
-      const { value } = userid.current;
-      const { checked } = statusCheck.current;
-      fetchdata(value, { is_active: !checked }, true);
-      // statusOnClose();
-      // console.log("save", e);
-      window.location.reload();
-    }
+    const res = editItem(
+      "/assert-type/",
+      headers,
+      value,
+      {is_active:checked},
+      categorySetValues,
+      categorys,
+      toast
+    );
+  };
+
+  const brandStatus = (e) => {
+    const { value, checked } = e.target;
+    const res = editItem(
+      "/assert-brand/",
+      headers,
+      value,
+      {is_active:checked},
+      brandSetValues,
+      brands,
+      toast
+    );
   };
 
   const categoryDelete = (e) => {
@@ -327,17 +372,12 @@ function CategoryBrand() {
                       {item.name}
                     </th>
                     <td className="px-6 py-4">
-                      <label className="relative inline-flex items-center mb-4 cursor-pointer">
-                        <input
-                          type="checkbox"
+                      
+                        <Switch
                           value={item.id}
-                          onChange={statusHandler}
-                          className="sr-only peer"
-                          checked={item.is_active}
-                          ref={statusCheck}
+                          onChange={categoryStatus}
+                          isChecked={item.is_active}
                         />
-                        <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                      </label>
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -413,7 +453,11 @@ function CategoryBrand() {
                       {item.name}
                     </td>
                     <td className="px-6 py-4 flex items-center justify-center">
-                      {item.is_active? <FcApproval />:<Switch disabled/>}
+                    <Switch
+                          value={item.id}
+                          onChange={brandStatus}
+                          isChecked={item.is_active}
+                        />
                         
                     </td>
                     <td className="px-6 py-4">

@@ -16,7 +16,7 @@ import AddState from './pages/add-real-estate'
 import CategoryBrand from './pages/category-brand'
 import CountryCity from './pages/country-city'
 import Package from './pages/package'
-import Assert from './pages/asset'
+import Asset from './pages/asset'
 import Membership from './pages/membership'
 import ScheduleMaintenance from './pages/schedule-maintenance'
 import Profile from './pages/profile'
@@ -27,6 +27,7 @@ import ForgetPassword from './pages/account/forget-password'
 import PasswordConfirm from './pages/account/forget-password/password-confirm'
 import RealestateType from './pages/realestate-type'
 import EffectivReport from './pages/effectiveness-report'
+import Assets from './pages/assets'
 
 
 
@@ -87,10 +88,11 @@ function App() {
         <Route path='/category-brand' element={<CategoryBrand />} />
         <Route path='/country-city' element={<CountryCity />} />
         <Route path='/package' element={<Package />} />
-        <Route path='/asset' element={<Assert />} />
+        <Route path='/asset' element={<Asset />} />
         <Route path='/membership' element={<Membership />} />
         <Route path='/user-list' element={<UserList />}/>
         <Route path='/realestate-type' element={<RealestateType />} />
+        <Route path='/add-assets' element={<Assets />} />
         <Route path='/add-real-estate' element={<AddState />} />
         <Route path='/effectiveness-report' element={<EffectivReport />} />
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />

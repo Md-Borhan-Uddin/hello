@@ -42,7 +42,7 @@ import {
 import { BiAnalyse } from 'react-icons/bi'
 import { MdOutlineAssuredWorkload, MdOutlineCardMembership } from 'react-icons/md'
 import { BiMessageAltAdd,BiUser, BiAddToQueue } from 'react-icons/bi';
-
+import { BsCassette } from 'react-icons/bs';
 import { Link, useNavigate } from "react-router-dom/";
 
 import { deletetUser } from "../../utility/authentication";
@@ -56,6 +56,7 @@ const LinkItems = [
     children: [
       { name: "Home", icon: FiHome, href:'/', accessType:"all" },
       { name: "Add Realestate", icon: BiMessageAltAdd, href:'/add-real-estate', accessType:"all" },
+      { name: "Add Assets", icon: BsCassette, href:'/add-assets', accessType:"all" },
       { name: "Effectiveness Report", icon: FiSettings, href:'/effectiveness-report', accessType:"all" },
       { name: "User List", icon: BiUser, href:'/user-list', accessType:"admin" },
     ],
@@ -67,7 +68,7 @@ const LinkItems = [
       { name: "Realestate-Type", icon: BiAddToQueue, href:'/realestate-type', accessType:"admin" },
       { name: "Category/Brand", icon: BiAnalyse, href:'/category-brand', accessType:"admin" },
       { name: "Package", icon: FiPackage, href:'/package', accessType:"admin" },
-      { name: "Asset", icon: MdOutlineAssuredWorkload, href:'/asset', accessType:"all" },
+      { name: "Asset", icon: MdOutlineAssuredWorkload, href:'/asset', accessType:"admin" },
       { name: "MemberShip", icon: MdOutlineCardMembership, href:'/membership', accessType:"all" },
       { name: "Schedule Maintenance ", icon: MdOutlineCardMembership, href:'/schedule-maintenance', accessType:"all" },
     ],

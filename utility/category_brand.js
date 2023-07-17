@@ -65,13 +65,14 @@ export const editItem = (
     .then((res) => {
       const { data } = res;
       
-      state.map((item) => {
+      const obj = state.map((item) => {
         if (item.id == data.id) {
           item.name = data.name;
           item.is_active = data.is_active;
         }
+        return item
       });
-      console.log("state", state)
+      setState(obj)
       toast({
         title: "Successfully Update",
         status: "success",

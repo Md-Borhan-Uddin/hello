@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, useToast } from "@chakra-ui/react";
+import { Box, Switch, useToast } from "@chakra-ui/react";
 import SearchBox from "../../../components/SearchBox";
 import CustomModal from "../../../components/UserEditModal";
 import {
@@ -42,6 +42,7 @@ function UserList() {
   const [userSearch, setUserSearch] = useState("");
   const [users, setusers] = useState([]);
   const [status, setStatus] = useState(false);
+  const [check, setCheck] = useState(null)
   const { access_token } = getUser();
 
   const userid = useRef()
@@ -142,21 +143,22 @@ function UserList() {
   const searchHandle = ()=>{
     
   }
+  const openActive = (e)=>{
+    const { value, checked } = e.target;
+    setUserID(value)
+    setCheck(checked)
+    statusOnOpen()
+  }
 
   const statusHandler = (e) => {
-    const { value, checked } = e.target;
-    const data = user.filter(item=>item.id==value)
-    setStatus(!checked);
-    if (value) {
-      statusOnOpen();
-      fetchdata(data[0]?.username, {});
-    } else {
-      const {value} = statusCheck.current
-      const data = user.filter(item=>item.id==value)
-      const { checked } = statusCheck.current;
-      fetchdata(data[0]?.username, { is_active: !checked }, true);
-      statusOnClose();
-    }
+    
+    const data = user.filter(item=>item.id==userID)
+    
+    console.log('data',data)
+    fetchdata(data[0]?.username, { is_active: check }, true)
+    setStatus(!check);
+    statusOnClose();
+    
   };
   const handleDelete = () => {
     axios
@@ -295,17 +297,13 @@ function UserList() {
                       <td className="px-6 py-4">{item.mobile_number}</td>
                       <td className="px-6 py-4">{item.user_type}</td>
                       <td className="px-6 py-4">
-                        <label className="relative inline-flex items-center mb-4 cursor-pointer">
-                          <input
-                            type="checkbox"
+                        
+                          {item.user_type!='Admin'&&<Switch
                             value={item.id}
-                            onChange={statusHandler}
-                            className="sr-only peer"
-                            checked={item.is_active}
+                            onChange={openActive}
+                            isChecked={item.is_active}
                             ref={statusCheck}
-                          />
-                          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                        </label>
+                          />}
                       </td>
                       <td className="px-6 py-4">
                         <button

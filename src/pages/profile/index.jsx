@@ -1,5 +1,6 @@
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { FiFile } from 'react-icons/fi'
 import {
   Avatar,
   AvatarBadge,
@@ -12,6 +13,7 @@ import {
   FormLabel,
   HStack,
   Heading,
+  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -41,7 +43,7 @@ import {
   userUpdateSchima,
 } from "../../../Schima";
 import { Formik, useFormik } from "formik";
-import { butifyErrors } from "../../../utility/utlity";
+import { blobUrlToFile, butifyErrors } from "../../../utility/utlity";
 
 function Profile() {
   const profileData = {
@@ -51,6 +53,7 @@ function Profile() {
     last_name: "",
     email: "",
     mobile_number: "",
+    image:""
   };
   // const [user, setUser] = useState({})
   
@@ -85,6 +88,18 @@ function Profile() {
         })
         .then((res) => {
           console.log(res);
+          const {data} = res
+          setValues({
+            first_name: data?.first_name,
+            last_name: data?.last_name,
+            middle_name: data?.middle_name,
+            username: data?.username,
+            email: data?.email,
+            mobile_number: data?.mobile_number,
+          });
+          blobUrlToFile(res.data?.photo).then(res=>{
+            setFieldValue('image',res)
+          })
           toast({
             description: "Update Successfully",
             status: "success",
@@ -101,6 +116,34 @@ function Profile() {
     },
   });
 
+  const handleImage = (e)=>{
+    console.log(e)
+    // setFieldValue('image',e.target.files[0])
+    const image = e.target.files[0]
+    console.log(image)
+    axios
+        .patch(`${baseURL}/user-edit/${values.username}/`, {image:image}, {
+          headers: headers,
+        })
+        .then((res) => {
+          console.log(res);
+          const {data} = res
+          setValues({
+            first_name: data?.first_name,
+            last_name: data?.last_name,
+            middle_name: data?.middle_name,
+            username: data?.username,
+            email: data?.email,
+            mobile_number: data?.mobile_number,
+            image:data?.image
+          });
+          
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+
+  }
   const inputdata = {
     confirm_password: "",
     new_password: "",
@@ -113,6 +156,7 @@ function Profile() {
       username: profile?.username,
       email: profile?.email,
       mobile_number: profile?.mobile_number,
+      image:profile?.image
     });
   }, []);
   return (
@@ -131,22 +175,23 @@ function Profile() {
             >
               <Avatar
                 size={"xl"}
-                src={profile?.image}
+                src={values.image}
                 alt={"Avatar Alt"}
                 mb={4}
                 pos={"relative"}
               >
                 <AvatarBadge
-                  bg={"red"}
-                  boxSize={"1.1em"}
-                  _hover={{ borderColor: "primary.300" }}
+                  border={0}
                 >
-                  <InputGroup>
-                    <InputRightElement pointerEvents="none">
-                      <HiOutlineCamera />
-                    </InputRightElement>
-                    <Input />
-                  </InputGroup>
+                  <FileUpload
+                  accept={'image/*'}
+                  multiple
+                  handlePhoto={handleImage}
+                  
+                >
+                  <IconButton icon={<HiOutlineCamera />} borderRadius={'full'} />
+                    
+                </FileUpload>
                 </AvatarBadge>
               </Avatar>
               <Heading fontSize={"2xl"} fontFamily={"body"}>
@@ -372,6 +417,7 @@ const UpdateForm = ({
             type="text"
             name="username"
             placeholder="username"
+            isDisabled
             value={values.username}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -466,3 +512,34 @@ const UpdateForm = ({
     </form>
   );
 };
+
+
+
+
+const FileUpload = (props) => {
+  const { accept, multiple, children, handlePhoto } = props
+  const inputRef = useRef(null)
+  const [image, setImage] = useState(null)
+
+  const handleClick = () => inputRef.current?.click()
+  const handleChange = (e)=>{
+    console.log(e)
+    handlePhoto(e)
+  }
+
+  return (
+      <InputGroup onClick={handleClick}>
+        <input
+          type={'file'}
+          multiple={multiple || false}
+          hidden
+          accept={accept}
+          ref={inputRef}
+          onChange={handleChange}
+        />
+        <>
+          {children}
+        </>
+      </InputGroup>
+  )
+}

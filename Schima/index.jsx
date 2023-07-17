@@ -27,7 +27,9 @@ export const registrationSchima = Yup.object({
     username: Yup.string().max(20, "Maximum 20 Character").required('Enter username'),
     email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email').matches(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|([0-9]{10})+$/,
     "wrong Email format"),
-    mobile_number: Yup.string().required('Enter valid Mobile  Number'),//.matches(/^(\d{2})\s(\d{3})\s(\d{4})$/,'Invalid phone Number'),
+    mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
+    .matches(/^\S+$/,'Invalid phone Number')
+    .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
     password: Yup.string().min(8).max(20).required('Enter Password').matches(
         /^(?=.*[a-z])/,
         " Must Contain One Lowercase Character"
@@ -54,8 +56,9 @@ export const userUpdateSchima = Yup.object({
   username: Yup.string().max(20, "Maximum 20 Character").required('Enter username'),
   email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email').matches(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|([0-9]{10})+$/,
   "wrong Email format"),
-  mobile_number: Yup.string().required('Enter valid Mobile  Number'),//.matches(/^(\d{2})\s(\d{3})\s(\d{4})$/,'Invalid phone Number'),
-  
+  mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
+  .matches(/^\S+$/,'Invalid phone Number')
+  .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
 })
 
 
@@ -66,6 +69,11 @@ export const userEditSchima = Yup.object({
   middel_name: Yup.string().max(10,"Maximum 10 Character").optional(),
   email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email'),
   mobile_number: Yup.string(),
+  image: Yup.mixed().test(
+    'filetype',
+    "Only the following formats are accepted:(.jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png)",
+    checkIfFilesAreCorrectTypeAdd
+  ).optional(),
   
 })
 
@@ -256,3 +264,29 @@ export const scheduleSchima = Yup.object({
 
   
 });
+
+
+export const assetsSchema = Yup.object({
+  real_estate:Yup.number().required('Select Realestate'),
+  name: Yup.string().max(100).required("Must Fill Name Field"),
+  photo: Yup.mixed().optional().test(
+    'filetype',
+    "Only the following formats are accepted:(.jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png)",
+    checkFileType
+  ),
+  type:Yup.number().required('Select Category'),
+  brand:Yup.number().required('Select Brand'),
+  model: Yup.string().max(200).required("Must Fill Model Field"),
+  description: Yup.string().max(200).optional(),
+  quantity: Yup.number().required('Select Quantity'),
+  purchasing_price: Yup.number().optional(),
+  purchasing_currency: Yup.string().optional(),
+  purchasing_date: Yup.date().optional(),
+  floor_name: Yup.string().max(100).required('Select Floor Name Or Number'),
+  room_name:Yup.string().max(100).required('Select Room Name Or Number'),
+  assert_file: Yup.mixed().optional().test(
+    'filetype',
+    "Only the following formats are accepted:(.jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png)",
+    checkFileType
+  ).optional(),
+})

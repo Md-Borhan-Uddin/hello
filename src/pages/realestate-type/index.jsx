@@ -107,7 +107,41 @@ function RealestateType() {
     getObjects("/real-estate-type/", headers, setTypes);
   }, []);
 
-
+  const typeStatus = (e) => {
+    const { value, checked } = e.target;
+    axios
+    .patch(`${baseURL}/real-estate-type/${value}/`, {is_active:checked}, {
+      headers: headers,
+    })
+    .then((res) => {
+      console.log(res);
+      const { data } = res;
+      const newType = types.map((item) => {
+        if (item.id == data.id) {
+          item.name = data.name;
+          item.is_active = data.is_active;
+        }
+        return item;
+      });
+      
+      setTypes(newType);
+      toast({
+        title: "Successfully Update",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    })
+    .catch((error) => {
+      toast({
+        title: "Something wrong try again",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      console.log(error);
+    });
+  };
 
 
 
@@ -248,7 +282,11 @@ function RealestateType() {
                       {item.name}
                     </td>
                     <td className="px-6 py-4">
-                      {item.is_active? <FcApproval />:<Switch disabled/>}
+                    <Switch
+                          value={item.id}
+                          onChange={typeStatus}
+                          isChecked={item.is_active}
+                        />
                         
                     </td>
                     <td className="px-6 py-4">

@@ -23,27 +23,29 @@ import axios from "axios";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
-import { deleteItem, editItem, getObjects } from "../../../utility/country_city";
+import {
+  deleteItem,
+  editItem,
+  getObjects,
+} from "../../../utility/country_city";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import { FcApproval } from "react-icons/fc";
 
-
-
 const countrydata = {
   name: "",
-  is_active: false
+  is_active: false,
 };
 
 const citydata = {
-    name: '',
-    country_id: ""
-}
+  name: "",
+  country_id: "",
+};
 
 function countryCity() {
   const [countries, setCountries] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [cities, setCities] = useState([]);
-  const [id,setId] = useState()
+  const [id, setId] = useState();
   const router = useNavigate();
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
@@ -75,7 +77,6 @@ function countryCity() {
     initialValues: countrydata,
     validationSchema: countrySchima,
     onSubmit: (values, { setSubmitting }) => {
-      
       axios
         .post(baseURL + "/country/", values, {
           headers: headers,
@@ -93,17 +94,16 @@ function countryCity() {
         })
         .catch((error) => {
           console.log(error);
-          setcustomerror(error.response.data)
-          if(error.response.data.non_field_errors){
-            error.response.data.non_field_errors.map((message)=>{
-
+          setcustomerror(error.response.data);
+          if (error.response.data.non_field_errors) {
+            error.response.data.non_field_errors.map((message) => {
               toast({
                 title: message,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
               });
-            })
+            });
           }
           if (error.response.status == 401) {
             toast({
@@ -115,8 +115,8 @@ function countryCity() {
             router("/account/login");
           }
         });
-        countryHandleReset()
-        countryOnClose();
+      countryHandleReset();
+      countryOnClose();
 
       //   onClose();
       //   window.location.reload();
@@ -130,34 +130,33 @@ function countryCity() {
     handleChange: cityHandleChange,
     handleSubmit: cityHandleSubmit,
     handleReset: cityHandleReset,
+    setFieldValue: citySetFieldValue,
     touched: cityTouched,
   } = useFormik({
     initialValues: citydata,
     validationSchema: citySchima,
     onSubmit: (citiesValues, { setSubmitting }) => {
-      console.log(citiesValues)
+      console.log(citiesValues);
       axios
-        .post(baseURL+ "/city/", citiesValues, {
+        .post(baseURL + "/city/", citiesValues, {
           headers: headers,
         })
         .then((res) => {
           console.log(res);
           setCities([...cities, res.data]);
-          
         })
         .catch((error) => {
           console.log(error);
-          setcustomerror(error.response.data)
-          if(error.response.data.non_field_errors){
-            error.response.data.non_field_errors.map((message)=>{
-
+          setcustomerror(error.response.data);
+          if (error.response.data.non_field_errors) {
+            error.response.data.non_field_errors.map((message) => {
               toast({
                 title: message,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
               });
-            })
+            });
           }
           if (error.response.status == 401) {
             toast({
@@ -171,8 +170,8 @@ function countryCity() {
           // countriesHandleReset()
           // countriesOnClose();
         });
-        cityHandleReset()
-        cityOnClose();
+      cityHandleReset();
+      cityOnClose();
     },
   });
 
@@ -184,26 +183,26 @@ function countryCity() {
   const countryEdit = (e) => {
     setIsEdit(true);
     const { value } = e.target;
-    setId(value)
+    setId(value);
     const cat = countries.filter((e) => e.id == value);
     countryOnOpen();
     countriesSetValues({
       name: cat[0]?.name,
-      is_active:cat[0]?.is_active
+      is_active: cat[0]?.is_active,
     });
   };
 
   const citiEdit = (e) => {
     setIsEdit(true);
     const { value } = e.target;
-    setId(value)
+    setId(value);
     const cat = cities.filter((e) => e.id == value);
-    console.log(cat)
+    console.log(cat);
     cityOnOpen();
     citySetValues({
       name: cat[0]?.name,
       country_id: cat[0]?.country.id,
-      is_active:cat[0]?.is_active
+      is_active: cat[0]?.is_active,
     });
   };
 
@@ -219,7 +218,7 @@ function countryCity() {
       cities,
       toast
     );
-    
+
     cityOnClose();
   };
 
@@ -235,7 +234,7 @@ function countryCity() {
       countries,
       toast
     );
-    
+
     countryOnClose();
   };
 
@@ -250,21 +249,53 @@ function countryCity() {
       countries,
       toast
     );
-    const obj = cities.filter(item=>item.country.id!=value)
-    setCities(obj)
-    
+    const obj = cities.filter((item) => item.country.id != value);
+    setCities(obj);
   };
 
   const cityDelete = (e) => {
     const { value } = e.target;
 
-    const res = deleteItem(`/city/delete/`, headers, value, setCities, cities,toast);
-    
+    const res = deleteItem(
+      `/city/delete/`,
+      headers,
+      value,
+      setCities,
+      cities,
+      toast
+    );
   };
+
+  const cauntryStatus = (e) => {
+    const { value, checked } = e.target;
+    const res = editItem(
+      "/country/",
+      headers,
+      value,
+      { is_active: checked },
+      setCountries,
+      countries,
+      toast
+    );
+  };
+
+  const cityStatus = (e) => {
+    const { value, checked } = e.target;
+    const res = editItem(
+      "/city/edit/",
+      headers,
+      value,
+      { is_active: checked },
+      setCities,
+      cities,
+      toast
+    );
+  };
+
   return (
     <>
-      <Flex gap={3} flexWrap={{base:'wrap',md:'nowrap'}}>
-        <Box w={{base:'100%',md:'50%'}} pl={'10px'}>
+      <Flex gap={3} flexWrap={{ base: "wrap", md: "nowrap" }}>
+        <Box w={{ base: "100%", md: "50%" }} pl={"10px"}>
           <Flex
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -313,8 +344,11 @@ function countryCity() {
                       {item.name}
                     </td>
                     <td className="px-6 py-4 flex items-center justify-center">
-                      {item.is_active? <FcApproval />:<Switch disabled/>}
-                        
+                      <Switch
+                        value={item.id}
+                        onChange={cauntryStatus}
+                        isChecked={item.is_active}
+                      />
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -343,7 +377,7 @@ function countryCity() {
             </tbody>
           </table>
         </Box>
-        <Box w={{base:'100%',md:'50%'}} pr={'10px'}>
+        <Box w={{ base: "100%", md: "50%" }} pr={"10px"}>
           <Flex
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -353,7 +387,11 @@ function countryCity() {
               Cities List
             </Text>
             <Button
-              onClick={()=>{cityHandleReset();setIsEdit(false); cityOnOpen()}}
+              onClick={() => {
+                cityHandleReset();
+                setIsEdit(false);
+                cityOnOpen();
+              }}
               backgroundColor={"rgb(34,220,118)"}
               _hover={{ backgroundColor: "rgb(58, 187, 116)" }}
             >
@@ -391,12 +429,13 @@ function countryCity() {
                       {item.name}
                     </td>
                     <td className="px-6 py-4 flex items-center justify-center">
-                      {item.is_active? <FcApproval />:<Switch disabled/>}
-                        
+                      <Switch
+                        value={item.id}
+                        onChange={cityStatus}
+                        isChecked={item.is_active}
+                      />
                     </td>
-                    <td className="px-6 py-4">
-                      {item.country.name}
-                    </td>
+                    <td className="px-6 py-4">{item.country.name}</td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
                         <Button
@@ -435,10 +474,7 @@ function countryCity() {
         isFooter={true}
         cancelBtnLabel="Cancel"
       >
-        <form
-          className="space-y-3 md:space-y-4"
-          onSubmit={countryHandleSubmit}
-        >
+        <form className="space-y-3 md:space-y-4" onSubmit={countryHandleSubmit}>
           <FormControl isInvalid={countriesErrors.name}>
             <FormLabel>Name</FormLabel>
             <Input
@@ -459,7 +495,9 @@ function countryCity() {
             <Checkbox
               onChange={countryHandleChange}
               name="is_active"
-              isChecked={countriesValues.is_active ? countriesValues.is_active : false}
+              isChecked={
+                countriesValues.is_active ? countriesValues.is_active : false
+              }
               value={countriesValues.is_active}
             >
               Active
@@ -500,19 +538,29 @@ function countryCity() {
         cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={cityHandleSubmit}>
-            <FormControl isInvalid={citiesErrors.country_id&&cityTouched.country_id}>
-                <Select placeholder='Select Country' name="country_id" value={citiesValues.country_id} onChange={cityHandleChange}>
-                    {countries.map((item)=><option key={item.id} value={item.id}>{item.name}</option>)}
-                    
-                </Select>
-                {citiesErrors.country && cityTouched.country ? (
-                <FormErrorMessage>{citiesErrors.country}.</FormErrorMessage>
-                ) : null}
-                {customerror.country ? (
-                <p className="text-red-600">{customerror.country.message}.</p>
-                ) : null}
+          <FormControl
+            isInvalid={citiesErrors.country_id && cityTouched.country_id}
+          >
+            <Select
+              placeholder="Select Country"
+              name="country_id"
+              value={citiesValues.country_id}
+              onChange={cityHandleChange}
+            >
+              {countries.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Select>
+            {citiesErrors.country && cityTouched.country ? (
+              <FormErrorMessage>{citiesErrors.country}.</FormErrorMessage>
+            ) : null}
+            {customerror.country ? (
+              <p className="text-red-600">{customerror.country.message}.</p>
+            ) : null}
           </FormControl>
-          <FormControl isInvalid={citiesErrors.name&&cityTouched.name}>
+          <FormControl isInvalid={citiesErrors.name && cityTouched.name}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
@@ -529,11 +577,13 @@ function countryCity() {
             ) : null}
           </FormControl>
 
-          <FormControl isInvalid={citiesErrors.is_active&&cityTouched}>
+          <FormControl isInvalid={citiesErrors.is_active && cityTouched}>
             <Checkbox
               onChange={cityHandleChange}
               name="is_active"
-              isChecked={citiesValues.is_active ? citiesValues.is_active : false}
+              isChecked={
+                citiesValues.is_active ? citiesValues.is_active : false
+              }
               value={citiesValues.is_active}
             >
               Active
@@ -545,7 +595,7 @@ function countryCity() {
               <p className="text-red-600">{customerror.is_active.message}.</p>
             ) : null}
           </FormControl>
-          
+
           {isEdit ? (
             <button
               className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
@@ -568,5 +618,4 @@ function countryCity() {
   );
 }
 
-
-export default RequireAuth(countryCity)
+export default RequireAuth(countryCity);
