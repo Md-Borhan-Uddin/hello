@@ -68,7 +68,9 @@ export const userEditSchima = Yup.object({
   last_name: Yup.string().max(10,"Maximum 10 Character").required('Enter Last Name'),
   middel_name: Yup.string().max(10,"Maximum 10 Character").optional(),
   email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email'),
-  mobile_number: Yup.string(),
+  mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
+  .matches(/^\S+$/,'Invalid phone Number')
+  .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
   image: Yup.mixed().test(
     'filetype',
     "Only the following formats are accepted:(.jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png)",
