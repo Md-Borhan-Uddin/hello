@@ -47,15 +47,24 @@ const AddState = () => {
   useEffect(() => {
     
     setLocation([geolocation.latitude,geolocation.longitude])
-    console.log('location',location)
+    // axios.get(baseURL+'/active-membership/',{headers:headers})
+    // .then((res)=>{
+    //   console.log('active',res)
+
+    // })
+    // .catch((err)=>{
+    //   console.log(err)
+    // })
+    
+    
     let c = [{ key: "Please select", value: "" }];
     getObjects("/country/", headers, setCountry);
-    // getObjects("/city/", headers, setCity);
-    // setCountry(c)
+    
     const cur = [];
     const cr = Object.keys(CurrencyList.getAll().af);
     cr.map((item) => cur.push({ key: item, value: item }));
     setCurrency(cur);
+
     setUType(userType);
 
     fetch(baseURL + "/real-estate-type/")
@@ -207,21 +216,10 @@ const AddState = () => {
     return option;
   };
 
-  const style = {
-    border: "1px solid silver",
-    padding: "5px",
-    borderRadius: "5px",
-    width: "100%",
-  };
+  
 
   const [error, setErrors] = useState([]);
 
-  const options = [
-    { key: "Please select", value: "" },
-    { key: "Bangladesh", value: "Bangladesh" },
-    { key: "India", value: "India" },
-    { key: "Afganishan", value: "Afganishan" },
-  ];
 
   return (
     <div className="py-2 px-4 flex justify-center">

@@ -41,6 +41,7 @@ import {
   Radio,
   CheckboxGroup,
   Icon,
+  Switch,
 } from "@chakra-ui/react";
 import { FcOk, FcDisapprove } from "react-icons/fc";
 import { useFormik } from "formik";
@@ -51,6 +52,7 @@ import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { months } from "../../../utility/utlity";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import { editItem } from "../../../utility/country_city";
 
 const inputdata = {
   name: "",
@@ -295,7 +297,41 @@ function Package() {
       });
   };
 
-  console.log(values)
+  const packageStatus = (e) => {
+    const { value, checked } = e.target;
+    axios
+      .patch(baseUrl.defaults.baseURL + `/package/${value}/`, {is_active:checked}, {
+        headers: headers,
+      })
+      .then((res) => {
+        console.log(res);
+        getPackage().then((res) => setPackages(res));
+        toast({
+          title: "update Successfully",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast({
+          title: "Somethings wrong try again",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        if (error.response.status == 401) {
+          toast({
+            title: "You are not Login Login First",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
+          router("/login");
+        }
+      });
+  };
 
   return (
     <>
@@ -323,7 +359,7 @@ function Package() {
                 <Tr>
                   <Th>Name</Th>
                   <Th>Duration(Date/Month)</Th>
-                  <Th>Free/Active</Th>
+                  <Th>Status</Th>
                   <Th>Price</Th>
                   <Th textAlign={"center"}>Action</Th>
                 </Tr>
@@ -337,26 +373,11 @@ function Package() {
                         {item.duration_date}/{item.duration_month}
                       </Td>
                       <Td>
-                        <Flex>
-                          {item.is_free ? (
-                            <Icon as={FcOk} />
-                          ) : (
-                            <Icon as={FcDisapprove} />
-                          )}
-                          <Divider
-                            borderColor="gray.600"
-                            orientation="vartical"
-                            width="2px"
-                            margin="2px"
-                            borderTopWidth="20px"
-                            size="3px"
-                          />
-                          {item.is_active ? (
-                            <Icon as={FcOk} />
-                          ) : (
-                            <Icon as={FcDisapprove} />
-                          )}
-                        </Flex>
+                      <Switch
+                        value={item.id}
+                        onChange={packageStatus}
+                        isChecked={item.is_active}
+                      />
                       </Td>
                       <Td>{item.default_price}</Td>
                       <Td>

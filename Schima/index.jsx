@@ -27,9 +27,8 @@ export const registrationSchima = Yup.object({
     username: Yup.string().max(20, "Maximum 20 Character").required('Enter username'),
     email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email').matches(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|([0-9]{10})+$/,
     "wrong Email format"),
-    mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
-    .matches(/^\S+$/,'Invalid phone Number').min(13)
-    .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
+    mobile_number: Yup.string().required('Enter valid Mobile  Number')
+  .matches(/^[+][0-9]{3}[\s\./0-9]{9}$/,'Invalid phone Number'),
     password: Yup.string().min(8).max(20).required('Enter Password').matches(
         /^(?=.*[a-z])/,
         " Must Contain One Lowercase Character"
@@ -56,9 +55,8 @@ export const userUpdateSchima = Yup.object({
   username: Yup.string().max(20, "Maximum 20 Character").required('Enter username'),
   email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email').matches(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|([0-9]{10})+$/,
   "wrong Email format"),
-  mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
-  .matches(/^\S+$/,'Invalid phone Number').min(13)
-  .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
+  mobile_number: Yup.string().required('Enter valid Mobile  Number')
+  .matches(/^[+][0-9]{3}[\s\./0-9]{9}$/,'Invalid phone Number'),
 })
 
 
@@ -68,9 +66,8 @@ export const userEditSchima = Yup.object({
   last_name: Yup.string().max(10,"Maximum 10 Character").required('Enter Last Name'),
   middel_name: Yup.string().max(10,"Maximum 10 Character").optional(),
   email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email'),
-  mobile_number: Yup.string().required('Enter valid Mobile  Number').max(13,'Less Then 13 Character')
-  .min(13).matches(/^\S+$/,'Invalid phone Number')
-  .matches(/(?:^|\s)(\+[0-9]\w*)/gi,'Invalid phone Number'),
+  mobile_number: Yup.string().required('Enter valid Mobile  Number')
+  .matches(/^[+][0-9]{3}[\s\./0-9]{9}$/,'Invalid phone Number'),
   image: Yup.mixed().test(
     'filetype',
     "Only the following formats are accepted:(.jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png)",

@@ -92,15 +92,15 @@ function UserList() {
       .catch((error) => {
         // setcustomerror(error.response.data);
         console.log(error);
-        if (error.response.status == 401) {
-          toast({
-            title: "you are Not Login Please login",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-          router("/login");
-        }
+        // if (error.response.status == 401) {
+        //   toast({
+        //     title: "you are Not Login Please login",
+        //     status: "success",
+        //     duration: 2000,
+        //     isClosable: true,
+        //   });
+        //   router("/login");
+        // }
       });
   };
   useEffect(()=>{
