@@ -393,10 +393,11 @@ const AddState = () => {
             <Table variant="simple" textAlign={"center"}>
               <Thead bg={"gray.200"}>
                 <Tr>
+                  <Th>ID</Th>
                   <Th>Name</Th>
-                  <Th>Duration(Date/Month)</Th>
-                  <Th>Status</Th>
-                  <Th>Price</Th>
+                  <Th>Currency</Th>
+                  <Th>Purchasing Cost</Th>
+                  <Th>Type</Th>
                   <Th textAlign={"center"}>Action</Th>
                 </Tr>
               </Thead>
@@ -404,18 +405,15 @@ const AddState = () => {
                 {realestate.map((item) => {
                   return (
                     <Tr key={item.id}>
+                      <Td>{item.realestate_id}</Td>
                       <Td>{item.name}</Td>
                       <Td>
-                        {item.duration_date}/{item.duration_month}
+                        {item.cost_currency}
                       </Td>
                       <Td>
-                        {/* <Switch
-                          value={item.id}
-                          // onChange={packageStatus}
-                          isChecked={item.is_active}
-                        /> */}
+                        {item.purchasing_cost}
                       </Td>
-                      <Td>{item.default_price}</Td>
+                      <Td>{item.type.name}</Td>
                       <Td>
                         <HStack alignItems={"center"} justifyContent={"center"}>
                           <Button
