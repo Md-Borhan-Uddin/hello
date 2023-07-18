@@ -402,7 +402,9 @@ const AddState = () => {
                 </Tr>
               </Thead>
               <Tbody>
+                {console.log(realestate)}
                 {realestate.map((item) => {
+                  
                   return (
                     <Tr key={item.id}>
                       <Td>{item.realestate_id}</Td>
