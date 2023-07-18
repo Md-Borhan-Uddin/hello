@@ -67,7 +67,7 @@ const AddState = () => {
       setLocation([geoLocation.coordinates.lat, geoLocation.coordinates.lng]);
     }
     axios
-      .get(`${baseURL}/realestate/${userType}`, { headers: headers })
+      .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
       .then((res) => {
         setRealestate(res.data.results);
       })
