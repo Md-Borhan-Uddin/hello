@@ -409,11 +409,11 @@ const AddState = () => {
                         {item.duration_date}/{item.duration_month}
                       </Td>
                       <Td>
-                        <Switch
+                        {/* <Switch
                           value={item.id}
                           // onChange={packageStatus}
                           isChecked={item.is_active}
-                        />
+                        /> */}
                       </Td>
                       <Td>{item.default_price}</Td>
                       <Td>
