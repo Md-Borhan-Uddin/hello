@@ -63,7 +63,10 @@ const AddState = () => {
   const { loaded, coordinates } = useGeolocation();
 
   useEffect(() => {
-    setLocation([coordinates.lat, coordinates.lng]);
+    if(loaded){
+
+      setLocation([coordinates.lat, coordinates.lng]);
+    }
     axios
       .get(`${baseURL}/realestate/${userType}`, { headers: headers })
       .then((res) => {
