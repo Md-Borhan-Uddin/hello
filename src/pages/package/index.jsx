@@ -123,6 +123,7 @@ function Package() {
     handleReset,
     touched,
     setFieldValue,
+    handleBlur
   } = useFormik({
     initialValues: inputdata,
     validationSchema: packageSchima,
@@ -176,7 +177,7 @@ function Package() {
     const { value } = e.target;
     setId(value);
     axios
-      .get(baseUrl.defaults.baseURL + `/package/${value}/`, values, {
+      .get(baseUrl.defaults.baseURL + `/package/${value}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -433,6 +434,7 @@ function Package() {
                       name="name"
                       onChange={handleChange}
                       value={values.name}
+                      onBlur={handleBlur}
                     />
                     {errors.name && touched.name ? (
                       <FormErrorMessage>{errors.name}</FormErrorMessage>
@@ -455,6 +457,7 @@ function Package() {
                     onChange={handleChange}
                     name="description"
                     value={values.description}
+                    onBlur={handleBlur}
                   ></Textarea>
                   {errors.description && touched.description ? (
                     <FormErrorMessage>{errors.description}</FormErrorMessage>
@@ -476,6 +479,7 @@ function Package() {
                     isNative={true}
                     name="feature"
                     defaultValue={values.feature}
+                    onBlur={handleBlur}
                   >
                     <SimpleGrid columns={{ base: 1, md: 2 }}>
                       <Checkbox
@@ -496,7 +500,7 @@ function Package() {
                         textColor="secondary.300"
                         onChange={handleChange}
                         name="feature"
-                      
+                        onBlur={handleBlur}
                       >
                         Edit Real Estate
                       </Checkbox>
@@ -507,6 +511,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Create Asset"
                         )}
+                        onBlur={handleBlur}
                       >
                         Create Asset
                       </Checkbox>
@@ -517,6 +522,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Edit Asset"
                         )}
+                        onBlur={handleBlur}
                       >
                         Edit Asset
                       </Checkbox>
@@ -527,6 +533,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Maintenance Scheduling"
                         )}
+                        onBlur={handleBlur}
                       >
                         Maintenance Scheduling
                       </Checkbox>
@@ -537,6 +544,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Calculating the Effectiveness of the Real Estate"
                         )}
+                        onBlur={handleBlur}
                       >
                         Calculating the Effectiveness of the Real Estate
                       </Checkbox>
@@ -547,6 +555,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Calculating the Effectiveness of the Asset"
                         )}
+                        onBlur={handleBlur}
                       >
                         Calculating the Effectiveness of the Asset
                       </Checkbox>
@@ -557,6 +566,7 @@ function Package() {
                         isChecked={values.feature.find(
                           (ele) => ele === "Reports"
                         )}
+                        onBlur={handleBlur}
                       >
                         Reports
                       </Checkbox>
@@ -564,6 +574,7 @@ function Package() {
                         value="Dashboard"
                         onChange={handleChange}
                         name="feature"
+                        onBlur={handleBlur}
                         isChecked={values.feature.find((item)=>item==='Dashboard')}
                       >
                         Dashboard
@@ -593,6 +604,7 @@ function Package() {
                       name="duration_date"
                       value={values.duration_date}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     >
                       {months(31).map((item, i) => (
                         <option key={i} value={item.value}>
@@ -621,6 +633,7 @@ function Package() {
                       name="duration_month"
                       value={values.duration_month}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     >
                       {months(12).map((item, i) => (
                         <option key={i} value={item.value}>
@@ -651,6 +664,7 @@ function Package() {
                       onChange={(e) => setFieldValue("is_free", e)}
                       value={values.is_free}
                       name="is_free"
+                      onBlur={handleBlur}
                     >
                       <Stack spacing={5} direction="row">
                         <Radio value="true" colorScheme="primary">
@@ -683,6 +697,7 @@ function Package() {
                         onChange={(e) => setFieldValue("pricing_approach", e)}
                         value={values.pricing_approach}
                         name="pricing_approach"
+                        onBlur={handleBlur}
                       >
                         <Stack spacing={3} direction="column">
                           <Radio
@@ -728,6 +743,7 @@ function Package() {
                       onChange={handleChange}
                       name="default_price"
                       value={values.default_price}
+                      onBlur={handleBlur}
                     />
                     {errors.default_price && touched.default_price ? (
                       <FormErrorMessage>
@@ -753,6 +769,7 @@ function Package() {
                       onChange={handleChange}
                       name="default_real_estate_number"
                       value={values.default_real_estate_number}
+                      onBlur={handleBlur}
                     />
                     {errors.default_real_estate_number &&
                     touched.default_real_estate_number ? (
@@ -780,6 +797,7 @@ function Package() {
                       onChange={(e) => setFieldValue("is_renewal", e)}
                       value={values.is_renewal}
                       name="is_renewal"
+                      onBlur={handleBlur}
                     >
                       <Stack spacing={5} direction="row">
                         <Radio colorScheme="primary" value="true">
@@ -815,6 +833,7 @@ function Package() {
                         value={values.enabling_adding_extra_real_estate}
                         name="enabling_adding_extra_real_estate"
                         defaultValue='true'
+                        onBlur={handleBlur}
                         isDisabled={values.pricing_approach==='Based on number of real estate only'?true:false}
                       >
                         <Stack spacing={5} direction="row">
@@ -855,6 +874,7 @@ function Package() {
                       onChange={handleChange}
                       name="price_per_real_estate"
                       value={values.price_per_real_estate}
+                      onBlur={handleBlur}
                     />
                     {errors.price_per_real_estate &&
                     touched.price_per_real_estate ? (

@@ -117,6 +117,7 @@ function EffectReport() {
     handleReset,
     touched,
     setFieldValue,
+    handleBlur
   } = useFormik({
     initialValues: inputdata,
     validationSchema: packageSchima,
@@ -381,6 +382,7 @@ function EffectReport() {
                       name="name"
                       onChange={handleChange}
                       value={values.name}
+                      onBlur={handleBlur}
                     />
                     {errors.name && touched.name? <FormErrorMessage>{errors.name}</FormErrorMessage>:null}
                   </FormControl>
@@ -398,6 +400,7 @@ function EffectReport() {
                         name="duration_date"
                         value={values.duration_date}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       >
                         {months(31).map((item, i) => (
                           <option key={i} value={item.value}>
@@ -420,6 +423,7 @@ function EffectReport() {
                         name="duration_month"
                         value={values.duration_month}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                       >
                         {months(12).map((item, i) => (
                           <option key={i} value={item.value}>
@@ -446,6 +450,7 @@ function EffectReport() {
                     onChange={handleChange}
                     name="description"
                     value={values.description}
+                    onBlur={handleBlur}
                   ></Textarea>
                 {errors.description && touched.description? <FormErrorMessage>{errors.description}</FormErrorMessage>:null}
                 </FormControl>
@@ -464,6 +469,7 @@ function EffectReport() {
                       onChange={(e) => setFieldValue("is_free", e)}
                       value={values.is_free}
                       name="is_free"
+                      onBlur={handleBlur}
                     >
                       <Stack spacing={5} direction="row">
                         <Radio value="true" colorScheme="primary">
@@ -488,6 +494,7 @@ function EffectReport() {
                       onChange={(e) => setFieldValue("is_active", e)}
                       value={values.is_active}
                       name="is_active"
+                      onBlur={handleBlur}
                     >
                       <Stack spacing={5} direction="row">
                         <Radio value="true" colorScheme="primary">
@@ -512,6 +519,7 @@ function EffectReport() {
                       onChange={(e) => setFieldValue("is_renewal", e)}
                       value={values.is_renewal}
                       name="is_renewal"
+                      onBlur={handleBlur}
                     >
                       <Stack spacing={5} direction="row">
                         <Radio colorScheme="primary" value="true">
@@ -541,6 +549,7 @@ function EffectReport() {
                         onChange={(e) => setFieldValue("pricing_approach", e)}
                         value={values.pricing_approach}
                         name="pricing_approach"
+                        onBlur={handleBlur}
                       >
                         <Stack spacing={3} direction="column">
                           <Radio
@@ -576,6 +585,7 @@ function EffectReport() {
                         }
                         value={values.enabling_adding_extra_real_estate}
                         name="enabling_adding_extra_real_estate"
+                        onBlur={handleBlur}
                       >
                         <Stack spacing={5} direction="row">
                           <Radio value="true" colorScheme="primary">
@@ -606,6 +616,7 @@ function EffectReport() {
                       onChange={handleChange}
                       name="default_price"
                       value={values.default_price}
+                      onBlur={handleBlur}
                     />
                     {errors.default_price && touched.default_price? <FormErrorMessage>{errors.default_price}</FormErrorMessage>:null}
                   </FormControl>
@@ -622,6 +633,7 @@ function EffectReport() {
                       onChange={handleChange}
                       name="price_per_real_estate"
                       value={values.price_per_real_estate}
+                      onBlur={handleBlur}
                     />
                     {errors.price_per_real_estate && touched.price_per_real_estate? <FormErrorMessage>{errors.price_per_real_estate}</FormErrorMessage>:null}
                   </FormControl>
@@ -642,6 +654,7 @@ function EffectReport() {
                       onChange={handleChange}
                       name="default_real_estate_number"
                       value={values.default_real_estate_number}
+                      onBlur={handleBlur}
                     />
                     {errors.default_real_estate_number && touched.default_real_estate_number? <FormErrorMessage>{errors.default_real_estate_number}</FormErrorMessage>:null}
                   </FormControl>
@@ -656,25 +669,25 @@ function EffectReport() {
                       </FormLabel>
                       <CheckboxGroup colorScheme="primary" isNative={true} name="feature">
                         <SimpleGrid columns={{ base: 1, md: 2 }}>
-                          <Checkbox value="Create Real Estate" checked={values.feature.find(ele=>ele==="Create Real Estate")} textColor='secondary.300' onChange={handleChange} name="feature">
+                          <Checkbox onBlur={handleBlur} value="Create Real Estate" checked={values.feature.find(ele=>ele==="Create Real Estate")} textColor='secondary.300' onChange={handleChange} name="feature">
                             Create Real Estate
                           </Checkbox>
                           <Checkbox value="Edit Real Estate">
                             Edit Real Estate
                           </Checkbox>
-                          <Checkbox value="Create Asset" onChange={handleChange} name="feature">Create Asset</Checkbox>
-                          <Checkbox value="Edit Asset" onChange={handleChange} name="feature">Edit Asset</Checkbox>
-                          <Checkbox value="Maintenance Scheduling" onChange={handleChange} name="feature">
+                          <Checkbox onBlur={handleBlur} value="Create Asset" onChange={handleChange} name="feature">Create Asset</Checkbox>
+                          <Checkbox onBlur={handleBlur} value="Edit Asset" onChange={handleChange} name="feature">Edit Asset</Checkbox>
+                          <Checkbox onBlur={handleBlur} value="Maintenance Scheduling" onChange={handleChange} name="feature">
                             Maintenance Scheduling
                           </Checkbox>
-                          <Checkbox value="Calculating the Effectiveness of the Real Estate" onChange={handleChange} name="feature">
+                          <Checkbox onBlur={handleBlur} value="Calculating the Effectiveness of the Real Estate" onChange={handleChange} name="feature">
                             Calculating the Effectiveness of the Real Estate
                           </Checkbox>
-                          <Checkbox value="Calculating the Effectiveness of the Asset" onChange={handleChange} name="feature">
+                          <Checkbox onBlur={handleBlur} value="Calculating the Effectiveness of the Asset" onChange={handleChange} name="feature">
                             Calculating the Effectiveness of the Asset
                           </Checkbox>
-                          <Checkbox value="Reports" onChange={handleChange} name="feature">Reports</Checkbox>
-                          <Checkbox value="naruto" onChange={handleChange} name="feature">Dashboard</Checkbox>
+                          <Checkbox onBlur={handleBlur} value="Reports" onChange={handleChange} name="feature">Reports</Checkbox>
+                          <Checkbox onBlur={handleBlur} value="naruto" onChange={handleChange} name="feature">Dashboard</Checkbox>
                         </SimpleGrid>
                       </CheckboxGroup>
                       {errors.feature && touched.feature? <FormErrorMessage>{errors.feature}</FormErrorMessage>:null}

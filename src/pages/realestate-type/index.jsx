@@ -29,6 +29,7 @@ import {
 } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import {FcApproval} from 'react-icons/fc'
+import { realestateTypeSchima } from "../../../Schima";
 // const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
 const inputdata = {
@@ -63,6 +64,7 @@ function RealestateType() {
     resetForm
   } = useFormik({
     initialValues: inputdata,
+    validationSchema:realestateTypeSchima,
     onSubmit: (values, { setSubmitting }) => {
       axios
         .post(baseURL + "/real-estate-type/", values, {

@@ -125,6 +125,7 @@ function ScheduleMaintain() {
     handleReset,
     touched,
     setFieldValue,
+    handleBlur
   } = useFormik({
     initialValues: inputdata,
     validationSchema: scheduleSchima,
@@ -449,6 +450,7 @@ function ScheduleMaintain() {
                     name="duration_date"
                     value={values.real_estate_id}
                     onChange={handleEstateChange}
+                    onBlur={handleBlur}
                   >
                     {realestate.map((item, i) => (
                       <option key={i} value={item.id}>
@@ -474,6 +476,7 @@ function ScheduleMaintain() {
                     placeholder="Select Asset"
                     name="asset_id"
                     value={values.asset_id}
+                    onBlur={handleBlur}
                     onChange={(e) => setFieldValue("asset_id", e.target.value)}
                   >
                     {asset.map((item, i) => (
@@ -502,6 +505,7 @@ function ScheduleMaintain() {
                     onChange={handleChange}
                     name="name"
                     value={values.name}
+                    onBlur={handleBlur}
                   />
                   {errors.name && touched.name ? (
                     <FormErrorMessage>{errors.name}</FormErrorMessage>
@@ -520,6 +524,7 @@ function ScheduleMaintain() {
                     value={values.is_reminder}
                     onChange={(e) => setFieldValue("is_reminder", e)}
                     name="is_reminder"
+                    onBlur={handleBlur}
                   >
                     <HStack>
                       <Radio value="true" colorScheme="primary">
@@ -551,6 +556,7 @@ function ScheduleMaintain() {
                     name="maintain_date"
                     value={values.maintain_date}
                     type="date"
+                    onBlur={handleBlur}
                     min={new Date().toISOString().slice(0, 10)}
                   />
                   {errors.maintain_date && touched.maintain_date ? (
@@ -571,6 +577,7 @@ function ScheduleMaintain() {
                     name="reminder_date"
                     value={values.reminder_date}
                     type="date"
+                    onBlur={handleBlur}
                     min={new Date().toISOString().slice(0, 10)}
                   />
                   {errors.reminder_date && touched.reminder_date ? (
@@ -593,6 +600,7 @@ function ScheduleMaintain() {
                     onChange={handleChange}
                     name="description"
                     value={values.description}
+                    onBlur={handleBlur}
                   ></Textarea>
                   {errors.description && touched.description ? (
                     <FormErrorMessage>{errors.description}</FormErrorMessage>
@@ -616,6 +624,7 @@ function ScheduleMaintain() {
                       name="invoice_file"
                       value={values.invoice_file}
                       type="file"
+                      onBlur={handleBlur}
                     />
                     {errors.invoice_file && touched.invoice_file ? (
                       <FormErrorMessage>{errors.invoice_file}</FormErrorMessage>
@@ -634,6 +643,7 @@ function ScheduleMaintain() {
                       name="status"
                       value={values.status}
                       onChange={handleEstateChange}
+                      onBlur={handleBlur}
                     >
                       <option value="Active">Active</option>
                       <option value="Cancele">Cancele</option>

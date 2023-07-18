@@ -73,6 +73,7 @@ function countryCity() {
     handleSubmit: countryHandleSubmit,
     handleReset: countryHandleReset,
     touched: countryTouched,
+    handleBlur:countryHandleBlur
   } = useFormik({
     initialValues: countrydata,
     validationSchema: countrySchima,
@@ -132,6 +133,7 @@ function countryCity() {
     handleReset: cityHandleReset,
     setFieldValue: citySetFieldValue,
     touched: cityTouched,
+    handleBlur:cityHandleBlur
   } = useFormik({
     initialValues: citydata,
     validationSchema: citySchima,
@@ -464,7 +466,7 @@ function countryCity() {
           </table>
         </Box>
       </Flex>
-
+              {console.log(countriesErrors, countryTouched)}
       {/* countries modal */}
       <CustomModal
         isOpen={countryIsOpen}
@@ -475,7 +477,7 @@ function countryCity() {
         cancelBtnLabel="Cancel"
       >
         <form className="space-y-3 md:space-y-4" onSubmit={countryHandleSubmit}>
-          <FormControl isInvalid={countriesErrors.name}>
+          <FormControl isInvalid={countriesErrors.name && countryTouched.name}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
@@ -483,6 +485,7 @@ function countryCity() {
               placeholder="countries Name"
               value={countriesValues.name}
               onChange={countryHandleChange}
+              onBlur={countryHandleBlur}
             />
             {countriesErrors.name && countryTouched.name ? (
               <FormErrorMessage>{countriesErrors.name}.</FormErrorMessage>
@@ -568,6 +571,7 @@ function countryCity() {
               placeholder="cities Name"
               value={citiesValues.name}
               onChange={cityHandleChange}
+              onBlur={cityHandleBlur}
             />
             {citiesErrors.name && cityTouched.name ? (
               <FormErrorMessage>{citiesErrors.name}.</FormErrorMessage>

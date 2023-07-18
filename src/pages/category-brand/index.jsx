@@ -70,6 +70,7 @@ function CategoryBrand() {
     handleSubmit: categoryHandleSubmit,
     handleReset: categoryHandleReset,
     touched: categoryTouched,
+    handleBlur:categoryHandleBlur
   } = useFormik({
     initialValues: inputdata,
     validationSchema: categoryANDBrandSchima,
@@ -130,6 +131,7 @@ function CategoryBrand() {
     handleSubmit: brandHandleSubmit,
     handleReset: brandHandleReset,
     touched: brandTouched,
+    handleBlur:brandHandleBlur,
   } = useFormik({
     initialValues: inputdata,
     validationSchema: categoryANDBrandSchima,
@@ -513,6 +515,7 @@ function CategoryBrand() {
               placeholder="category Name"
               value={categoryValues.name}
               onChange={categoryHandleChange}
+              onBlur={categoryHandleBlur}
             />
             {categoryErrors.name && categoryTouched.name ? (
               <FormErrorMessage>{categoryErrors.name}.</FormErrorMessage>
@@ -576,6 +579,7 @@ function CategoryBrand() {
               placeholder="brand Name"
               value={brandValues.name}
               onChange={brandHandleChange}
+              onBlur={brandHandleBlur}
             />
             {brandErrors.name && brandTouched.name ? (
               <FormErrorMessage>{brandErrors.name}.</FormErrorMessage>

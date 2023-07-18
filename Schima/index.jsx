@@ -205,11 +205,19 @@ export const countrySchima = Yup.object({
   is_active:Yup.bool().optional()
 })
 
-export const citySchima = Yup.object({
+
+
+export const realestateTypeSchima = Yup.object({
   name:Yup.string().max(20).required('Must Fill Name Field'),
+  is_active:Yup.bool().optional()
+})
+export const citySchima = Yup.object({
+  name:Yup.string().max(20,'Less Then 20 Character').required('Must Fill Name Field'),
   country_id:Yup.number(),
   is_active:Yup.bool().optional()
 })
+
+
 
 
 export const packageSchima = Yup.object({
