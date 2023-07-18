@@ -106,7 +106,7 @@ const AddState = () => {
           setUser(u);
         });
     }
-  }, []);
+  }, [geoLocation.loaded]);
 
   const inputField = {
     name: "",
