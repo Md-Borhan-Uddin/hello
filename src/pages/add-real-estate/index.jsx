@@ -60,11 +60,10 @@ const AddState = () => {
   };
   const toast = useToast();
 
-  const { loaded, coordinates } = useGeolocation();
+  const geoLocation = useGeolocation();
 
   useEffect(() => {
-    if(loaded){
-      console.log('coords',coordinates)
+    if(geoLocation.coordinates){
       setLocation([coordinates.lat, coordinates.lng]);
     }
     axios
@@ -107,7 +106,7 @@ const AddState = () => {
           setUser(u);
         });
     }
-  }, [loaded]);
+  }, []);
 
   const inputField = {
     name: "",
