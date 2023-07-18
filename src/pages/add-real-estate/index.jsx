@@ -63,8 +63,8 @@ const AddState = () => {
   const geoLocation = useGeolocation();
 
   useEffect(() => {
-    if(geoLocation.coordinates){
-      setLocation([coordinates.lat, coordinates.lng]);
+    if('geolocation' in navigator){
+      setLocation([geoLocation.coordinates.lat, geoLocation.coordinates.lng]);
     }
     axios
       .get(`${baseURL}/realestate/${userType}`, { headers: headers })
