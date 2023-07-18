@@ -64,7 +64,7 @@ const AddState = () => {
 
   useEffect(() => {
     if(loaded){
-
+      console.log('coords',coordinates)
       setLocation([coordinates.lat, coordinates.lng]);
     }
     axios
