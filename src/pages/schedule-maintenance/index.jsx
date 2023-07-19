@@ -338,7 +338,7 @@ function ScheduleMaintain() {
       })
       .then((res) => {
         console.log("real", res);
-        setrealestate(res.data);
+        setrealestate(res.data.results);
         handleReset();
         setIsEdit(false);
         onOpen();

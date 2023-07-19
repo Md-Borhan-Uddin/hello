@@ -99,7 +99,7 @@ function EffectReport() {
 
   useEffect(()=>{
     axios.get(baseURL+`/realestate/${userType}`,{headers:headers})
-    .then(res=>{setRealesate(res.data)})
+    .then(res=>{setRealesate(res.data.results)})
     .catch(error=>{console.log(error)})
 
     // getPackage().then(res=>console.log("data",res))
