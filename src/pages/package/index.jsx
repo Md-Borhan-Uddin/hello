@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
+import DeleteButton from "../../../components/deleteButton";
 import {
   Box,
   Button,
@@ -12,21 +12,15 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Select,
   Spacer,
-  useColorModeValue,
   useDisclosure,
   useToast,
   Checkbox,
-  Divider,
-  Flex,
-  VStack,
   SimpleGrid,
   Modal,
   ModalOverlay,
@@ -40,19 +34,16 @@ import {
   Stack,
   Radio,
   CheckboxGroup,
-  Icon,
   Switch,
 } from "@chakra-ui/react";
-import { FcOk, FcDisapprove } from "react-icons/fc";
 import { useFormik } from "formik";
-import { countrySchima, citySchima, packageSchima } from "../../../Schima";
+import { packageSchima } from "../../../Schima";
 import axios from "axios";
 import { baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { months } from "../../../utility/utlity";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import { editItem } from "../../../utility/country_city";
 
 const inputdata = {
   name: "",
@@ -261,11 +252,10 @@ function Package() {
     handleReset();
   };
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
+  const handleDelete = (id) => {
 
     axios
-      .delete(baseUrl.defaults.baseURL + `/package/${value}/`, {
+      .delete(baseUrl.defaults.baseURL + `/package/${id}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -391,15 +381,7 @@ function Package() {
                           >
                             Edit
                           </Button>
-
-                          <Button
-                            aria-label="deletebtn"
-                            onClick={handleDelete}
-                            value={item.id}
-                            colorScheme="red"
-                          >
-                            Delete
-                          </Button>
+                          <DeleteButton handleDelete={handleDelete} id={item.id} />
                         </HStack>
                       </Td>
                     </Tr>

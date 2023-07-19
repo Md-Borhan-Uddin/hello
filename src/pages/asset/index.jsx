@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import CustomModal from "../../../components/UserEditModal";
 import { useFormik } from "formik";
-import { categoryANDBrandSchima } from "../../../Schima";
+import { assetSchima, categoryANDBrandSchima } from "../../../Schima";
 import axios from "axios";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
@@ -26,18 +26,17 @@ import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import DeleteButton from "../../../components/deleteButton";
 
 // const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
 const inputdata = {
-  brand_id: "",
-  type_id: "",
+  brand: "",
+  type: "",
 };
 
 function Assert() {
   const [assets, setAssets] = useState([]);
-  const [categories, setCategories] = useState([])
-  const [brands, setBrands] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [id,setId] = useState()
   const router = useNavigate();
@@ -62,9 +61,11 @@ function Assert() {
     handleChange,
     handleSubmit,
     handleReset,
-    touched
+    touched,
+    handleBlur
   } = useFormik({
     initialValues: inputdata,
+    validationSchema:assetSchima,
     onSubmit: (values, { setSubmitting }) => {
       
       axios
@@ -75,6 +76,7 @@ function Assert() {
           console.log(res);
           // setBrands([...brands, res.data]);
           setAssets([...assets,res.data])
+          console.log(assets)
           
         })
         .catch((error) => {
@@ -110,8 +112,6 @@ function Assert() {
 
   useEffect(() => {
     getObjects("/asset/", headers, setAssets);
-    getObjects("/assert-type/", headers, setCategories);
-    getObjects("/assert-brand/", headers, setBrands);
     
   }, []);
   
@@ -131,8 +131,8 @@ function Assert() {
     const cat = assets.filter((e) => e.id == value);
     onOpen();
     setValues({
-      brand_id: cat[0]?.brand.id,
-      type_id: cat[0]?.type.id,
+      brand: cat[0]?.brand,
+      type: cat[0]?.type,
     });
   };
 
@@ -146,13 +146,14 @@ function Assert() {
     })
     .then((res) => {
       const { data } = res;
-      
-      assets.map((item) => {
+      const obj = assets.map((item) => {
         if (item.id == data.id) {
-          item.brand.name = data.brand.name;
-          item.type.name = data.type.name;
+          item.brand = data?.brand;
+          item.type = data?.type;
         }
+        return item
       });
+      setAssets(obj)
       onClose();
       toast({
         title: "Successfully Update",
@@ -175,10 +176,10 @@ function Assert() {
   };
 
  
-  const assetDelete = (e) => {
-    const { value } = e.target;
+  const assetDelete = (id) => {
+    // const { value } = e.target;
 
-    const res = deleteItem("/asset/", headers, value, setAssets, assets,toast);
+    const res = deleteItem("/asset/", headers, id, setAssets, assets,toast);
     
   };
   return (
@@ -225,32 +226,24 @@ function Assert() {
                       scope="row"
                       className="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {item.type.name}
+                      {item?.type}
                     </td>
                     <td className="px-6 py-4">
-                    {item.brand.name}
+                    {item?.brand}
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
                         <Button
                           aria-label="editbtn"
                           onClick={assetEdit}
-                          value={item.id}
+                          value={item?.id}
                           colorScheme="teal"
                           icon={<BiEdit />}
                         >
                           Edit
                         </Button>
 
-                        <Button
-                          aria-label="deletebtn"
-                          icon={<BsTrash3 />}
-                          onClick={assetDelete}
-                          value={item.id}
-                          colorScheme="red"
-                        >
-                          Delete
-                        </Button>
+                        <DeleteButton handleDelete={assetDelete} id={item.id}/>
                       </HStack>
                     </td>
                   </tr>
@@ -276,31 +269,39 @@ function Assert() {
           className="space-y-3 md:space-y-4"
           onSubmit={handleSubmit}
         >
-          <FormControl isInvalid={errors.type_id}>
+          <FormControl isInvalid={errors.type}>
             <FormLabel>Category</FormLabel>
-            <Select placeholder="Select Category" name="type_id" value={values.type_id} onChange={handleChange}>
-                {categories.map((item)=>
-                  <option key={item.id} value={item.id}>{item.name}</option>
-                )}
-            </Select>
-            {errors.type_id && touched.type_id ? (
-              <FormErrorMessage>{errors.type_id}.</FormErrorMessage>
+            <Input 
+            placeholder="Category" 
+            name="type" 
+            value={values.type} 
+            onChange={handleChange}
+            onBlur={handleBlur}
+            maxLength='20'
+            />
+              
+            {errors.type && touched.type ? (
+              <FormErrorMessage>{errors.type}.</FormErrorMessage>
             ) : null}
-            {customerror.type_id ? (
-              <p className="text-red-600">{customerror.type_id.message}.</p>
+            {customerror.type ? (
+              <p className="text-red-600">{customerror.type.message}.</p>
             ) : null}
           </FormControl>
-          <FormControl isInvalid={errors.brand_id && touched.brand_id}>
-          <Select placeholder="Select Brand" name="brand_id" value={values.brand_id} onChange={handleChange}>
-                {brands.map((item)=>
-                    <option key={item.id} value={item.id}>{item.name}</option>
-                )}
-            </Select>
-            {errors.brand_id && touched.brand_id ? (
+          <FormControl isInvalid={errors.brand && touched.brand}>
+          <Input 
+          placeholder="Select Brand" 
+          name="brand" 
+          value={values.brand} 
+          onChange={handleChange}
+          onBlur={handleBlur}
+          maxLength='20'
+          />
+            
+            {errors.brand && touched.brand ? (
               <FormErrorMessage>{errors.is_active}.</FormErrorMessage>
             ) : null}
-            {customerror.brand_id ? (
-              <p className="text-red-600">{customerror.brand_id.message}.</p>
+            {customerror.brand ? (
+              <p className="text-red-600">{customerror.brand.message}.</p>
             ) : null}
           </FormControl>
           {isEdit ? (

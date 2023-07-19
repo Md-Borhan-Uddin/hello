@@ -40,6 +40,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { getObjects } from "../../../utility/property";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import useGeolocation from "../../../hooks/geoLocation";
+import DeleteButton from "../../../components/deleteButton";
 
 const AddState = () => {
   const { access_token, userType } = getUser();
@@ -323,11 +324,10 @@ const AddState = () => {
     handleReset();
   };
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
+  const handleDelete = (id) => {
 
     axios
-      .delete(baseURL + `realestate/delete/${value}/`, {
+      .delete(baseURL + `/realestate/delete/${id}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -362,7 +362,12 @@ const AddState = () => {
   const handleOpen = ()=>{
     axios.get(baseURL+'/active-membership/',{headers:headers})
     .then(res=>{
-      if(res.data.id && new Date(res.data.expire_date)> new Date()){
+      if(userType==='Admin'){
+        handleReset();
+        setIsEdit(false);
+        onOpen();
+      }
+      else if(userType==='RealTor' && res.data.id && new Date(res.data.expire_date)> new Date()){
         handleReset();
         setIsEdit(false);
         onOpen();
@@ -439,15 +444,7 @@ const AddState = () => {
                           >
                             Edit
                           </Button>
-
-                          <Button
-                            aria-label="deletebtn"
-                            onClick={handleDelete}
-                            value={item.id}
-                            colorScheme="red"
-                          >
-                            Delete
-                          </Button>
+                          <DeleteButton handleDelete={handleDelete} id={item.id} />
                         </HStack>
                       </Td>
                     </Tr>

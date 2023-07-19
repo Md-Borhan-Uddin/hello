@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
+import DeleteButton from "../../../components/deleteButton";
 import {
   Box,
   Button,
@@ -240,28 +240,28 @@ function countryCity() {
     countryOnClose();
   };
 
-  const countryDelete = (e) => {
-    const { value } = e.target;
+  const countryDelete = (id) => {
+    
 
     const res = deleteItem(
       "/country/",
       headers,
-      value,
+      id,
       setCountries,
       countries,
       toast
     );
-    const obj = cities.filter((item) => item.country.id != value);
+    const obj = cities.filter((item) => item.country.id != id);
     setCities(obj);
   };
 
-  const cityDelete = (e) => {
-    const { value } = e.target;
+  const cityDelete = (id) => {
+    
 
     const res = deleteItem(
       `/city/delete/`,
       headers,
-      value,
+      id,
       setCities,
       cities,
       toast
@@ -363,14 +363,15 @@ function countryCity() {
                           Edit
                         </Button>
 
-                        <Button
+                        {/* <Button
                           aria-label="deletebtn"
                           onClick={countryDelete}
                           colorScheme="red"
                           value={item.id}
                         >
                           Delete
-                        </Button>
+                        </Button> */}
+                        <DeleteButton handleDelete={countryDelete} id={item.id} />
                       </HStack>
                     </td>
                   </tr>
@@ -449,14 +450,15 @@ function countryCity() {
                           Edit
                         </Button>
 
-                        <Button
+                        {/* <Button
                           aria-label="deletebtn"
                           onClick={cityDelete}
                           value={item.id}
                           colorScheme="red"
                         >
                           Delete
-                        </Button>
+                        </Button> */}
+                        <DeleteButton handleDelete={cityDelete} id={item.id} />
                       </HStack>
                     </td>
                   </tr>
@@ -486,6 +488,7 @@ function countryCity() {
               value={countriesValues.name}
               onChange={countryHandleChange}
               onBlur={countryHandleBlur}
+              maxLength='20'
             />
             {countriesErrors.name && countryTouched.name ? (
               <FormErrorMessage>{countriesErrors.name}.</FormErrorMessage>
@@ -572,6 +575,7 @@ function countryCity() {
               value={citiesValues.name}
               onChange={cityHandleChange}
               onBlur={cityHandleBlur}
+              maxLength='20'
             />
             {citiesErrors.name && cityTouched.name ? (
               <FormErrorMessage>{citiesErrors.name}.</FormErrorMessage>

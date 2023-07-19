@@ -47,6 +47,7 @@ import { useNavigate } from "react-router-dom";
 import { blobUrlToFile, months } from "../../../utility/utlity";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import { getObjects } from "../../../utility/category_brand";
+import DeleteButton from "../../../components/deleteButton";
 
 const inputdata = {
   real_estate: "",
@@ -277,11 +278,11 @@ function Assets() {
     handleReset();
   };
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
+  const handleDelete = (id) => {
+    
 
     axios
-      .delete(baseUrl.defaults.baseURL + `/assets/${value}/`, {
+      .delete(baseUrl.defaults.baseURL + `/assets/${id}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -389,14 +390,15 @@ function Assets() {
                             Edit
                           </Button>
 
-                          <Button
+                          {/* <Button
                             aria-label="deletebtn"
                             onClick={handleDelete}
                             value={item.id}
                             colorScheme="red"
                           >
                             Delete
-                          </Button>
+                          </Button> */}
+                          <DeleteButton handleDelete={handleDelete} id={item.id} /> 
                         </HStack>
                       </Td>
                     </Tr>

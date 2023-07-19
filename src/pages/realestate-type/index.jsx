@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import DeleteButton from '../../../components/deleteButton'
 import {
   Button,
   Checkbox,
@@ -206,15 +207,15 @@ function RealestateType() {
 
  
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
-    setId(value)
+  const handleDelete = (id) => {
+    
+    setId(id)
     axios
-    .delete(`${baseURL}/real-estate-type/${value}/`, {
+    .delete(`${baseURL}/real-estate-type/${id}/`, {
       headers: headers,
     })
     .then((res) => {
-      const object = types.filter((e) => e.id != value);
+      const object = types.filter((e) => e.id != id);
 
     //   state = object;
       setTypes(object);
@@ -303,15 +304,7 @@ function RealestateType() {
                           Edit
                         </Button>
 
-                        <Button
-                          aria-label="deletebtn"
-                          icon={<BsTrash3 />}
-                          onClick={handleDelete}
-                          value={item.id}
-                          colorScheme="red"
-                        >
-                          Delete
-                        </Button>
+                        <DeleteButton handleDelete={handleDelete} id={item.id}/>
                       </HStack>
                     </td>
                   </tr>
@@ -341,6 +334,7 @@ function RealestateType() {
               value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
+              maxLength='20'
             />
             {errors.name && touched.name ? (
               <FormErrorMessage>{errors.name}.</FormErrorMessage>

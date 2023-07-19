@@ -161,6 +161,7 @@ export default function Registration() {
                     value={values.username}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    maxLength='20'
                   />
                   {errors.username && touched.username ? (
                     <FormErrorMessage>{errors.username}.</FormErrorMessage>
@@ -176,6 +177,8 @@ export default function Registration() {
                       value={values.password}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      maxLength='20'
+                      minLength='8'
                     />
                     <Tooltip
                       borderRadius={"base"}
@@ -218,6 +221,8 @@ export default function Registration() {
                     value={values.password2}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    maxLength='20'
+                    minLength='8'
                   />
                   {errors.password2 && touched.password2 ? (
                     <FormErrorMessage>{errors.password2}.</FormErrorMessage>
@@ -234,6 +239,7 @@ export default function Registration() {
                     value={values.first_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    maxLength='10'
                   />
                   {errors.first_name && touched.first_name ? (
                     <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
@@ -252,6 +258,7 @@ export default function Registration() {
                     value={values.middle_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    maxLength='10'
                   />
                   {errors.middle_name && touched.middle_name ? (
                     <FormErrorMessage>{errors.middle_name}.</FormErrorMessage>
@@ -266,6 +273,7 @@ export default function Registration() {
                     value={values.last_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    maxLength='10'
                   />
                   {errors.last_name && touched.last_name ? (
                     <FormErrorMessage>{errors.last_name}.</FormErrorMessage>
@@ -283,6 +291,7 @@ export default function Registration() {
                       value={values.email}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      maxLength='50'
                     />
                     <Tooltip
                       borderRadius={"base"}

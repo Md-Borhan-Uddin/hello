@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import DeleteButton from '../../../components/deleteButton'
 import {
   Box,
   Button,
@@ -272,11 +273,10 @@ function ScheduleMaintain() {
     handleReset();
   };
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
+  const handleDelete = (id) => {
 
     axios
-      .delete(baseUrl.defaults.baseURL + `/schedule-maintain/${value}/`, {
+      .delete(baseUrl.defaults.baseURL + `/schedule-maintain/${id}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -403,15 +403,7 @@ function ScheduleMaintain() {
                           >
                             Edit
                           </Button>
-
-                          <Button
-                            aria-label="deletebtn"
-                            onClick={handleDelete}
-                            value={item.id}
-                            colorScheme="red"
-                          >
-                            Delete
-                          </Button>
+                          <DeleteButton handleDelete={handleDelete} id={item.id} />
                         </HStack>
                       </Td>
                     </Tr>

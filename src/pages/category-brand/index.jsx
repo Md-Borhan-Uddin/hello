@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
+import DeleteButton from '../../../components/deleteButton'
 import {
   Box,
   Button,
@@ -302,13 +302,13 @@ function CategoryBrand() {
     );
   };
 
-  const categoryDelete = (e) => {
-    const { value } = e.target;
+  const categoryDelete = (id) => {
+
 
     const res = deleteItem(
       "/assert-type/",
       headers,
-      value,
+      id,
       setCategorys,
       categorys,
       toast
@@ -316,10 +316,10 @@ function CategoryBrand() {
     
   };
 
-  const brandDelete = (e) => {
-    const { value } = e.target;
+  const brandDelete = (id) => {
+    
 
-    const res = deleteItem("/assert-brand/", headers, value, setBrands, brands,toast);
+    const res = deleteItem("/assert-brand/", headers, id, setBrands, brands,toast);
     
   };
   return (
@@ -392,16 +392,7 @@ function CategoryBrand() {
                         >
                           Edit
                         </Button>
-
-                        <Button
-                          aria-label="deletebtn"
-                          icon={<BsTrash3 values={item.id} />}
-                          onClick={categoryDelete}
-                          colorScheme="red"
-                          value={item.id}
-                        >
-                          Delete
-                        </Button>
+                        <DeleteButton handleDelete={categoryDelete} id={item.id}/>
                       </HStack>
                     </td>
                   </tr>
@@ -474,16 +465,8 @@ function CategoryBrand() {
                           Edit
                         </Button>
 
-                        <Button
-                          aria-label="deletebtn"
-                          icon={<BsTrash3 />}
-                          onClick={brandDelete}
-                          value={item.id}
-                          colorScheme="red"
-                          ref={brandid}
-                        >
-                          Delete
-                        </Button>
+                        
+                        <DeleteButton handleDelete={brandDelete} id={item.id}/>
                       </HStack>
                     </td>
                   </tr>
@@ -516,6 +499,7 @@ function CategoryBrand() {
               value={categoryValues.name}
               onChange={categoryHandleChange}
               onBlur={categoryHandleBlur}
+              maxLength='20'
             />
             {categoryErrors.name && categoryTouched.name ? (
               <FormErrorMessage>{categoryErrors.name}.</FormErrorMessage>
@@ -580,6 +564,7 @@ function CategoryBrand() {
               value={brandValues.name}
               onChange={brandHandleChange}
               onBlur={brandHandleBlur}
+              maxLength='20'
             />
             {brandErrors.name && brandTouched.name ? (
               <FormErrorMessage>{brandErrors.name}.</FormErrorMessage>

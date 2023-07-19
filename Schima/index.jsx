@@ -218,6 +218,12 @@ export const citySchima = Yup.object({
 })
 
 
+export const assetSchima = Yup.object({
+  brand:Yup.string().max(20).required('Must Fill Name Field'),
+  type:Yup.string().max(20).required('Must Fill Name Field'),
+})
+
+
 
 
 export const packageSchima = Yup.object({

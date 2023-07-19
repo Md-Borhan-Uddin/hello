@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import DeleteButton from '../../../components/deleteButton'
 import {
   Box,
   Button,
@@ -43,16 +44,13 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import {
-  countrySchima,
-  citySchima,
-  packageSchima,
   paymentSchima,
 } from "../../../Schima";
 import axios from "axios";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
-import { MdCheckCircle, MdSettings } from "react-icons/md";
+import { MdCheckCircle } from "react-icons/md";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 const inputdata = {
@@ -282,11 +280,10 @@ function Membership() {
     handleReset();
   };
 
-  const handleDelete = (e) => {
-    const { value } = e.target;
+  const handleDelete = (id) => {
 
     axios
-      .delete(baseURL + `/membership/${value}/`, {
+      .delete(baseURL + `/membership/${id}/`, {
         headers: headers,
       })
       .then((res) => {
@@ -401,15 +398,7 @@ function Membership() {
                             >
                               Edit
                             </Button> */}
-
-                            <Button
-                              aria-label="deletebtn"
-                              onClick={handleDelete}
-                              value={item.id}
-                              colorScheme="red"
-                            >
-                              Delete
-                            </Button>
+                            <DeleteButton handleDelete={handleDelete} id={item.id} />
                           </HStack>
                         </Td>
                       </Tr>
