@@ -138,35 +138,18 @@ function Dashboard() {
     setUsertype(userType);
     dispatch(setLoginUser({user:activeUser}))
 
-    fetch(baseURL + "/active-membership/", { headers: headers })
+    fetch(baseURL + "/membership/", { headers: headers })
       .then((res) => res.json())
       .then((data) => {
-        let u = [];
-        data.map((item) =>
-          u.push({ key: item.username, value: item.id.toString() })
-        );
-        setActiveMembership(u);
+        const activeObject = data.filter((item)=>new Date(item.expire_date)>new Date())
+        const inactiveObject = data.filter((item)=>new Date(item.expire_date)>new Date())
+        
+        setActiveMembership(activeObject)
+        setInactiveMembership(inactiveObject)
       })
       .catch((error) => {
         console.log(error);
       });
-
-    fetch(baseURL + "/inactive-membership/", { headers: headers })
-      .then((res) => res.json())
-      .then((data) => {
-        let u = [];
-        data.map((item) =>
-          u.push({ key: item.username, value: item.id.toString() })
-        );
-        setInactiveMembership(u);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // if(isSuccess){
-    //   // dispatch(setActiveUser(activeUser))
-    // }
 
     if (userType === "Admin") {
       fetch(baseURL + "/all-user/", { headers: headers })

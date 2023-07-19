@@ -63,7 +63,9 @@ const AddState = () => {
   const geoLocation = useGeolocation();
 
   useEffect(() => {
-    if('geolocation' in navigator){
+    const len = Object.keys(geoLocation.coordinates).length
+    if(len>0){
+      
       setLocation([geoLocation.coordinates.lat, geoLocation.coordinates.lng]);
     }
     axios
@@ -288,7 +290,7 @@ const AddState = () => {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
+        console.log('data',res);
         // const obj = realestate.filter(item=>item.id!=id)
         // setRealestate(obj)
         toast({
@@ -329,7 +331,6 @@ const AddState = () => {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         const obj = realestate.filter((item) => item.id != id);
         setRealestate(obj);
         toast({
@@ -359,16 +360,28 @@ const AddState = () => {
       });
   };
   const handleOpen = ()=>{
-    // axios.get(baseURL+'/active-membership/',{headers:headers})
-    // .then(res=>{
-    //   console.log(res)
-    // })
-    // .catch(err=>{
-    //   console.log(err)
-    // })
-    handleReset();
-    setIsEdit(false);
-    onOpen();
+    axios.get(baseURL+'/active-membership/',{headers:headers})
+    .then(res=>{
+      if(res.data.id && new Date(res.data.expire_date)> new Date()){
+        handleReset();
+        setIsEdit(false);
+        onOpen();
+      }
+      else{
+        toast(
+          {
+            title: "you don't have active membership",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          }
+        )
+      }
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+    
   }
 
   const [error, setErrors] = useState([]);

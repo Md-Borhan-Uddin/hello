@@ -49,14 +49,13 @@ function Profile() {
   const profileData = {
     username: "",
     first_name: "",
-    middle_name: "",
+    middel_name: "",
     last_name: "",
     email: "",
-    mobile_number: "",
-    image:""
+    mobile_number: ""
   };
   // const [user, setUser] = useState({})
-  
+  const [photo, setPhoto] = useState('')
   const { access_token } = getUser();
   const { data: profile, isSuccess: isProfileSuccess } =
     useGetUserQuery(access_token);
@@ -81,10 +80,12 @@ function Profile() {
     initialValues: profileData,
     validationSchema: userUpdateSchima,
     onSubmit: (values, { setSubmitting }) => {
-      console.log("val", values);
       axios
         .patch(`${baseURL}/user-edit/${values.username}/`, values, {
-          headers: headers,
+          headers:  {
+            "Content-type":"multipart/form-data",
+            Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+          },
         })
         .then((res) => {
           console.log(res);
@@ -92,14 +93,14 @@ function Profile() {
           setValues({
             first_name: data?.first_name,
             last_name: data?.last_name,
-            middle_name: data?.middle_name,
+            middel_name: data?.middel_name,
             username: data?.username,
             email: data?.email,
             mobile_number: data?.mobile_number,
+            
           });
-          blobUrlToFile(res.data?.photo).then(res=>{
-            setFieldValue('image',res)
-          })
+          setPhoto(data?.image)
+          
           toast({
             description: "Update Successfully",
             status: "success",
@@ -109,7 +110,7 @@ function Profile() {
         })
         .catch((err) => {
           console.log("errors", err);
-          const e = butifyErrors(res.error.data);
+          const e = butifyErrors(err.error.data);
           setcustomerror(e);
           window.scrollTo(0, 0);
         });
@@ -117,13 +118,14 @@ function Profile() {
   });
 
   const handleImage = (e)=>{
-    console.log(e)
-    // setFieldValue('image',e.target.files[0])
     const image = e.target.files[0]
     console.log(image)
     axios
         .patch(`${baseURL}/user-edit/${values.username}/`, {image:image}, {
-          headers: headers,
+          headers: {
+            "Content-type":"multipart/form-data",
+            Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+          },
         })
         .then((res) => {
           console.log(res);
@@ -131,12 +133,13 @@ function Profile() {
           setValues({
             first_name: data?.first_name,
             last_name: data?.last_name,
-            middle_name: data?.middle_name,
+            middel_name: data?.middel_name,
             username: data?.username,
             email: data?.email,
             mobile_number: data?.mobile_number,
-            image:data?.image
+            
           });
+          setPhoto(data?.image)
           
         })
         .catch((err) => {
@@ -149,16 +152,25 @@ function Profile() {
     new_password: "",
   };
   useEffect(() => {
+    axios.get(baseURL+'/active-membership/',{headers:headers})
+    .then(res=>{
+      console.log(res)
+    })
+    .catch(err=>{
+      console.log(err)
+    })
     setValues({
       first_name: profile?.first_name,
       last_name: profile?.last_name,
-      middle_name: profile?.middle_name,
+      middel_name: profile?.middel_name,
       username: profile?.username,
       email: profile?.email,
       mobile_number: profile?.mobile_number,
-      image:profile?.image
+      
     });
+    setPhoto(profile?.image)
   }, []);
+
   return (
     <>
       <Box ml={"1rem"}>
@@ -175,7 +187,7 @@ function Profile() {
             >
               <Avatar
                 size={"xl"}
-                src={values.image}
+                src={photo}
                 alt={"Avatar Alt"}
                 mb={4}
                 pos={"relative"}
@@ -397,7 +409,7 @@ const UpdateForm = ({
   console.log(errors);
   const [midname, setMidname] = useState('')
   useEffect(()=>{
-    setFieldValue('middle_name',midname)
+    setFieldValue('middel_name',midname)
   },[midname])
   return (
     <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
@@ -443,18 +455,18 @@ const UpdateForm = ({
         </FormControl>
       </div>
       <div className="grid md:grid-cols-2 md:gap-3">
-        <FormControl isInvalid={errors.middle_name && touched.middle_name}>
+        <FormControl isInvalid={errors.middel_name && touched.middel_name}>
           <FormLabel>Middle Name</FormLabel>
           <Input
             type="text"
-            name="middle_name"
+            name="middel_name"
             placeholder="Middle Name"
             onChange={(e)=>setMidname(e.target.value)}
-            value={midname}
+            value={values.middel_name}
             onBlur={handleBlur}
           />
-          {errors.middle_name && touched.middle_name ? (
-            <FormErrorMessage>{errors.middle_name}.</FormErrorMessage>
+          {errors.middel_name && touched.middel_name ? (
+            <FormErrorMessage>{errors.middel_name}.</FormErrorMessage>
           ) : null}
         </FormControl>
         <FormControl isInvalid={errors.last_name && touched.last_name}>
@@ -519,11 +531,9 @@ const UpdateForm = ({
 const FileUpload = (props) => {
   const { accept, multiple, children, handlePhoto } = props
   const inputRef = useRef(null)
-  const [image, setImage] = useState(null)
 
   const handleClick = () => inputRef.current?.click()
   const handleChange = (e)=>{
-    console.log(e)
     handlePhoto(e)
   }
 
