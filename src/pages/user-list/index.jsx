@@ -147,6 +147,7 @@ function UserList() {
     const { value, checked } = e.target;
     setUserID(value)
     setCheck(checked)
+    setStatus(!check);
     statusOnOpen()
   }
 
@@ -156,7 +157,7 @@ function UserList() {
     
     console.log('data',data)
     fetchdata(data[0]?.username, { is_active: check }, true)
-    setStatus(!check);
+    setStatus(check);
     statusOnClose();
     
   };
