@@ -119,7 +119,7 @@ function Assets() {
     axios
       .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
       .then((res) => {
-        setRealestate(res.data);
+        setRealestate(res.data.results);
       })
       .catch((error) => {
         console.log(error);
