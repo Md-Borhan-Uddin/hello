@@ -14,7 +14,7 @@ export const checkIfTokenExpired = () => {
       return false
     }
     const decoded = parseJwt(access_token)
-    const access_token_expaire = new Date(decoded.exp*1000)
+    const access_token_expaire = new Date(decoded.exp*1000,)
     const isExpaire = access_token_expaire < new Date()
 
     return isExpaire;

@@ -324,7 +324,7 @@ function CategoryBrand() {
   };
   return (
     <>
-      <Flex gap={3}>
+      <Flex gap={3} overflowX={'auto'}>
       <Box w={{base:'100%',md:'50%'}} pl={'10px'}>
           <Flex
             alignItems={"center"}

@@ -1,22 +1,20 @@
-"use client"
-import { propertyAddSchima, propertyEditSchima } from "@/Schima";
-import CommonSelect from "@/components/CommonForm";
-import InputField from "@/components/CommonForm/InputField";
-import InputFormRadio from "@/components/CommonForm/InputFormRadio";
-import { baseURL } from "@/utility/baseURL";
+
+import { propertyEditSchima } from "../../../Schima";
+import CommonSelect from "../../../components/CommonForm";
+import InputField from "../../../components/CommonForm/InputField";
+import InputFormRadio from "../../../components/CommonForm/InputFormRadio";
+import { baseURL } from "../../../utility/baseURL";
 
 import { useFormik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import CurrencyList from 'currency-list'
 import axios from "axios";
 import { Alert, AlertDescription, AlertIcon, Box, Button, useToast } from "@chakra-ui/react";
-import { getUser } from "@/utility/authentication";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import DefaultLayout from "../DefaultLayout";
-import RequireAuth from "@/components/auth/TokenExpaireCheck";
-import { getObjects } from "@/utility/property";
+import { getUser } from "../../../utility/authentication";
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import { getObjects } from "../../../utility/property";
 import { blobUrlToFile } from "../../../utility/utlity";
+import { useNavigate,Link } from "react-router-dom";
 
 
 
@@ -28,7 +26,7 @@ function EditState() {
   const [currency, setCurrency] = useState([{ key: "Please select", value: "" }])
   const [type, setType] = useState([])
   const [user, setUser] = useState([])
-  const router = useRouter()
+  const router = useNavigate()
   const realestateid = useRef()
   const toast = useToast()
   const [image_url, setImageUrl] = useState('')
@@ -87,8 +85,6 @@ function EditState() {
         return;
       }
       
-      
-      console.log("value",values)
       axios
         .patch(baseURL+`/realestate/edit/${id}/`, values,{
           headers:{
@@ -104,7 +100,7 @@ function EditState() {
                 duration: 2000,
                 isClosable: true,
               })
-          router.push(`/property-list/${userType}`);
+          router(`/property-list/${userType}`);
         })
         .catch((error) => {
           console.log(error.response)
@@ -199,7 +195,6 @@ function EditState() {
             })
           })
           .catch((error) => {
-            // setcustomerror(error.response.data);
             console.log(error);
             if(error.response.status==404){
               toast({
@@ -307,7 +302,7 @@ function EditState() {
 
 
   return (
-    <DefaultLayout>
+    <>
     <div className="py-2 px-4 flex justify-center">
       <div className="add-state-body w-3/4 mt-2 px-4 pb-3">
         <h2 className="text-center font-bold text-2xl text-gray-500 mt-2">Update Real Estate </h2>
@@ -350,7 +345,7 @@ function EditState() {
               </div>
               <div className="md:ml-2 md:w-1/2 flex">
               <div className="md:ml-2">
-                <Image src={image_url} width={100} height={100} alt="property image" />
+                <img src={image_url} width={100} height={100} alt="property image" />
               </div>
               <div className="md:ml-2">
               <InputField 
@@ -549,7 +544,7 @@ function EditState() {
         </div>
       </div>
     </div>
-    </DefaultLayout>
+    </>
   );
 };
 

@@ -9,17 +9,30 @@ import { baseUrl } from '../../utility/baseURL';
 
 
 const refreshAccessToken = async (refreshToken) => {
+  console.log('acess token reguiest')
   try {
     const response = await axios.post(baseUrl.defaults.baseURL+"/refresh-token/",{"refresh":refreshToken});
-    
+    console.log('refresh', response)
     const { access } = response.data;
-    localStorage.setItem('access_token', access);
     return access;
   } catch (error) {
+    console.log('error',error)
     return error
     
   }
 };
+const getAccessToken = (refreshToken,router)=>{
+  axios.post(baseUrl.defaults.baseURL+"/refresh-token/",{"refresh":refreshToken})
+  .then(res=>{
+    localStorage.setItem('access_token', res.data.access)
+    
+  })
+  .catch(err=>{
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    router('/login')
+  })
+}
 
 
 const RequireAuth = (WrappedComponent) => {
@@ -32,21 +45,17 @@ const RequireAuth = (WrappedComponent) => {
       const refreshToken = localStorage.getItem('refresh_token');
       // Check if the access token is expired
       const isTokenExpired = checkIfTokenExpired(accessToken);
+      
       if(!accessToken){
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
         router('/login');
       }
       else if (isTokenExpired && refreshToken) {
-        refreshAccessToken(refreshToken)
-          .then((newAccessToken) => {
-            console.log('refresh token new', newAccessToken)
-            localStorage.setItem('access_token', newAccessToken);
-            setIsShow(true)
-          })
-          .catch((error) => {
-            console.error('Token refresh error:', error);
-            router('/login');
-          });
+        getAccessToken(refreshToken,router)
       } else if (isTokenExpired && !refreshToken) {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
         router('/login');
       }
       else{

@@ -255,8 +255,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 Profile
                 </Link>
               </MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
+              <MenuItem>
+                <Link to={'/dashboard'}>Dashboard</Link>
+              </MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>

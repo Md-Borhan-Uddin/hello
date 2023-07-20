@@ -390,14 +390,6 @@ function Membership() {
                             alignItems={"center"}
                             justifyContent={"center"}
                           >
-                            {/* <Button
-                              aria-label="editbtn"
-                              onClick={handleEdit}
-                              value={item.id}
-                              colorScheme="teal"
-                            >
-                              Edit
-                            </Button> */}
                             <DeleteButton handleDelete={handleDelete} id={item.id} />
                           </HStack>
                         </Td>

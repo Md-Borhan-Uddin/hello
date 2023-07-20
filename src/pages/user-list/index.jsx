@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Switch, useToast } from "@chakra-ui/react";
+import { Box, Button, HStack, Switch, useToast } from "@chakra-ui/react";
 import SearchBox from "../../../components/SearchBox";
 import CustomModal from "../../../components/UserEditModal";
 import {
@@ -17,6 +17,8 @@ import { getUser } from "../../../utility/authentication";
 import Paginator from "../../../components/Paginator";
 import {useNavigate} from 'react-router-dom'
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import DeleteButton from "../../../components/deleteButton";
+import { BiEdit } from "react-icons/bi";
 
 function UserList() {
   const router = useNavigate()
@@ -161,14 +163,14 @@ function UserList() {
     statusOnClose();
     
   };
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     axios
-      .delete(baseUrl.defaults.baseURL + `/user-delete/${userID}/`, {
+      .delete(baseUrl.defaults.baseURL + `/user-delete/${id}/`, {
         headers: headers,
       })
       .then((res) => {
         console.log(res);
-        const obj = user.filter(item=>item.id!=userID)
+        const obj = user.filter(item=>item.id!=id)
         
         setUser(obj)
 
@@ -180,7 +182,6 @@ function UserList() {
         });
       })
       .catch((error) => {
-        // setcustomerror(error.response.data);
         console.log(error);
         if (error.response.status == 401) {
           toast({
@@ -193,7 +194,6 @@ function UserList() {
         }
       });
     editOnClose();
-    // window.location.reload()
   };
 
   const handleEdit = (e) => {
@@ -307,14 +307,19 @@ function UserList() {
                           />}
                       </td>
                       <td className="px-6 py-4">
-                        <button
+                        <HStack alignItems={"center"} justifyContent={"center"}>
+                        <Button
+                          aria-label="editbtn"
                           onClick={openEditForm}
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           value={item.id}
-                          ref={userid}
+                          colorScheme="teal"
+                          icon={<BiEdit />}
                         >
                           Edit
-                        </button>
+                        </Button>
+
+                        <DeleteButton handleDelete={handleDelete} id={item.id}/>
+                      </HStack>
                       </td>
                     </tr>
                   );
@@ -334,8 +339,6 @@ function UserList() {
         title="Edit User"
         isFooter={true}
         cancelBtnLabel="Cancel"
-        deleteBtnLable="Delete"
-        handleDelete={handleDelete}
       >
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div className="grid md:grid-cols-2 md:gap-3">

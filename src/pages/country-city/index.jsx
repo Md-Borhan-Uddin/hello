@@ -296,7 +296,7 @@ function countryCity() {
 
   return (
     <>
-      <Flex gap={3} flexWrap={{ base: "wrap", md: "nowrap" }}>
+      <Flex gap={3} flexWrap={{ base: "wrap", md: "nowrap" }} overflowX={'auto'}>
         <Box w={{ base: "100%", md: "50%" }} pl={"10px"}>
           <Flex
             alignItems={"center"}
@@ -304,7 +304,7 @@ function countryCity() {
             p={"0.5rem"}
           >
             <Text as={"h2"} fontSize={"1.3rem"} textAlign={"center"}>
-              countries List
+              Countries List
             </Text>
             <Button
               onClick={() => {
@@ -315,7 +315,7 @@ function countryCity() {
               backgroundColor={"rgb(34,220,118)"}
               _hover={{ backgroundColor: "rgb(58, 187, 116)" }}
             >
-              Add country
+              Add Country
             </Button>
           </Flex>
           <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
@@ -362,15 +362,6 @@ function countryCity() {
                         >
                           Edit
                         </Button>
-
-                        {/* <Button
-                          aria-label="deletebtn"
-                          onClick={countryDelete}
-                          colorScheme="red"
-                          value={item.id}
-                        >
-                          Delete
-                        </Button> */}
                         <DeleteButton handleDelete={countryDelete} id={item.id} />
                       </HStack>
                     </td>
@@ -431,6 +422,7 @@ function countryCity() {
                     >
                       {item.name}
                     </td>
+                    <td className="px-6 py-4">{item.country.name}</td>
                     <td className="px-6 py-4 flex items-center justify-center">
                       <Switch
                         value={item.id}
@@ -438,7 +430,6 @@ function countryCity() {
                         isChecked={item.is_active}
                       />
                     </td>
-                    <td className="px-6 py-4">{item.country.name}</td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
                         <Button
@@ -449,15 +440,6 @@ function countryCity() {
                         >
                           Edit
                         </Button>
-
-                        {/* <Button
-                          aria-label="deletebtn"
-                          onClick={cityDelete}
-                          value={item.id}
-                          colorScheme="red"
-                        >
-                          Delete
-                        </Button> */}
                         <DeleteButton handleDelete={cityDelete} id={item.id} />
                       </HStack>
                     </td>
@@ -468,7 +450,6 @@ function countryCity() {
           </table>
         </Box>
       </Flex>
-              {console.log(countriesErrors, countryTouched)}
       {/* countries modal */}
       <CustomModal
         isOpen={countryIsOpen}

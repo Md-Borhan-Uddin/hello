@@ -28,6 +28,7 @@ import { useGetUserQuery } from "../../../data/auth/service/userServide";
 import { useDispatch } from "react-redux";
 import { setLoginUser } from "../../../data/auth/slice/userSlice";
 import {useGetRealestateQuery} from "../../../data/auth/service/realestateService"
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
 ChartJS.register(
   ArcElement,
@@ -296,4 +297,4 @@ function Dashboard() {
   return pageContent
 }
 
-export default Dashboard;
+export default RequireAuth(Dashboard);

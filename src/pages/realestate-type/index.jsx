@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DeleteButton from '../../../components/deleteButton'
 import {
+  Box,
   Button,
   Checkbox,
   Flex,
@@ -24,8 +25,6 @@ import { BsTrash3 } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import {
-  deleteItem,
-  editItem,
   getObjects,
 } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
@@ -239,7 +238,7 @@ function RealestateType() {
   };
   return (
     <>
-      <Flex gap={3}>
+      <Box>
         <div className="relative overflow-x-auto mt-3 pr-3">
           <Flex
             alignItems={"center"}
@@ -313,7 +312,7 @@ function RealestateType() {
             </tbody>
           </table>
         </div>
-      </Flex>
+      </Box>
 
       {/* category modal */}
       <CustomModal

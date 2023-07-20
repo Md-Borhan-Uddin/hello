@@ -1,34 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
-  Icon,
-  IconButton,
-  Input,
-  Select,
   Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import CustomModal from "../../../components/UserEditModal";
 import { useFormik } from "formik";
-import { assetSchima, categoryANDBrandSchima } from "../../../Schima";
+import { assetSchima } from "../../../Schima";
 import axios from "axios";
-import { baseURL, baseUrl } from "../../../utility/baseURL";
-import { getUser } from "../../../utility/authentication";
-import { BsTrash3 } from "react-icons/bs";
+import { baseURL } from "../../../utility/baseURL";
+import { getUser } from "../../../utility/authentication"
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
+import { deleteItem } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import DeleteButton from "../../../components/deleteButton";
 
-// const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
 const inputdata = {
   brand: "",
@@ -117,8 +110,6 @@ function Assert() {
   
 
   const handleAdd = ()=>{
-    // getObjects("/assert-type/", headers, setCategories);
-    // getObjects("/assert-brand/", headers, setBrands);
     handleReset();
     setIsEdit(false); 
     onOpen()
@@ -139,7 +130,6 @@ function Assert() {
  
   const assetUpdate = (e) => {
     e.preventDefault();
-    // const { value } = categoryId.current;
     axios
     .patch(`${baseURL}/asset/${id}/`, values, {
       headers: headers,
@@ -177,7 +167,6 @@ function Assert() {
 
  
   const assetDelete = (id) => {
-    // const { value } = e.target;
 
     const res = deleteItem("/asset/", headers, id, setAssets, assets,toast);
     

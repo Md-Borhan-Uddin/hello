@@ -91,7 +91,7 @@ export default function Activate() {
         console.log('error',err);
       });
   };
-  console.log('resend',resend)
+  
 
   const pageContent = isLoading ? (
     <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>

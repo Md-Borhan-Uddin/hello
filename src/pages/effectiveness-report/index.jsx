@@ -336,14 +336,6 @@ function EffectReport() {
                       <Td>{item.number_of_floors}</Td>
                       <Td>
                         <HStack alignItems={"center"} justifyContent={"center"}>
-                          {/* <Button
-                            aria-label="editbtn"
-                            onClick={handleEdit}
-                            value={item.id}
-                            colorScheme="primary"
-                          >
-                            Download
-                          </Button> */}
                           <GeneratePDF realestate={item.realestate_id} />
                         </HStack>
                       </Td>

@@ -13,12 +13,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { deletetUser, getUser } from "../utility/authentication";
 import { useNavigate } from "react-router-dom";
