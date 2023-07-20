@@ -72,6 +72,7 @@ const AddState = () => {
     axios
       .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
       .then((res) => {
+        console.log(res)
         setRealestate(res.data.results);
       })
       .catch((err) => {
@@ -145,6 +146,11 @@ const AddState = () => {
     initialValues: inputField,
     validationSchema: propertyAddSchima,
     onSubmit: (values) => {
+      if (!access_token) {
+        setErrors({ message: "You are not Login. First Login Then Create" });
+        window.scrollTo(0, 0);
+        return;
+      }
       values.location = JSON.stringify(location);
       setFieldValue("location", location);
       if (!values.invoice_file) {
@@ -160,12 +166,8 @@ const AddState = () => {
       } else {
         values.owner = false;
       }
-
-      if (!access_token) {
-        setErrors({ message: "You are not Login. First Login Then Create" });
-        window.scrollTo(0, 0);
-        return;
-      }
+      console.log(new Date(values.ex))
+      
       axios
         .post(baseURL + `/realestate/${userType}/`, values, {
           headers: {
@@ -175,6 +177,7 @@ const AddState = () => {
         })
         .then((res) => {
           // setUser(res.data)
+          setRealestate(res.data.results)
           router(`/property-list/${userType}`);
         })
         .catch((error) => {

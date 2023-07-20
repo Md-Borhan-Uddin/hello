@@ -18,7 +18,7 @@ export default function PropertyList() {
     }
   useEffect(()=>{
     axios.get(baseUrl.defaults.baseURL+`/realestate/${userType}/`,{headers:headers})
-    .then(res=>{setData(res.data);})
+    .then(res=>{setData(res.data.results);})
     .catch(error=>console.log(error))
   },[])
   return (
