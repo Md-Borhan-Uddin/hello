@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Input,
   Text,
   useDisclosure,
   useToast,
@@ -18,7 +19,7 @@ import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication"
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { deleteItem } from "../../../utility/category_brand";
+import { deleteItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import DeleteButton from "../../../components/deleteButton";
 

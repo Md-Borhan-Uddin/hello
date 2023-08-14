@@ -303,3 +303,15 @@ export const assetsSchema = Yup.object({
     checkFileType
   ).optional(),
 })
+
+
+
+export const visitorSchima = Yup.object({
+  first_name: Yup.string().max(10,"Maximum 10 Character").required('Enter First Name '),
+  last_name: Yup.string().max(10,"Maximum 10 Character").required('Enter Last Name'),
+  
+  email: Yup.string().max(50, "Maximum 50 Character").email().required('Enter Email').matches(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|([0-9]{10})+$/,
+  "wrong Email format"),
+  mobile_number: Yup.string().required('Enter valid Mobile  Number')
+.matches(/^[+][0-9]{3}[\s\./0-9]{9}$/,'Invalid phone Number')
+})

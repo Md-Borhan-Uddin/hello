@@ -6,7 +6,8 @@ import activeUserSlice from '../auth/slice/activeUserSlice'
 import { userAPI } from '../auth/service/userServide'
 import userSlice from '../auth/slice/userSlice'
 import { realestateAPI } from '../auth/service/realestateService'
-
+import {notificationAPI} from '../notification/notificationService'
+import notificationSlice from '../notification/notificationSlice'
 
 
 export const store = configureStore({
@@ -16,12 +17,15 @@ export const store = configureStore({
     activeUser:activeUserSlice,
     [userAPI.reducerPath]:userAPI.reducer,
     userData:userSlice,
-    [realestateAPI.reducerPath] : realestateAPI.reducer
+    [realestateAPI.reducerPath] : realestateAPI.reducer,
+    notifications:notificationSlice,
+    [notificationAPI.reducerPath]: notificationAPI.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(userAuthAPI.middleware)
     .concat(userAPI.middleware).concat(realestateAPI.middleware)
+    .concat(notificationAPI.middleware),
 })
 
 

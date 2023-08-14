@@ -12,6 +12,14 @@ import {
   PopoverContent,
   useColorModeValue,
   useDisclosure,
+  HStack,
+  Menu,
+  MenuButton,
+  Avatar,
+  VStack,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { deletetUser, getUser } from "../utility/authentication";
@@ -21,6 +29,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteLoginUser } from "../data/auth/slice/userSlice";
 import { deleteActiveUser } from "../data/auth/slice/activeUserSlice";
+import { FiChevronDown } from "react-icons/fi";
+
 
 export default function WithSubnavigation() {
   const [user, setUser] = useState("");
@@ -28,19 +38,22 @@ export default function WithSubnavigation() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen:isOpenMobile, onClose:onCloseMobile, onOpen:onOpenMobile } = useDisclosure();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const dispatch = useDispatch()
+  const activeUser = useSelector((state)=> state.activeUser.user)
 
   useEffect(() => {
     const { userType, access_token } = getUser();
     setUser(userType);
+    if(!activeUser){
+      router('/login')
+    }
     if (access_token) {
       setIsAuthenticated(true);
     }
   }, []);
 
-  const dispatch = useDispatch()
-  const activeUser = useSelector((state)=> state.userData.user)
   
+  console.log('activeUser', activeUser)
   const handleLogout = () => {
     deletetUser()
     dispatch(deleteActiveUser())
@@ -88,63 +101,59 @@ export default function WithSubnavigation() {
           />
         </Link>
         <div className="flex items-center md:order-2">
-          {isAuthenticated?<button
-            type="button"
-            className="flex relative mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-            id="user-menu-button"
-            aria-expanded="false"
-            data-dropdown-toggle="user-dropdown"
-            data-dropdown-placement="bottom"
-            onClick={isOpen ? onClose : onOpen}
-          >
-            <span className="sr-only">Open user menu</span>
-            <img
-              className="w-8 h-8 rounded-full"
-              src={activeUser?.image}
-              alt="user photo"
-              width={100}
-              height={100}
-            />
-
-            {isOpen ? (
-              <div
-                className="z-50 absolute top-5 left-[-300%] my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                id="user-dropdown"
+          {isAuthenticated?
+          <HStack spacing={{ base: "0", md: "6" }}>
+          <Flex alignItems={"center"}>
+            <Menu>
+              <MenuButton
+                py={2}
+                transition="all 0.3s"
+                _focus={{ boxShadow: "none" }}
               >
-                <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">
-                    {`${activeUser?.first_name} ${activeUser?.last_name}`}
-                  </span>
-                </div>
-                <ul className="py-2" aria-labelledby="user-menu-button">
-                  <li>
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-left text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/dashboard"
-                      className="block px-4 py-2 text-left text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-base text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Sign out
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            ) : null}
-          </button>:
+                <HStack>
+                  
+                  <Avatar
+                    size={"sm"}
+                    src={activeUser?.image}
+                  />
+                  
+                  <Box display={{ base: "none", md: "flex" }}>
+                    <FiChevronDown />
+                  </Box>
+                </HStack>
+              </MenuButton>
+              <MenuList
+                bg={"white"}
+                borderColor={"gray.200"}
+              >
+                <MenuItem>
+                <VStack
+                  display={{ base: "none", md: "flex" }}
+                  alignItems="flex-start"
+                  spacing="1px"
+                  ml="2"
+                >
+                  <Text fontSize="sm">{`${activeUser?.first_name} ${activeUser?.last_name}`}</Text>
+                  <Text fontSize="xs" color="gray.600">
+                    {activeUser?.user_type}
+                  </Text>
+                </VStack>
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem>
+                  <Link to='/profile'>
+                  Profile
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link to={'/dashboard'}>Dashboard</Link>
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem onClick={handleLogout}>Sign out</MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+        </HStack>:
           <Flex gap={'0.5rem'}>
             <Link to="/login" className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</Link>
             <Link to="/registration" className="w-full text-white font-semibold cursor-pointer bg-[rgb(1,22,39)] hover:bg-[rgb(11,38,61)] rounded-lg text-sm px-5 py-2.5 text-center">Register</Link>

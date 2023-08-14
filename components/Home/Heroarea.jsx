@@ -10,14 +10,43 @@ import {
     InputGroup,
     InputRightAddon,
     Box,
+    Select,
+    useToast,
   } from '@chakra-ui/react';
 import Statistics from './Statics';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
   
   export default function WithBackgroundImage() {
+    const toast = useToast()
     const router = useNavigate()
+    const [type, setType] = useState("")
+    const [searchValue, setSearchValue] = useState("")
     const searchClick = ()=>{
-        router.push('/property-list')
+      if(type==""){
+        toast({
+          
+            title: 'Select Search Type',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          
+        })
+        return
+      }
+      if(searchValue==""){
+        toast({
+          
+            title: type+' value not fill ',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          
+        })
+        return
+      }
+
+      router(`/property?type=${type}&value=${searchValue}`)
     }
     return (
       <Flex
@@ -52,8 +81,25 @@ import { useNavigate } from 'react-router-dom';
               Let’s find a home that’s perfect for you
             </Text>
             <Box bg={'white'} w={'full'} borderRadius={7}>
-                <InputGroup size={'lg'}>
-                    <Input placeholder='Find your Home' variant={'filled'} focusBorderColor={'rgb(38, 220, 118)'} />
+                <InputGroup size={'lg'} >
+                  <Select 
+                    placeholder='Type' 
+                    width={'200px'}
+                    value={type}
+                    name='type'
+                    onChange={(e)=>setType(e.target.value)}
+                  >
+                    <option value='ID'>ID</option>
+                    <option value='floor_number'>Floor Number</option>
+                  </Select>
+                    <Input 
+                      placeholder='Find your Home' 
+                      variant={'filled'} 
+                      focusBorderColor={'rgb(38, 220, 118)'} 
+                      value={searchValue}
+                      name='searchValue'
+                      onChange={(e)=>setSearchValue(e.target.value)}
+                    />
                     <InputRightAddon bgColor={'rgb(38,220,118)'} cursor={'pointer'} as={'button'} onClick={searchClick}>
                         <SearchIcon />
                     </InputRightAddon>

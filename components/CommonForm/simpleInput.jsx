@@ -20,7 +20,6 @@ const SimpleInput = ({
   maxTime,
   style = {},
 }) => {
-  console.log(error, "errrrr");
   return (
     <>
       <p>

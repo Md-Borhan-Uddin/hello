@@ -21,11 +21,14 @@ import {
   Avatar,
   Badge,
   Collapse,
+  useDisclosure,
 } from '@chakra-ui/react';
-import {Link, useParams} from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import {Link, useLocation, useParams} from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { getUser } from '../../../../utility/authentication';
 import { baseURL } from '../../../../utility/baseURL';
+import { CustomModal } from '../../../../components/modal';
+import VisitorForm from '../../../../components/form/visitorForm';
 
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipisicing elit.Ad
@@ -36,9 +39,18 @@ aliquid amet at delectus doloribus dolorum expedita hic, ipsum
 maxime modi nam officiis porro, quae, quisquam quos
 reprehenderit velit? Natus, totam.`
 
+function useQuery() {
+  const { search } = useLocation();
+  
+
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 
 export default function SingleProperty() {
+  const {isOpen,onOpen,onClose} = useDisclosure()
   const query = useParams()
+  const search = useQuery()
   const [lessText, setLessText] = useState(false)
   const [realestate, setRealestate] = useState({})
   const hideText = () =>{
@@ -49,10 +61,17 @@ export default function SingleProperty() {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
   useEffect(()=>{
-    fetch(baseURL + `/realestate/${query.id}/detail/`, { headers: headers })
+    let url;
+    if(search.get('type')==='ID'){
+      url = baseURL + `/real-estate/details/?realestate_id=${search.get('value')}`
+    }
+    else{
+      url = baseURL + `/real-estate/details/?number_of_floors=${search.get('value')}`
+    }
+    fetch(url, { headers: headers })
       .then((res) => res.json())
       .then((data) => {
-        console.log('data', data)
+        console.log('realestate data', data)
         setRealestate(data)
       })
       .catch((error) => {
@@ -62,7 +81,8 @@ export default function SingleProperty() {
   const desc = lessText ? text.slice(0,200):text
   return (
     <Container maxW={'7xl'} mt={7}>
-      <Box>
+      {realestate?.realestate_id?<Box>
+        <Box>
       <Image
         loading='lazy'
         rounded={'md'}
@@ -212,7 +232,7 @@ export default function SingleProperty() {
         <Avatar
           size={'xl'}
           src={
-            'https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
+            realestate?.user.image
           }
           alt={'Avatar Alt'}
           mb={4}
@@ -230,7 +250,7 @@ export default function SingleProperty() {
           }}
         />
         <Heading fontSize={'2xl'} fontFamily={'body'}>
-          Lindsey James
+          {realestate?.user.first_name} {realestate?.user.last_name}
         </Heading>
         <Text fontWeight={600} color={'gray.500'} mb={4}>
           @Agent
@@ -239,15 +259,16 @@ export default function SingleProperty() {
 
         <Stack mt={8} direction={'row'} spacing={4}>
           <Button
+          onClick={onOpen}
             flex={1}
             fontSize={'sm'}
             rounded={'full'}
             color={'white'}
             bg={'rgb(1,22,39)'}
-            _focus={{
+            _hover={{
               bg: 'rgb(1,22,39)',
             }}>
-            Message
+            Request
           </Button>
           <Button
             flex={1}
@@ -270,6 +291,13 @@ export default function SingleProperty() {
       </Box>
         </VStack>
       </Flex>
+      </Box>:<Box>
+        <Text fontSize={'2xl'} align={'center'}>There is no data found with {search.get('value')} {search.get('type')}</Text>
+        </Box>}
+
+      <CustomModal onClose={onClose} isOpen={isOpen} title='Visitor Form'>
+        <VisitorForm realestate={realestate} onClose={onClose}/>
+      </CustomModal>
       
     </Container>
   );

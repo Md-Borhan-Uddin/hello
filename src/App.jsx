@@ -1,5 +1,5 @@
 import UserList from './pages/user-list'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import Home from './pages/home'
 import Login from './pages/account/login'
 import Registration from './pages/account/registration'
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useGetUserQuery } from '../data/auth/service/userServide'
 import { setLoginUser } from '../data/auth/slice/userSlice'
 import { useEffect } from 'react'
-import { getUser } from '../utility/authentication'
+import { checkIfTokenExpired, getAccessToken, getUser } from '../utility/authentication'
 import AddState from './pages/add-real-estate'
 import CategoryBrand from './pages/category-brand'
 import CountryCity from './pages/country-city'
@@ -28,6 +28,9 @@ import PasswordConfirm from './pages/account/forget-password/password-confirm'
 import RealestateType from './pages/realestate-type'
 import EffectivReport from './pages/effectiveness-report'
 import Assets from './pages/assets'
+import { useGetNotificationQuery } from '../data/notification/notificationService'
+import { setNotification } from '../data/notification/notificationSlice'
+import { setActiveUser } from '../data/auth/slice/activeUserSlice'
 
 
 
@@ -38,26 +41,40 @@ function App() {
   let access_token;
   const {token} = useSelector((state)=>state.activeUser)
   const user = useSelector((state)=>state.userData.user)
-  if(token){
+  const isTokenExpired = checkIfTokenExpired(token);
+  // console.log(isTokenExpired)
+  if(token && !isTokenExpired){
     access_token = token
   }
   else{
-    access_token = getUser().access_token
+    const isTokenExpired = checkIfTokenExpired(getUser().access_token);
+    if(isTokenExpired){
+      access_token = getUser().refresh_token
+    }
+    else{
+
+      access_token = getUser().access_token
+    }
   }
   
 
-
-    const {data:activeUser, isSuccess, isLoading} = useGetUserQuery(access_token);
   
-  // console.log("active", activeUser);
+
+  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
+  const {data:notification, isSuccess:notifiSuccess} = useGetNotificationQuery()
+ 
+  const router = useNavigate();
+
   
   const dispatch = useDispatch();
   useEffect(() => {
-    if(activeUser){
-      dispatch(setLoginUser({user:activeUser}))
-    }
+    dispatch(setNotification({notification}))
+      if(activeUser){
+        dispatch(setLoginUser({user:activeUser}))
+        dispatch(setActiveUser({user:activeUser}))
+      }
 
-  },[activeUser, isSuccess, isLoading])
+  },[userSuccess])
   
   
   const pageContent = isLoading ? (
@@ -79,7 +96,7 @@ function App() {
         <Route path='/registration' element={<Registration />}/>
         <Route path='/activate/:uid/:token' element={<Activate />} />
         <Route path='/property-list/:userType' element={<Property />} />
-        <Route path='/property/:id/:title' element={<SingleProperty />} />
+        <Route path='/property' element={<SingleProperty />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/password-reset/:uid/:token' element={<PasswordConfirm />} />
       </Route>

@@ -336,7 +336,7 @@ function EffectReport() {
                       <Td>{item.number_of_floors}</Td>
                       <Td>
                         <HStack alignItems={"center"} justifyContent={"center"}>
-                          <GeneratePDF realestate={item.realestate_id} />
+                          <GeneratePDF realestate={item} />
                         </HStack>
                       </Td>
                     </Tr>

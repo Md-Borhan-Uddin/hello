@@ -13,7 +13,6 @@ export default function InputBox(props) {
     })
     return ans
   }
-  console.log(props)
   return (
     <div className="mb-3">
             <label
