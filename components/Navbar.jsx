@@ -34,12 +34,13 @@ import { FiChevronDown } from "react-icons/fi";
 
 export default function WithSubnavigation() {
   const [user, setUser] = useState("");
+  const [activeUser, setactiveUser] = useState({});
   const router = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen:isOpenMobile, onClose:onCloseMobile, onOpen:onOpenMobile } = useDisclosure();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dispatch = useDispatch()
-  const activeUser = useSelector((state)=> state.activeUser.user)
+  // const activeUser = useSelector((state)=> state.activeUser.user)
 
   useEffect(() => {
     const { userType, access_token } = getUser();

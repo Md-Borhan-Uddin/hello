@@ -238,8 +238,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userData.user);
   const { isOpen, onOpen: onModal, onClose } = useDisclosure();
-  const [searchType, setSearchType] = useState("");
-  const [notification, setNotification] = useState([])
+  // const [searchType, setSearchType] = useState("");
+  // const [notification, setNotification] = useState([])
   const notifications = useSelector((state)=>state.notifications.notification) 
  
   

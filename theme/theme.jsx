@@ -3,7 +3,6 @@ import { inputTheme } from "./Input";
 
 
 export const theme = extendTheme({
-  components: { Input: inputTheme },
     fonts:{
         heading:`'Poppins', sans-serif`,
         body:`'Montserrat', sans-serif`

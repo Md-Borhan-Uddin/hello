@@ -11,10 +11,10 @@ import { useGetUserQuery } from '../../data/auth/service/userServide'
 export default function DefaultLayout() {
   const {access_token} = getUser()
   const dispatch = useDispatch();
-  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
+  // const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
   
   useEffect(()=>{
-    dispatch(setActiveUser({token:access_token,user:activeUser}))
+    // dispatch(setActiveUser({token:access_token,user:activeUser}))
   },[])
   return (
     <Layout>

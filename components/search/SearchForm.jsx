@@ -3,14 +3,9 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Text,
   Select,
   Input,
-  useBreakpointValue,
   Button,
-  useBreakpoint,
-  useDisclosure,
-  Stack,
   ModalFooter,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -19,10 +14,12 @@ import { getUser } from "../../utility/authentication";
 import { getObjects } from "../../utility/country_city";
 import axios from "axios";
 import { baseURL } from "../../utility/baseURL";
+import { Link } from "react-router-dom";
 
 export default function SearchForm({ onClose }) {
   const [searchType, setSearchType] = useState("");
   const [country, setCountry] = useState([]);
+  const [realestateType, setRealestateType] = useState([]);
   const [city, setCity] = useState([]);
   const { access_token } = getUser();
   const headers = {
@@ -31,31 +28,32 @@ export default function SearchForm({ onClose }) {
 
   useEffect(() => {
     getObjects("/country/?is_active=True", headers, setCountry);
+    getObjects("/real-estate-type/", headers, setRealestateType);
   }, []);
 
   const InputData =
     searchType === "request"
       ? {
           id: "",
-          requestType: "",
-          submissionDate: "",
-          initiatorUserName: "",
-          initiatorFirstName: "",
-          initiatorLastName: "",
+          real_estate__type: "",
+          create: "",
+          username: "",
+          first_name: "",
+          last_name: "",
           assignee: "",
-          lastActionDate: "",
+          update: "",
         }
       : {
           id: "",
-          realEstateName: "",
-          creationProfileDate: "",
+          name: "",
+          user__create: "",
           country: "",
           city: "",
-          realEstateType: "",
-          numberofFloors: "",
-          ownerFirstName: "",
-          ownerLastName: "",
-          ownerUserName: "",
+          type: "",
+          number_of_floors: "",
+          user__first_name: "",
+          user__last_name: "",
+          user__username: "",
         };
 
   const {
@@ -87,6 +85,7 @@ export default function SearchForm({ onClose }) {
         console.log(err);
       });
   };
+  // console.log('values', values);
   return (
     <Box mb={20}>
       <Select
@@ -121,10 +120,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Request Type</FormLabel>
                   <Select
                     placeholder="Select Type"
-                    value={values.requestType}
+                    value={values.real_estate__type}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    name="requestType"
+                    name="real_estate__type"
                   >
                     <option value="Effectiveness Report">
                       Effectiveness Report
@@ -137,10 +136,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Submission Date</FormLabel>
                   <Input
                     type="date"
-                    name="submissionDate"
+                    name="create"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.submissionDate}
+                    value={values.create}
                     max={new Date().toISOString().slice(0, 10)}
                   />
                 </FormControl>
@@ -149,10 +148,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Initiator Username</FormLabel>
                   <Input
                     type="text"
-                    name="initiatorUserName"
+                    name="username"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.initiatorUserName}
+                    value={values.username}
                   />
                 </FormControl>
               </Flex>
@@ -161,10 +160,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Initiator Firstname</FormLabel>
                   <Input
                     type="text"
-                    name="initiatorFirstName"
+                    name="first_name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.initiatorFirstName}
+                    value={values.first_name}
                   />
                 </FormControl>
 
@@ -172,10 +171,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Initiator LastName</FormLabel>
                   <Input
                     type="text"
-                    name="initiatorLastName"
+                    name="last_name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.initiatorLastName}
+                    value={values.last_name}
                   />
                 </FormControl>
               </Flex>
@@ -195,10 +194,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Last Action Date</FormLabel>
                   <Input
                     type="date"
-                    name="lastActionDate"
+                    name="update"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.lastActionDate}
+                    value={values.update}
                     max={new Date().toISOString().slice(0, 10)}
                   />
                 </FormControl>
@@ -223,10 +222,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Real Estate Name</FormLabel>
                   <Input
                     type="text"
-                    name="realEstateName"
+                    name="name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.realEstateName}
+                    value={values.name}
                   />
                 </FormControl>
               </Flex>
@@ -235,10 +234,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Creation Profile Date</FormLabel>
                   <Input
                     type="date"
-                    name="creationProfileDate"
+                    name="user__create"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.creationProfileDate}
+                    value={values.user__create}
                     max={new Date().toISOString().slice(0, 10)}
                   />
                 </FormControl>
@@ -282,13 +281,16 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Real EstateT ype</FormLabel>
                   <Select
                     placeholder="Real EstateT ype"
-                    value={values.realEstateType}
+                    value={values.type}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    name="realEstateType"
+                    name="type"
                   >
-                    <option value="realEstateType1">realEstateType1</option>
-                    <option value="realEstateType2">realEstateType2</option>
+                    {realestateType.map((item, i) => (
+                      <option key={i} value={item.value}>
+                        {item.key}
+                      </option>
+                    ))}
                   </Select>
                 </FormControl>
               </Flex>
@@ -297,10 +299,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Number of Floors</FormLabel>
                   <Input
                     type="number"
-                    name="numberofFloors"
+                    name="number_of_floors"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.numberofFloors}
+                    value={values.number_of_floors}
                   />
                 </FormControl>
 
@@ -308,10 +310,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Owner FirstName</FormLabel>
                   <Input
                     type="text"
-                    name="ownerFirstName"
+                    name="user__first_name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.ownerFirstName}
+                    value={values.user__first_name}
                   />
                 </FormControl>
               </Flex>
@@ -320,10 +322,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Owner LastName</FormLabel>
                   <Input
                     type="text"
-                    name="ownerLastName"
+                    name="user__last_name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.ownerLastName}
+                    value={values.user__last_name}
                   />
                 </FormControl>
 
@@ -331,10 +333,10 @@ export default function SearchForm({ onClose }) {
                   <FormLabel>Owner Username</FormLabel>
                   <Input
                     type="text"
-                    name="ownerUserName"
+                    name="user__username"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.ownerUserName}
+                    value={values.user__username}
                   />
                 </FormControl>
               </Flex>
@@ -349,8 +351,8 @@ export default function SearchForm({ onClose }) {
             >
               Close
             </Button>
-            <Button colorScheme="primary" mr={3} type="submit">
-              Submit
+            <Button colorScheme="primary" mr={3} type="submit" onClick={onClose}>
+             <Link to={'/request-search'} state={{data:InputData,type:searchType}}> Submit</Link>
             </Button>
           </ModalFooter>}
         </form>

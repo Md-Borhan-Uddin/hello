@@ -15,12 +15,12 @@ import { setActiveUser } from '../../data/auth/slice/activeUserSlice'
 export default function DashboardLayout() {
   const {access_token} = getUser()
   const dispatch = useDispatch();
-  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
-  const {data:notification, isSuccess:notifiSuccess} = useGetNotificationQuery()
-  useEffect(()=>{
-    dispatch(setNotification({notification}))
-    dispatch(setActiveUser({token:access_token,user:activeUser}))
-  },[])
+  // const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
+  // const {data:notification, isSuccess:notifiSuccess} = useGetNotificationQuery()
+  // useEffect(()=>{
+  //   dispatch(setNotification({notification}))
+  //   // dispatch(setActiveUser({token:access_token,user:activeUser}))
+  // },[])
   return (
     <Layout>
 

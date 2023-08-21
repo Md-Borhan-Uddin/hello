@@ -336,10 +336,10 @@ function Membership() {
         <Box py={12} px={4}>
           <HStack spacing={2} textAlign="center" mb="1rem">
             <Heading fontSize="4xl">All Membership</Heading>
-            {/* <Spacer />
+            <Spacer />
           <Button colorScheme="primary" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
-            Add Package
-          </Button> */}
+            Add Membership
+          </Button>
           </HStack>
           <Box>
             <TableContainer>

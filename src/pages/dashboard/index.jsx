@@ -119,8 +119,6 @@ function Dashboard() {
       const country = realestateCount.country
       const city = realestateCount.city
       const type = realestateCount.type
-      const name = []
-      const total = []
       
       country.map((item)=> {
         countryName.push(item.country)

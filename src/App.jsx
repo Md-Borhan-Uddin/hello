@@ -9,9 +9,9 @@ import DashboardLayout from './pages/DashboardLayout'
 import Dashboard from './pages/dashboard'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetUserQuery } from '../data/auth/service/userServide'
-import { setLoginUser } from '../data/auth/slice/userSlice'
+import { deleteLoginUser, setLoginUser } from '../data/auth/slice/userSlice'
 import { useEffect } from 'react'
-import { checkIfTokenExpired, getAccessToken, getUser } from '../utility/authentication'
+import { checkIfTokenExpired, deletetUser, getAccessToken, getUser } from '../utility/authentication'
 import AddState from './pages/add-real-estate'
 import CategoryBrand from './pages/category-brand'
 import CountryCity from './pages/country-city'
@@ -30,9 +30,9 @@ import EffectivReport from './pages/effectiveness-report'
 import Assets from './pages/assets'
 import { useGetNotificationQuery } from '../data/notification/notificationService'
 import { setNotification } from '../data/notification/notificationSlice'
-import { setActiveUser } from '../data/auth/slice/activeUserSlice'
+import { deleteActiveUser, setActiveUser } from '../data/auth/slice/activeUserSlice'
 
-
+import RequestSearch from './pages/requestSearch'
 
 
 
@@ -40,7 +40,6 @@ import { setActiveUser } from '../data/auth/slice/activeUserSlice'
 function App() {
   let access_token;
   const {token} = useSelector((state)=>state.activeUser)
-  const user = useSelector((state)=>state.userData.user)
   const isTokenExpired = checkIfTokenExpired(token);
   // console.log(isTokenExpired)
   if(token && !isTokenExpired){
@@ -60,10 +59,11 @@ function App() {
 
   
 
-  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
-  const {data:notification, isSuccess:notifiSuccess} = useGetNotificationQuery()
+  const {data:activeUser, isSuccess:userSuccess, isLoading:loading} = useGetUserQuery(access_token);
+  const {data:notification, isSuccess:notifiSuccess, isLoading} = useGetNotificationQuery()
  
   const router = useNavigate();
+  
 
   
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ function App() {
         dispatch(setActiveUser({user:activeUser}))
       }
 
-  },[userSuccess])
+  },[notifiSuccess, userSuccess])
   
   
   const pageContent = isLoading ? (
@@ -101,6 +101,7 @@ function App() {
         <Route path='/password-reset/:uid/:token' element={<PasswordConfirm />} />
       </Route>
       <Route element={<DashboardLayout />}>
+        <Route path='/request-search' element={<RequestSearch />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/category-brand' element={<CategoryBrand />} />
         <Route path='/country-city' element={<CountryCity />} />
