@@ -59,7 +59,7 @@ const inputdata = {
   payment_method: "",
   real_estate_number: "",
   card_number: "",
-  card_holder_name: null,
+  card_holder_name: "",
   expire_date: "",
   cvv: "",
   mobile_number: "",
@@ -104,6 +104,13 @@ function Membership() {
   useEffect(() => {
     const { userType } = getUser();
     setUserType(userType);
+    // let URL;
+    // if(userType==="Admin"){
+    //   URL = baseURL + "/membership/"
+    // }
+    // else{
+    //   URL = baseURL + "/membership?is_active=True"
+    // }
 
     axios
       .get(baseURL + "/membership/", { headers: headers })
@@ -115,6 +122,8 @@ function Membership() {
         console.log("membership", error);
       });
   }, []);
+
+  
 
   const {
     values,
@@ -182,8 +191,16 @@ function Membership() {
         });
     },
   });
+console.log(values);
+
+  const handlePay = ()=>{
+    console.log(values);
+    console.log(packageInput);
+
+  }
 
   const handleShow = (e) => {
+    handleReset(e)
     if (membership[0]) {
       expairModalonOpen();
     } else {
@@ -329,6 +346,36 @@ function Membership() {
       .then((res) => setPackagedata(res.data))
       .catch((error) => setcustomerror(error.response.data));
   };
+
+  const handleMembership = ()=>{
+    
+    const data = {
+      package_id: parseInt(packageInput),
+      expire_date:new Date(),
+      is_pay: true
+    }
+    axios.post(baseURL+'/membership/',data,{headers:headers})
+    .then(res=>{
+      console.log(res)
+      toast({
+        title: 'The Free Membership activated Successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      onClose()
+    })
+    .catch(err=>{
+      console.log(err)
+      toast({
+        title: 'Somethings wrong try again',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    })
+  }
+
 
   if (userType === "Admin") {
     return (
@@ -478,7 +525,7 @@ function Membership() {
                           <SimpleGrid columns={{ base: 1, md: 2 }}>
                             {membership[0]?.package.feature.map((item, i) => {
                               return (
-                                <ListItem>
+                                <ListItem key={i}>
                                   <ListIcon
                                     key={i}
                                     as={MdCheckCircle}
@@ -509,7 +556,7 @@ function Membership() {
                   <HStack>
                     <Heading size="md">You Need More</Heading>
                     <Spacer />
-                    {/* <Button colorScheme="teal">Renewal</Button> */}
+                    <Button colorScheme="teal">Renewal</Button>
                   </HStack>
                 </CardHeader>
 
@@ -522,7 +569,7 @@ function Membership() {
                         onChange={handlePackage}
                       >
                         {packages.map((item, i) => (
-                          <option key={i} value={item.name}>
+                          <option key={i} value={item.id}>
                             {item.name} price-{item.default_price}
                           </option>
                         ))}
@@ -540,6 +587,7 @@ function Membership() {
                       </Box>
                     )}
                     <HStack>
+                      {console.log(packagedata)}
                       {packagedata.default_price && (
                         <Box>
                           <Heading size="xs" textTransform="uppercase">
@@ -633,7 +681,7 @@ function Membership() {
                 <Box>
                   <Text>Are You Activate Free Membership?</Text>
                   <ModalFooter>
-                    <Button colorScheme="primary" mr={3}>
+                    <Button colorScheme="primary" mr={3} onClick={handleMembership}>
                       Active
                     </Button>
                     <Button onClick={onClose}>Cancel</Button>
@@ -696,7 +744,7 @@ function Membership() {
                       )}
                     </SimpleGrid>
                   </Box>
-                  <FormControl isInvalid={errors.pay_method} mb={3}>
+                  <FormControl isInvalid={errors.payment_method&&touched.payment_method} mb={3}>
                     <FormLabel
                       color="secondary.600"
                       fontWeight="semibold"
@@ -709,29 +757,35 @@ function Membership() {
                         setFieldValue("payment_method", e);
                         console.log(values);
                       }}
-                      value={values.is_free}
+                      value={values.payment_method}
                       name="payment_method"
                     >
                       <Stack direction="row">
                         <Radio value="mada" onChange={handleChange}>
                           Mada
                         </Radio>
-                        <Radio value="credit card" onChange={handleChange}>
+                        <Radio value="credit" onChange={handleChange}>
                           Credit Card
                         </Radio>
-                        <Radio value="STC pay" onChange={handleChange}>
+                        <Radio value="STC" onChange={handleChange}>
                           STC Pay
                         </Radio>
-                        <Radio value="Apple pay" onChange={handleChange}>
+                        <Radio value="Apple" onChange={handleChange}>
                           Apple Pay
                         </Radio>
                       </Stack>
                     </RadioGroup>
+                    {errors.payment_method &&
+                          touched.payment_method ? (
+                            <FormErrorMessage>
+                              {errors.payment_method}
+                            </FormErrorMessage>
+                          ) : null}
                   </FormControl>
 
                   <Box mb={2}>
                     <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                      <FormControl isInvalid={errors.mobile_number}>
+                      {values.payment_method==="STC"&&<FormControl isInvalid={errors.mobile_number&&touched.mobile_number}>
                         <FormLabel
                           color="secondary.600"
                           fontWeight="semibold"
@@ -751,14 +805,14 @@ function Membership() {
                             {errors.mobile_number}
                           </FormErrorMessage>
                         ) : null}
-                      </FormControl>
+                      </FormControl>}
                     </SimpleGrid>
                   </Box>
                   {(values.payment_method === "mada" ||
-                    values.payment_method === "credit card") && (
+                    values.payment_method === "credit") && (
                     <Box mb={2}>
                       <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                        <FormControl isInvalid={errors.card_holder_name}>
+                        <FormControl isInvalid={errors.card_holder_name&&touched.card_holder_name}>
                           <FormLabel
                             color="secondary.600"
                             fontWeight="semibold"
@@ -780,7 +834,7 @@ function Membership() {
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
-                        <FormControl isInvalid={errors.card_number}>
+                        <FormControl isInvalid={errors.card_number&&touched.card_number}>
                           <FormLabel
                             color="secondary.600"
                             fontWeight="semibold"
@@ -802,7 +856,7 @@ function Membership() {
                           ) : null}
                         </FormControl>
 
-                        <FormControl isInvalid={errors.expaire_date}>
+                        <FormControl isInvalid={errors.expire_date&&touched.expire_date}>
                           <FormLabel
                             color="secondary.600"
                             fontWeight="semibold"
@@ -812,14 +866,14 @@ function Membership() {
                           </FormLabel>
                           <Input
                             type="month"
-                            name="expair_date"
-                            value={values.expaire_date}
+                            name="expire_date"
+                            value={values.expire_date}
                             onChange={handleChange}
                             placeholder="Expiration Date"
                           />
-                          {errors.expaire_date && touched.expaire_date ? (
+                          {errors.expire_date && touched.expire_date ? (
                             <FormErrorMessage>
-                              {errors.expaire_date}
+                              {errors.expire_date}
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
@@ -857,6 +911,7 @@ function Membership() {
                       colorScheme="primary"
                       transition="ease-in-out 0.5s"
                       _hover={{ bgColor: "primary.600", color: "#fff" }}
+                      
                     >
                       Pay
                     </Button>

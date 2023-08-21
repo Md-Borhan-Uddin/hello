@@ -33,6 +33,7 @@ import { FiChevronDown } from "react-icons/fi";
 
 
 export default function WithSubnavigation() {
+
   const [user, setUser] = useState("");
   const [activeUser, setactiveUser] = useState({});
   const router = useNavigate();
@@ -102,7 +103,7 @@ export default function WithSubnavigation() {
           />
         </Link>
         <div className="flex items-center md:order-2">
-          {isAuthenticated?
+          {activeUser==={}?
           <HStack spacing={{ base: "0", md: "6" }}>
           <Flex alignItems={"center"}>
             <Menu>

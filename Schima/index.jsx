@@ -247,7 +247,7 @@ export const packageSchima = Yup.object({
 
 export const paymentSchima = Yup.object({
   package_id: Yup.number().optional(),
-  payment_method: Yup.string(),
+  payment_method: Yup.string().required('Must Select Payment Method'),
   real_estate_number: Yup.number().min(1,'Please Enter a Value More than 0'),
   card_number: Yup.number(),//.test('len','Must be 16 characters',val=>val.toString().length === 16),
   card_holder_name: Yup.string(),
