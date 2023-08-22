@@ -1,9 +1,8 @@
-import { ReactNode } from 'react';
+import {Link} from 'react-router-dom'
 
 import {
   Box,
   Container,
-  Link,
   SimpleGrid,
   Stack,
   Text,
@@ -40,35 +39,32 @@ export default function Footer() {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Product</ListHeader>
-            <Link href={'#'}>Overview</Link>
-            <Link href={'#'}>Features</Link>
-            <Link href={'#'}>Tutorials</Link>
-            <Link href={'#'}>Pricing</Link>
-            <Link href={'#'}>Releases</Link>
+            <Link to="#">Overview</Link>
+            <Link to="#">Features</Link>
+            <Link to="#">Tutorials</Link>
+            <Link to="#">Pricing</Link>
+            <Link to="#">Releases</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Company</ListHeader>
-            <Link href={'#'}>About</Link>
-            <Link href={'#'}>Press</Link>
-            <Link href={'#'}>Careers</Link>
-            <Link href={'#'}>Contact</Link>
-            <Link href={'#'}>Partners</Link>
+            <Link to="/about">About</Link>
+            <Link to="#">Press</Link>
+            <Link to="#">Careers</Link>
+            <Link to="/contact">Contact</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Support</ListHeader>
-            <Link href={'#'}>Help Center</Link>
-            <Link href={'#'}>Terms of Service</Link>
-            <Link href={'#'}>Legal</Link>
-            <Link href={'#'}>Privacy Policy</Link>
-            <Link href={'#'}>Status</Link>
+            <Link to="#">Help Center</Link>
+            <Link to="/terms-and-conditions">Terms of Service</Link>
+            <Link to="/privacy">Privacy Policy</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Follow Us</ListHeader>
-            <Link href={'#'}>Facebook</Link>
-            <Link href={'#'}>Twitter</Link>
-            <Link href={'#'}>Dribbble</Link>
-            <Link href={'#'}>Instagram</Link>
-            <Link href={'#'}>LinkedIn</Link>
+            <Link to="#">Facebook</Link>
+            <Link to="#">Twitter</Link>
+            <Link to="#">Dribbble</Link>
+            <Link to="#">Instagram</Link>
+            <Link to="#">LinkedIn</Link>
           </Stack>
         </SimpleGrid>
       </Container>

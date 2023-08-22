@@ -66,29 +66,21 @@ export default function WithSubnavigation() {
 
   const NAV_ITEMS = [
     {
-      label: "Listing",
-      // children: [
-      //   {
-      //     label: 'Job Board',
-      //     subLabel: 'Find your dream design job',
-      //     to: '#',
-      //   },
-      //   {
-      //     label: 'Freelance Projects',
-      //     subLabel: 'An exclusive list for contract work',
-      //     to: '#',
-      //   },
-      // ],
-      to: `/property-list/${user}`,
+      label: "About Company",
+      to: '/about',
     },
     {
-      label: "Home",
-      to: "/",
+      label: "Mission and Vision",
+      to: "/mission-and-vision",
     },
-    // {
-    //   label: "Dashboard",
-    //   to: "/dashboard",
-    // },
+    {
+      label: "Leadership/Team",
+      to: "/team",
+    },
+    {
+      label: "Contact Us",
+      to: "/contact",
+    },
   ];
   return (
     <nav className="bg-white border-b-2 border-[rgb(38,220,118)]  dark:bg-gray-900">
@@ -103,7 +95,7 @@ export default function WithSubnavigation() {
           />
         </Link>
         <div className="flex items-center md:order-2">
-          {activeUser==={}?
+          {activeUser?
           <HStack spacing={{ base: "0", md: "6" }}>
           <Flex alignItems={"center"}>
             <Menu>

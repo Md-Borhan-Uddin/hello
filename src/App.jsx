@@ -9,9 +9,9 @@ import DashboardLayout from './pages/DashboardLayout'
 import Dashboard from './pages/dashboard'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetUserQuery } from '../data/auth/service/userServide'
-import { deleteLoginUser, setLoginUser } from '../data/auth/slice/userSlice'
+import { setLoginUser } from '../data/auth/slice/userSlice'
 import { useEffect } from 'react'
-import { checkIfTokenExpired, deletetUser, getAccessToken, getUser } from '../utility/authentication'
+import { checkIfTokenExpired, getUser } from '../utility/authentication'
 import AddState from './pages/add-real-estate'
 import CategoryBrand from './pages/category-brand'
 import CountryCity from './pages/country-city'
@@ -30,9 +30,15 @@ import EffectivReport from './pages/effectiveness-report'
 import Assets from './pages/assets'
 import { useGetNotificationQuery } from '../data/notification/notificationService'
 import { setNotification } from '../data/notification/notificationSlice'
-import { deleteActiveUser, setActiveUser } from '../data/auth/slice/activeUserSlice'
+import { setActiveUser } from '../data/auth/slice/activeUserSlice'
 
 import RequestSearch from './pages/requestSearch'
+import About from './pages/about'
+import Team from './pages/team'
+import TramsCondition from './pages/tramsCondition'
+import Privacy from './pages/privice'
+import MishonAndVishon from './pages/mishon'
+import Contact from './pages/contact'
 
 
 
@@ -99,6 +105,12 @@ function App() {
         <Route path='/property' element={<SingleProperty />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/password-reset/:uid/:token' element={<PasswordConfirm />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/team' element={<Team />} />
+        <Route path='/mission-and-vision' element={<MishonAndVishon />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/privacy' element={<Privacy />} />
+        <Route path='/terms-and-conditions' element={<TramsCondition />} />
       </Route>
       <Route element={<DashboardLayout />}>
         <Route path='/request-search' element={<RequestSearch />} />
