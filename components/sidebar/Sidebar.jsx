@@ -49,7 +49,7 @@ import { deletetUser } from "../../utility/authentication";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteLoginUser } from "../../data/auth/slice/userSlice";
 import { deleteActiveUser } from "../../data/auth/slice/activeUserSlice";
-import { useEffect, useState } from "react";
+
 import SearchForm from "../search/SearchForm";
 
 const LinkItems = [
@@ -163,7 +163,6 @@ export default function Sidebar({ children }) {
 
 const SidebarContent = ({ onClose, ...rest }) => {
   const user = useSelector((state) => state.activeUser.user);
-  console.log('user',user);
   return (
     <Box
       transition="3s ease"
