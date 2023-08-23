@@ -1,15 +1,11 @@
-'use client'
-
 import {
   Heading,
   Avatar,
   Box,
   Center,
-  Image,
   Flex,
   Text,
   Stack,
-  Button,
   useColorModeValue,
 } from '@chakra-ui/react'
 
