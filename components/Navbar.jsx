@@ -54,8 +54,6 @@ export default function WithSubnavigation() {
     }
   }, []);
 
-  
-  console.log('activeUser', activeUser===null)
   const handleLogout = () => {
     deletetUser()
     dispatch(deleteActiveUser())

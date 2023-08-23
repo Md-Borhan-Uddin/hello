@@ -2,7 +2,6 @@ import {
     Flex,
     Text,
   } from "@chakra-ui/react";
-  import bg from '/about.webp'
 
 function Hero({text, image}) {
   return (
@@ -11,7 +10,7 @@ function Hero({text, image}) {
           w={"full"}
           h={"80vh"}
           backgroundImage={
-            `url(${image?image:bg})`
+            `url(${image?image:'https://images.unsplash.com/photo-1616587896595-51352538155b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'})`
           }
           backgroundSize={"cover"}
           backgroundPosition={"center center"}

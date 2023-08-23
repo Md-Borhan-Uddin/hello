@@ -162,7 +162,6 @@ const AddState = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {console.log(realestate)}
                 {realestate.map((item) => {
                   
                   return (

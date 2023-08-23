@@ -21,21 +21,21 @@ import { categoryANDBrandSchima } from "../../../Schima";
 import axios from "axios";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
-import { BsTrash3 } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import { FcApproval } from "react-icons/fc";
+
 
 // const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
-const inputdata = {
-  name: "",
-  is_active: false,
-};
+
 
 function CategoryBrand() {
+  const inputdata = {
+    name: "",
+    is_active: false,
+  };
   const [categorys, setCategorys] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [brands, setBrands] = useState([]);
@@ -53,9 +53,6 @@ function CategoryBrand() {
     onClose: brandOnClose,
     onOpen: brandOnOpen,
   } = useDisclosure();
-  const statusCheck = useRef();
-  const brandid = useRef();
-  const categoryId = useRef();
   const { access_token } = getUser();
 
   const headers = {
@@ -177,42 +174,6 @@ function CategoryBrand() {
     },
   });
 
-  const fetchdata = (id, values, message) => {
-    
-    axios
-      .patch(baseUrl.defaults.baseURL + `/user-edit/${id}/`, values, {
-        headers: headers,
-      })
-      .then((res) => {
-        console.log(res);
-        
-        const obj = user.filter(item=>item.username!=res.data.username)
-        
-        setUser([...obj,res.data])
-        if (message) {
-          toast({
-            title: "update Successfully",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch((error) => {
-        // setcustomerror(error.response.data);
-        console.log(error);
-        if (error.response.status == 401) {
-          toast({
-            title: "you are Not Login Please login",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-          router("/login");
-        }
-      });
-  };
-
 
   useEffect(() => {
     getObjects("/assert-type/", headers, setCategorys);
@@ -246,7 +207,6 @@ function CategoryBrand() {
 
   const brandUpdate = (e) => {
     e.preventDefault();
-    // const { value } = brandid.current;
     const res = editItem(
       "/assert-brand/",
       headers,
@@ -262,7 +222,6 @@ function CategoryBrand() {
 
   const categoryUpdate = (e) => {
     e.preventDefault();
-    // const { value } = categoryId.current;
     const res = editItem(
       "/assert-type/",
       headers,

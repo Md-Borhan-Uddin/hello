@@ -6,12 +6,10 @@ export const getObjects = (endpoint, headers, setState) => {
   axios
     .get(baseURL + endpoint, { headers: headers })
     .then((res) => {
-      console.log(res);
       setState(res.data);
       
     })
     .catch((error) => {
-      console.log(error);
       
     });
 };
@@ -36,7 +34,6 @@ export const deleteItem = (endpoint, headers, id, setState, state, toast) => {
       });
     })
     .catch((error) => {
-      console.log(error);
       toast({
         title: "Something wrong try again",
         status: "error",
@@ -63,7 +60,6 @@ export const editItem = (
       headers: headers,
     })
     .then((res) => {
-      console.log(res);
       const { data } = res;
       const obj = state.map((item) => {
         if (item.id == data.id) {
@@ -89,6 +85,5 @@ export const editItem = (
         duration: 2000,
         isClosable: true,
       });
-      console.log(error);
     });
 };

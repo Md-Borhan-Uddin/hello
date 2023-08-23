@@ -7,18 +7,15 @@ import {
   Input,
   Alert,
   AlertIcon,
-  AlertTitle,
   AlertDescription,
   Spinner,
   Flex,
-  useTheme,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { loginSchima } from "../../../../Schima";
 import { Formik } from "formik";
 import { getUser, setUser } from "../../../../utility/authentication";
-import DefaultLayout from "../../DashboardLayout";
 import { useUserLoginMutation } from "../../../../data/auth/service/authServices";
 import { butifyErrors } from "../../../../utility/utlity";
 import { useDispatch, useSelector } from "react-redux";

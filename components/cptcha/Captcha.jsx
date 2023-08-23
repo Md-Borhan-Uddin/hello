@@ -1,7 +1,7 @@
-import { RepeatClockIcon, Search2Icon } from '@chakra-ui/icons'
+import { RepeatClockIcon } from '@chakra-ui/icons'
 import { Box, Input, InputGroup, InputRightAddon } from '@chakra-ui/react'
 import React from 'react'
-import bg from '../../src/assets/captcha-bg.jpeg'
+import bg from '/captcha-bg.jpeg'
 
 
 
