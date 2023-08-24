@@ -55,17 +55,7 @@ export default function Login() {
 
   if (token) return null;
 
-  const pageContent = isLoading ? (
-    <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>
-      <Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="secondary.200"
-        color="primary.500"
-        size="xl"
-      />
-    </Flex>
-  ) : (
+  return (
 
       <div className="flex items-center justify-center h-[calc(100vh-68px)] ">
         <div className="shadow-lg w-3/4 sm:w-1/2 md:w-1/3 p-4 rounded-md dark:bg-gray-950">
@@ -92,7 +82,6 @@ export default function Login() {
                 setErrors([]);
                 const res = await login(values);
                 if (res.data) {
-                  console.log(res.data);
                   setUser(res.data);
                   dispatch(
                     setActiveUser({
@@ -201,6 +190,4 @@ export default function Login() {
       </div>
   
   );
-
-  return pageContent;
 }

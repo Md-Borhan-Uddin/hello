@@ -1,44 +1,47 @@
-import UserList from './pages/user-list'
+import { useGetNotificationQuery } from '../data/notification/notificationService'
+import { setNotification } from '../data/notification/notificationSlice'
+import { setActiveUser } from '../data/auth/slice/activeUserSlice'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import Home from './pages/home'
-import Login from './pages/account/login'
-import Registration from './pages/account/registration'
-import DefaultLayout from './pages/DefaultLayout'
-import Activate from './pages/activate'
-import DashboardLayout from './pages/DashboardLayout'
-import Dashboard from './pages/dashboard'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetUserQuery } from '../data/auth/service/userServide'
 import { setLoginUser } from '../data/auth/slice/userSlice'
 import { useEffect } from 'react'
 import { checkIfTokenExpired, getUser } from '../utility/authentication'
-import AddState from './pages/add-real-estate'
-import CategoryBrand from './pages/category-brand'
-import CountryCity from './pages/country-city'
-import Package from './pages/package'
-import Asset from './pages/asset'
-import Membership from './pages/membership'
-import ScheduleMaintenance from './pages/schedule-maintenance'
-import Profile from './pages/profile'
-import Property from './pages/property-list/property'
-import SingleProperty from './pages/property-list/single-property'
 import { Flex, Spinner } from '@chakra-ui/react'
-import ForgetPassword from './pages/account/forget-password'
-import PasswordConfirm from './pages/account/forget-password/password-confirm'
-import RealestateType from './pages/realestate-type'
-import EffectivReport from './pages/effectiveness-report'
-import Assets from './pages/assets'
-import { useGetNotificationQuery } from '../data/notification/notificationService'
-import { setNotification } from '../data/notification/notificationSlice'
-import { setActiveUser } from '../data/auth/slice/activeUserSlice'
+import React, {Suspense} from 'react'
 
-import RequestSearch from './pages/requestSearch'
-import About from './pages/about'
-import Team from './pages/team'
-import TramsCondition from './pages/tramsCondition'
-import Privacy from './pages/privice'
-import MishonAndVishon from './pages/mishon'
-import Contact from './pages/contact'
+const UserList = React.lazy(()=>import('./pages/user-list'))
+const Home = React.lazy(()=>import('./pages/home'))
+const Login = React.lazy(()=>import('./pages/account/login'))
+
+const Registration = React.lazy(()=>import('./pages/account/registration'))
+const DefaultLayout = React.lazy(()=>import('./pages/DefaultLayout'))
+const Activate = React.lazy(()=>import('./pages/activate'))
+const DashboardLayout = React.lazy(()=>import('./pages/DashboardLayout'))
+const Dashboard = React.lazy(()=>import('./pages/dashboard'))
+const AddState = React.lazy(()=>import('./pages/add-real-estate'))
+const CategoryBrand = React.lazy(()=>import('./pages/category-brand'))
+const CountryCity = React.lazy(()=>import('./pages/country-city'))
+const Package = React.lazy(()=>import('./pages/package'))
+const Asset = React.lazy(()=>import('./pages/asset'))
+const Membership = React.lazy(()=>import('./pages/membership'))
+const ScheduleMaintenance = React.lazy(()=>import('./pages/schedule-maintenance'))
+const Profile = React.lazy(()=>import('./pages/profile'))
+const Property = React.lazy(()=>import('./pages/property-list/property'))
+const SingleProperty = React.lazy(()=>import('./pages/property-list/single-property'))
+const ForgetPassword = React.lazy(()=>import('./pages/account/forget-password'))
+const PasswordConfirm = React.lazy(()=>import('./pages/account/forget-password/password-confirm'))
+const RealestateType = React.lazy(()=>import('./pages/realestate-type'))
+const EffectivReport = React.lazy(()=>import('./pages/effectiveness-report'))
+const Assets = React.lazy(()=>import('./pages/assets'))
+
+const RequestSearch = React.lazy(()=>import('./pages/requestSearch'))
+const About = React.lazy(()=>import('./pages/about'))
+const Team = React.lazy(()=>import('./pages/team'))
+const TramsCondition = React.lazy(()=>import('./pages/tramsCondition'))
+const Privacy = React.lazy(()=>import('./pages/privice'))
+const MishonAndVishon = React.lazy(()=>import('./pages/mishon'))
+const Contact = React.lazy(()=>import('./pages/contact'))
 
 
 
@@ -83,17 +86,8 @@ function App() {
   },[notifiSuccess, userSuccess])
   
   
-  const pageContent = isLoading ? (
-    <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>
-      <Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="secondary.200"
-        color="primary.500"
-        size="xl"
-      />
-    </Flex>
-  ) :(
+  return (
+    <Suspense fallback={<LoadingSpiner />}>
     <Routes>
       <Route element={<DefaultLayout />}>
         <Route path='/' element={<Home />} />
@@ -128,9 +122,26 @@ function App() {
         <Route path='/schedule-maintenance' element={<ScheduleMaintenance />} />
       </Route>
     </Routes>
+    </Suspense>
   )
 
-  return pageContent
+  // return pageContent
 }
 
 export default App
+
+
+
+const LoadingSpiner = ()=>{
+  return (
+    <Flex minH={"100vh"} alignItems={"center"} justifyContent={"center"}>
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="secondary.200"
+        color="primary.500"
+        size="xl"
+      />
+    </Flex>
+  )
+}
