@@ -1,5 +1,4 @@
 import { extendTheme } from "@chakra-ui/react";
-import { inputTheme } from "./Input";
 
 
 export const theme = extendTheme({

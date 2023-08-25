@@ -1,4 +1,3 @@
-
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import CurrencyList from "currency-list";
@@ -40,29 +39,8 @@ const inputField = {
   location: [],
 };
 
-const addValue = (setValues,data)=>{
-    setValues({
-              name: data.name,
-              photo: data.photo,
-              country: data.country,
-              city: data.citu,
-              type_id: data.type_id,
-              property_age_years: data.property_age_years,
-              property_age_months: data.property_age_months,
-              rented: data.rented,
-              owner: data.owner,
-              purchasing_cost: data.purchasing_cost,
-              cost_currency: data.cost_currency,
-              cost_date: data.cost_date,
-              purpose: data.purpose,
-              number_of_floors: data.number_of_floors,
-              invoice_file: data.invoice_file,
-              user_id: data.user_id,
-              location: data.location,
-            });
-}
 
-export default function RealestateForm({isEdit, data, onClose}) {
+export default function RealestateForm({ isEdit, data, onClose }) {
   const { access_token, userType } = getUser();
   const [uType, setUType] = useState("");
   const [country, setCountry] = useState([]);
@@ -79,7 +57,28 @@ export default function RealestateForm({isEdit, data, onClose}) {
   };
   const geoLocation = useGeolocation();
 
-  
+  const addValue = (setValues, data) => {
+    setValues({
+      name: data.name,
+      photo: data.photo,
+      country: data.country,
+      city: data.citu,
+      type_id: data.type_id,
+      property_age_years: data.property_age_years,
+      property_age_months: data.property_age_months,
+      rented: data.rented,
+      owner: data.owner,
+      purchasing_cost: data.purchasing_cost,
+      cost_currency: data.cost_currency,
+      cost_date: data.cost_date,
+      purpose: data.purpose,
+      number_of_floors: data.number_of_floors,
+      invoice_file: data.invoice_file,
+      user_id: data.user_id,
+      location: data.location,
+    });
+  };
+
   const handleCountry = (e) => {
     handleChange(e);
     const { value } = e.target;
@@ -112,7 +111,7 @@ export default function RealestateForm({isEdit, data, onClose}) {
         headers: headers,
       })
       .then((res) => {
-        console.log('data',res);
+        console.log("data", res);
         // const obj = realestate.filter(item=>item.id!=id)
         // setRealestate(obj)
         toast({
@@ -144,8 +143,6 @@ export default function RealestateForm({isEdit, data, onClose}) {
     onClose();
     handleReset();
   };
-
-
 
   const {
     values,
@@ -225,11 +222,9 @@ export default function RealestateForm({isEdit, data, onClose}) {
     },
   });
 
-
-
   useEffect(() => {
-    if(isEdit && data){
-        addValue(setValues,data[0])
+    if (isEdit && data) {
+      addValue(setValues, data[0]);
     }
     const len = Object.keys(geoLocation.coordinates).length;
     if (len > 0) {

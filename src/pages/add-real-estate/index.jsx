@@ -21,9 +21,9 @@ import {
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import DeleteButton from "../../../components/deleteButton";
 import { CustomModal } from "../../../components/modal";
-import RealestateForm from "../../../components/form/realestateForm";
+const RealestateForm = React.lazy(()=>import("../../../components/form/realestateForm"));
+const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
 
 const AddState = () => {
   const { access_token, userType } = getUser();

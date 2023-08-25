@@ -1,10 +1,9 @@
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import React, { useEffect, useRef, useState } from "react";
-import { FiFile } from 'react-icons/fi'
+
 import {
   Avatar,
   AvatarBadge,
-  Badge,
   Box,
   Button,
   Center,
@@ -13,11 +12,9 @@ import {
   FormLabel,
   HStack,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
-  InputRightElement,
   Stack,
   Tab,
   TabIndicator,
@@ -30,20 +27,18 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { HiOutlineCamera } from "react-icons/hi";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
-import { useSelector } from "react-redux";
+
 import { useChangePasswordMutation } from "../../../data/auth/service/authServices";
 import {
   changePasswordSchima,
-  registrationSchima,
   userUpdateSchima,
 } from "../../../Schima";
 import { Formik, useFormik } from "formik";
-import { blobUrlToFile, butifyErrors } from "../../../utility/utlity";
+import { butifyErrors } from "../../../utility/utlity";
 
 function Profile() {
   const profileData = {

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Center,
   Flex,
@@ -12,7 +11,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import React from "react";
 import { FaBed, FaBath } from "react-icons/fa";
 import { CgMenuGridR } from "react-icons/cg";

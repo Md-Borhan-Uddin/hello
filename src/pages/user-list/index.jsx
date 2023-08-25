@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, HStack, Switch, useToast } from "@chakra-ui/react";
-import SearchBox from "../../../components/SearchBox";
-import CustomModal from "../../../components/UserEditModal";
 import {
   FormControl,
   FormErrorMessage,
@@ -11,20 +9,22 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { userEditSchima } from "../../../Schima/index";
 import { getUser } from "../../../utility/authentication";
-import Paginator from "../../../components/Paginator";
 import {useNavigate} from 'react-router-dom'
-import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import DeleteButton from "../../../components/deleteButton";
 import { BiEdit } from "react-icons/bi";
+
+const SearchBox = React.lazy(()=>import("../../../components/SearchBox"));
+const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
+const Paginator = React.lazy(()=>import("../../../components/Paginator"));
+const RequireAuth = React.lazy(()=>import("../../../components/auth/TokenExpaireCheck"));
+const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
 
 function UserList() {
   const router = useNavigate()
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
-  const [error, setErrors] = useState([]);
   const [user, setUser] = useState([])
   const [nextUrl, setNextUrl] = useState(null)
   const [previousUrl, setPreviousUrl] = useState(null)
@@ -41,13 +41,10 @@ function UserList() {
     onOpen: statusOnOpen,
     onClose: statusOnClose,
   } = useDisclosure();
-  const [userSearch, setUserSearch] = useState("");
-  const [users, setusers] = useState([]);
   const [status, setStatus] = useState(false);
   const [check, setCheck] = useState(null)
   const { access_token } = getUser();
 
-  const userid = useRef()
   const statusCheck = useRef();
 
   const headers = {
@@ -126,9 +123,7 @@ function UserList() {
     handleBlur,
     handleChange,
     handleSubmit,
-    handleReset,
     touched,
-    setFieldValue,
   } = useFormik({
     initialValues: inputdata,
     validationSchema: userEditSchima,
@@ -138,7 +133,6 @@ function UserList() {
       fetchdata(data[0].username, values, true);
       editOnClose();
       setUserID(null)
-      // window.location.reload();
     },
   });
 
@@ -157,7 +151,6 @@ function UserList() {
     
     const data = user.filter(item=>item.id==userID)
     
-    console.log('data',data)
     fetchdata(data[0]?.username, { is_active: check }, true)
     setStatus(check);
     statusOnClose();
@@ -196,44 +189,6 @@ function UserList() {
     editOnClose();
   };
 
-  const handleEdit = (e) => {
-    const { value } = e.target;
-    axios
-      .patch(
-        baseUrl.defaults.baseURL + `/user-edit/${value}/`,
-        {},
-        { headers: headers }
-      )
-      .then((res) => {
-        console.log(res.data);
-        const { data } = res;
-        setValues({
-          first_name: data?.first_name,
-          last_name: data?.last_name,
-          middel_name: data.middel_name ? data.middel_name : "",
-          email: data?.email,
-          mobile_number: data?.mobile_number.slice(
-            3,
-            data.mobile_number.length
-          ),
-        });
-        editOnOpen();
-      })
-      .catch((error) => {
-        // setcustomerror(error.response.data);
-        console.log(error);
-
-        if (error.response.status == 401) {
-          toast({
-            title: "you are Not Login Please login",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-          router("/login");
-        }
-      });
-  };
   
   const openEditForm = (e)=>{
     editOnOpen()

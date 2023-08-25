@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import DeleteButton from '../../../components/deleteButton'
 import {
   Box,
   Button,
@@ -15,19 +14,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import CustomModal from "../../../components/UserEditModal";
 import { useFormik } from "formik";
 import { categoryANDBrandSchima } from "../../../Schima";
 import axios from "axios";
-import { baseURL, baseUrl } from "../../../utility/baseURL";
+import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
+const DeleteButton = React.lazy(()=>import('../../../components/deleteButton'))
 
 
-// const categorys = [{ name: "bangladesh" }, { name: "india" }];
 
 
 

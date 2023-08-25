@@ -49,8 +49,10 @@ const Contact = React.lazy(()=>import('./pages/contact'))
 function App() {
   let access_token;
   const {token} = useSelector((state)=>state.activeUser)
+  console.log('token', token)
+  
   const isTokenExpired = checkIfTokenExpired(token);
-  // console.log(isTokenExpired)
+  
   if(token && !isTokenExpired){
     access_token = token
   }
@@ -64,26 +66,26 @@ function App() {
       access_token = getUser().access_token
     }
   }
-  
 
-  
+  const user = useSelector(state=>state.userData.user)
 
-  const {data:activeUser, isSuccess:userSuccess, isLoading:loading} = useGetUserQuery(access_token);
-  const {data:notification, isSuccess:notifiSuccess, isLoading} = useGetNotificationQuery()
+  console.log("user", user)
+
+  // const {data:activeUser, isSuccess:userSuccess, isLoading:loading} = useGetUserQuery(access_token);
+  // const {data:notification, isSuccess:notifiSuccess, isLoading} = useGetNotificationQuery()
  
-  const router = useNavigate();
+  // const router = useNavigate();
   
 
   
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setNotification({notification}))
-      if(activeUser){
-        dispatch(setLoginUser({user:activeUser}))
-        dispatch(setActiveUser({user:activeUser}))
-      }
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(setNotification({notification}))
+  //   dispatch(setLoginUser({user:activeUser}))
+  //   dispatch(setActiveUser({user:activeUser}))
+      
 
-  },[notifiSuccess, userSuccess])
+  // },[notifiSuccess])
   
   
   return (

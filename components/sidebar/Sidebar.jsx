@@ -20,17 +20,11 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  useColorMode,
-  Stack,
-  Collapse,
   Center,
-  Select,
 } from "@chakra-ui/react";
 import {
   FiHome,
   FiTrendingUp,
-  FiCompass,
-  FiStar,
   FiSettings,
   FiMenu,
   FiPackage,

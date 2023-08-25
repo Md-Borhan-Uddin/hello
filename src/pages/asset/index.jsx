@@ -11,7 +11,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import CustomModal from "../../../components/UserEditModal";
 import { useFormik } from "formik";
 import { assetSchima } from "../../../Schima";
 import axios from "axios";
@@ -21,7 +20,8 @@ import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import DeleteButton from "../../../components/deleteButton";
+const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
+const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
 
 
 const inputdata = {

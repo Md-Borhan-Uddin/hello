@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import getText from "../../../../components/cptcha/text_generate";
-import Captcha from "../../../../components/cptcha/Captcha";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { registrationSchima } from "../../../../Schima";
 import {
   Flex,
@@ -12,18 +10,17 @@ import {
   HStack,
   Input,
   Spinner,
-  Text,
   Tooltip,
-  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
-import DefaultLayout from "../../DashboardLayout";
 
 import { useUserRegistrationMutation } from "../../../../data/auth/service/authServices";
 import { butifyErrors } from "../../../../utility/utlity";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../../../data/auth/slice/activeUserSlice";
+const getText = React.lazy(()=>import("../../../../components/cptcha/text_generate"));
+const Captcha = React.lazy(()=>import("../../../../components/cptcha/Captcha"));
 
 const inputdata = {
   first_name: "",

@@ -10,8 +10,11 @@ export const userAPI = createApi({
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
       getUser: builder.query({
+        
         query: (access_token) => 
+        
           {
+            
             return {
             url:'/user/',
             headers:{

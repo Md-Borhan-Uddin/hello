@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import {Box, Button, ButtonGroup, Flex, HStack, IconButton, Text} from '@chakra-ui/react'
+
+import {Box, Flex, HStack, IconButton, Text} from '@chakra-ui/react'
 import { BsArrowLeftShort, BsArrowRightShort } from 'react-icons/bs'
 
 export default function ({handleNextPage,handlePreviousPage, totalItem,page, isNext, isPrevious}) {

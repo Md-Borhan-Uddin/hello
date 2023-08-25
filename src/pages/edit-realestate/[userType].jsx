@@ -1,21 +1,21 @@
 
 import { propertyEditSchima } from "../../../Schima";
-import CommonSelect from "../../../components/CommonForm";
-import InputField from "../../../components/CommonForm/InputField";
-import InputFormRadio from "../../../components/CommonForm/InputFormRadio";
 import { baseURL } from "../../../utility/baseURL";
 
 import { useFormik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
-import CurrencyList from 'currency-list'
 import axios from "axios";
 import { Alert, AlertDescription, AlertIcon, Box, Button, useToast } from "@chakra-ui/react";
 import { getUser } from "../../../utility/authentication";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import { getObjects } from "../../../utility/property";
 import { blobUrlToFile } from "../../../utility/utlity";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+const CurrencyList = React.lazy(()=>import('currency-list'));
+const CommonSelect = React.lazy(()=>import("../../../components/CommonForm"));
+const InputField = React.lazy(()=>import("../../../components/CommonForm/InputField"));
+const InputFormRadio = React.lazy(()=>import("../../../components/CommonForm/InputFormRadio"));
 
 
 
@@ -255,13 +255,7 @@ function EditState() {
 
   const [error, setErrors] = useState([]);
 
-  const options = [
-    { key: "Please select", value: "" },
-    { key: "Bangladesh", value: "Bangladesh" },
-    { key: "India", value: "India" },
-    { key: "Afganishan", value: "Afganishan" },
-  ];
-
+  
   const handleDelete = ()=>{
     const {value} = realestateid.current
     

@@ -191,13 +191,8 @@ function Membership() {
         });
     },
   });
-console.log(values);
 
-  const handlePay = ()=>{
-    console.log(values);
-    console.log(packageInput);
 
-  }
 
   const handleShow = (e) => {
     handleReset(e)

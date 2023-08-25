@@ -1,11 +1,10 @@
 
-import {Link, useNavigate, useParams} from 'react-router-dom'
+
 import React, { useState } from 'react'
 import { useSendPasswordResetEmainMutation } from '../../../../data/auth/service/authServices'
 import { useToast } from '@chakra-ui/react'
 
 export default function ForgetPassword() {
-  const router = useNavigate()
   const toast = useToast()
   const [email, setEmail] = useState('')
   const [emailSend, state] = useSendPasswordResetEmainMutation()

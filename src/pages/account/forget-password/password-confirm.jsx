@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   FormErrorMessage,
@@ -7,7 +7,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Formik } from "formik";
-import RequireAuth from "../../../../components/auth/TokenExpaireCheck";
 import { changePasswordSchima } from "../../../../Schima";
 import { usePasswordResetMutation } from "../../../../data/auth/service/authServices";
 import { useNavigate, useParams } from "react-router-dom";

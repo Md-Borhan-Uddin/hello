@@ -10,7 +10,6 @@ import {
   FormLabel,
   HStack,
   Input,
-  Select,
   Switch,
   Text,
   useDisclosure,
@@ -21,14 +20,13 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
-import { BsTrash3 } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import {
   getObjects,
 } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import {FcApproval} from 'react-icons/fc'
+
 import { realestateTypeSchima } from "../../../Schima";
 // const categorys = [{ name: "bangladesh" }, { name: "india" }];
 

@@ -10,9 +10,9 @@ const activeUserSlice = createSlice({
   initialState,
   reducers: {
     setActiveUser: (state, action) => {
-  
       state.token = action.payload.token
       state.user = action.payload.user
+      console.log('user update')
     },
     deleteActiveUser: (state) => {
       state.token = "" 

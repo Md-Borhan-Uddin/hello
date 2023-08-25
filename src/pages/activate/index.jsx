@@ -7,7 +7,6 @@ import {
   Input,
   Button,
   useColorModeValue,
-  Heading,
   Text,
   Container,
   Flex,

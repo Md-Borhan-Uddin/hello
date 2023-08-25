@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DeleteButton from "../../../components/deleteButton";
 import {
   Box,
   Button,
@@ -10,7 +9,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import CustomModal from "../../../components/UserEditModal";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,9 +16,12 @@ import {
   editItem,
   getObjects,
 } from "../../../utility/country_city";
+
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import CountryForm from "../../../components/form/countryForm";
-import CityForm from "../../../components/form/cityForm";
+const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
+const CountryForm = React.lazy(()=>import("../../../components/form/countryForm"));
+const CityForm = React.lazy(()=>import("../../../components/form/cityForm"));
+const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
 
 
 

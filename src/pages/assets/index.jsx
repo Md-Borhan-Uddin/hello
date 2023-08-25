@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../DashboardLayout";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,7 +11,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -40,14 +38,14 @@ import {
   assetsSchema,
 } from "../../../Schima";
 import axios from "axios";
-import CurrencyList from "currency-list";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { blobUrlToFile, months } from "../../../utility/utlity";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import { getObjects } from "../../../utility/category_brand";
-import DeleteButton from "../../../components/deleteButton";
+const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
+const CurrencyList = React.lazy(()=>import("currency-list"));
 
 const inputdata = {
   real_estate: "",
@@ -73,7 +71,6 @@ function Assets() {
   const [id, setId] = useState();
   const router = useNavigate();
   const toast = useToast();
-  const [customerror, setcustomerror] = useState({});
   const [types, setTypes] = useState([])
   const [brands, setBrands] = useState([])
   const [currency, setCurrency] = useState([]);

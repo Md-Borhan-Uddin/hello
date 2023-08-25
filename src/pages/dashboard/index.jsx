@@ -1,5 +1,4 @@
-import DashboardLayout from "../DashboardLayout";
-import CustomChart from "../../../components/DashboardChart";
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -13,23 +12,21 @@ import {
   Box,
   Flex,
   HStack,
-  Input,
   Select,
-  Spacer,
   Spinner,
   Text,
 } from "@chakra-ui/react";
 import { Pie, Bar } from "react-chartjs-2";
 import { getUser } from "../../../utility/authentication";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { baseURL } from "../../../utility/baseURL";
-// import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
 import { useDispatch } from "react-redux";
 import { setLoginUser } from "../../../data/auth/slice/userSlice";
 import {useGetRealestateQuery} from "../../../data/auth/service/realestateService"
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 
+const CustomChart = React.lazy(()=>import("../../../components/DashboardChart"));
 ChartJS.register(
   ArcElement,
   Tooltip,
