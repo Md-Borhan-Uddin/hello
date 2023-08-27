@@ -1,12 +1,11 @@
 import { useGetNotificationQuery } from '../data/notification/notificationService'
 import { setNotification } from '../data/notification/notificationSlice'
 import { setActiveUser } from '../data/auth/slice/activeUserSlice'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { Route, Routes } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { useGetUserQuery } from '../data/auth/service/userServide'
-import { setLoginUser } from '../data/auth/slice/userSlice'
 import { useEffect } from 'react'
-import { checkIfTokenExpired, getUser } from '../utility/authentication'
+import { getUser } from '../utility/authentication'
 import { Flex, Spinner } from '@chakra-ui/react'
 import React, {Suspense} from 'react'
 
@@ -47,46 +46,17 @@ const Contact = React.lazy(()=>import('./pages/contact'))
 
 
 function App() {
-  let access_token;
-  const {token} = useSelector((state)=>state.activeUser)
-  console.log('token', token)
-  
-  const isTokenExpired = checkIfTokenExpired(token);
-  
-  if(token && !isTokenExpired){
-    access_token = token
-  }
-  else{
-    const isTokenExpired = checkIfTokenExpired(getUser().access_token);
-    if(isTokenExpired){
-      access_token = getUser().refresh_token
-    }
-    else{
 
-      access_token = getUser().access_token
-    }
-  }
+  const {access_token} = getUser()
+  const dispatch = useDispatch();
+  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
+  const {data:notification, isSuccess:notifiSuccess} = useGetNotificationQuery()
 
-  const user = useSelector(state=>state.userData.user)
-
-  console.log("user", user)
-
-  // const {data:activeUser, isSuccess:userSuccess, isLoading:loading} = useGetUserQuery(access_token);
-  // const {data:notification, isSuccess:notifiSuccess, isLoading} = useGetNotificationQuery()
- 
-  // const router = useNavigate();
-  
-
-  
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(setNotification({notification}))
-  //   dispatch(setLoginUser({user:activeUser}))
-  //   dispatch(setActiveUser({user:activeUser}))
-      
-
-  // },[notifiSuccess])
-  
+  useEffect(()=>{
+      dispatch(setNotification({notification}))
+      dispatch(setActiveUser({token:access_token,user:activeUser}))
+   
+  },[dispatch])
   
   return (
     <Suspense fallback={<LoadingSpiner />}>

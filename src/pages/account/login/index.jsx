@@ -9,7 +9,7 @@ import {
   AlertIcon,
   AlertDescription,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { loginSchima } from "../../../../Schima";
 import { Formik } from "formik";
@@ -24,23 +24,24 @@ export default function Login() {
   const router = useNavigate();
   const [error, setErrors] = useState([]);
   const [captchaMatch, setCaptchaMatch] = useState(false);
-  const [captchtext, setCaptchtext] = useState("");
-  const reFreshCaptcha = () => setCaptchtext(getText(6));
+  const [captchtext, setCaptchtext] = useState(getText(6));
   const [captcha, setCaptcha] = useState("");
   
+  const reFreshCaptcha = () =>setCaptchtext(getText(6));
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.activeUser);
 
   const [login, { isLoading }] = useUserLoginMutation();
+  // const captchtext = getText(6)
 
-  useEffect(() => {
-    setCaptchtext(getText(6));
+  // useEffect(() => {
+  //   setCaptchtext(getText(6));
 
-    dispatch(setActiveUser({ token: token, user: user }));
-    if (token) {
-      router("/dashboard");
-    }
-  }, [token]);
+  //   dispatch(setActiveUser({ token: token, user: user }));
+  //   if (token) {
+  //     router("/dashboard");
+  //   }
+  // }, [token]);
 
   const captchaHandle = (e) => {
     setCaptcha(e.target.value);
@@ -51,11 +52,10 @@ export default function Login() {
   };
   const [customerrors, setcustomerror] = useState([]);
 
-  if (token) return null;
-
   return (
-
-      <div className="flex items-center justify-center h-[calc(100vh-68px)] ">
+    <>
+      {getUser().access_token ? (<Navigate to={"/dashboard"} replace={true} />)
+      :<div className="flex items-center justify-center h-[calc(100vh-68px)] ">
         <div className="shadow-lg w-3/4 sm:w-1/2 md:w-1/3 p-4 rounded-md dark:bg-gray-950">
           <h2 className="text-xl font-bold leading-tight tracking-tight text-secondary md:text-2xl dark:text-white dark:bg-gray-950 text-center mb-3">
             Login Form
@@ -87,7 +87,7 @@ export default function Login() {
                       user: res.data.user,
                     })
                   );
-                  dispatch(setLoginUser({user: res.data.user}))
+                  dispatch(setLoginUser({ user: res.data.user }));
 
                   router("/dashboard");
                 }
@@ -185,7 +185,7 @@ export default function Login() {
             )}
           </Formik>
         </div>
-      </div>
-  
+      </div>}
+    </>
   );
 }

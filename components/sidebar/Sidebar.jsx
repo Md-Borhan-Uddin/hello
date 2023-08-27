@@ -156,7 +156,8 @@ export default function Sidebar({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  const user = useSelector((state) => state.activeUser.user);
+  const user = useSelector((state) => state.activeUser);
+  // console.log('user', user)
   return (
     <Box
       transition="3s ease"
