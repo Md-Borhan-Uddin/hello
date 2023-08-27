@@ -4,12 +4,10 @@ import { baseURL } from "../utility/baseURL";
 import axios from "axios";
 import { getUser } from "../utility/authentication";
 import React from "react";
-import RealestateForm from "./form/realestateForm";
 
-function AddBUttonWithModal({
+function AddButtonWithModal({
   btnText,
-  isEdit,
-  editItem,
+  children,
   onOpen,
   onClose,
   isOpen,
@@ -58,14 +56,10 @@ function AddBUttonWithModal({
         isOpen={isOpen}
         title="Add Real Estate"
       >
-        <RealestateForm
-          isEdit={isEdit}
-          data={isEdit ? editItem : null}
-          onClose={onClose}
-        />
+        {children}
       </CustomModal>
     </>
   );
 }
 
-export default AddBUttonWithModal;
+export default AddButtonWithModal;

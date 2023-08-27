@@ -5,29 +5,16 @@ import {
   HStack,
   Heading,
   Spacer,
-  Button,
-  TableContainer,
-  Table,
-  Th,
-  Td,
-  Tr,
-  Thead,
-  Tbody,
   Box,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-import { CustomModal } from "../../../components/modal";
-import AddBUttonWithModal from "../../../components/addBUttonWithModal";
 import RealestateList from "./realestateList";
+import AddButtonWithModal from "../../../components/addButtonWithModal";
 const RealestateForm = React.lazy(() =>
   import("../../../components/form/realestateForm")
-);
-const DeleteButton = React.lazy(() =>
-  import("../../../components/deleteButton")
 );
 
 const AddState = () => {
@@ -69,14 +56,19 @@ const AddState = () => {
             All Real Estate
           </Heading>
           <Spacer />
-          <AddBUttonWithModal
+          <AddButtonWithModal
             onOpen={onOpen}
             onClose={onClose}
             isOpen={isOpen}
-            editItem={editItem}
             btnText={"Add Real Estate"}
-            isEdit={isEdit}
-          />
+          >
+            <RealestateForm
+          isEdit={isEdit}
+          data={isEdit ? editItem : null}
+          onClose={onClose}
+        />
+
+            </AddButtonWithModal>
         </HStack>
         <RealestateList realestate={realestate} handleEdit={handleEdit} />
       </Box>
