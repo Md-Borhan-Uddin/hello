@@ -45,6 +45,7 @@ import { deleteLoginUser } from "../../data/auth/slice/userSlice";
 import { deleteActiveUser } from "../../data/auth/slice/activeUserSlice";
 
 import SearchForm from "../search/SearchForm";
+import { memo } from "react";
 
 const LinkItems = [
   {
@@ -126,7 +127,7 @@ const LinkItems = [
   },
 ];
 
-export default function Sidebar({ children }) {
+function Sidebar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -369,3 +370,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
     </>
   );
 };
+
+
+
+export default memo(Sidebar)
