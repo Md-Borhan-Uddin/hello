@@ -3,7 +3,7 @@ import { deleteActiveUser, setActiveUser } from './auth/slice/activeUserSlice'
 import { deletetUser, getUser } from '../utility/authentication'
 import { baseURL } from '../utility/baseURL'
 import { deleteLoginUser } from './auth/slice/userSlice'
-
+import { useNavigate } from 'react-router-dom'
 
 const baseQuery = fetchBaseQuery({
     baseUrl: baseURL,
@@ -21,7 +21,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions)
-   console.log('base query')
+   console.log('base query',result)
     if (result?.error?.status === 400) {
         console.log('result error')
         api.dispatch(deleteActiveUser())

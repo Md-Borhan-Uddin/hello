@@ -9,13 +9,7 @@ import { setActiveUser } from '../../data/auth/slice/activeUserSlice'
 import { useGetUserQuery } from '../../data/auth/service/userServide'
 
 export default function DefaultLayout() {
-  const {access_token} = getUser()
-  const dispatch = useDispatch();
-  const {data:activeUser, isSuccess:userSuccess, isLoading} = useGetUserQuery(access_token);
-  
-  useEffect(()=>{
-    dispatch(setActiveUser({token:access_token,user:activeUser}))
-  },[])
+ 
   return (
     <Layout>
         <main style={{maxHeight:'100vh'}}>
