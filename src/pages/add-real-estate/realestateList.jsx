@@ -17,8 +17,15 @@ import {
 import { baseURL } from "../../../utility/baseURL";
 import axios from "axios";
 import DeleteButton from "../../../components/deleteButton";
+import { getUser } from "../../../utility/authentication";
 
-function RealestateList({ realestate,handleEdit }) {
+function RealestateList({ realestate,handleEdit,setRealestate }) {
+
+  const { access_token } = getUser()
+  const headers = {
+    Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+  };
+  const toast = useToast()
 
   const handleDelete = (id) => {
     axios
@@ -27,7 +34,7 @@ function RealestateList({ realestate,handleEdit }) {
       })
       .then((res) => {
         const obj = realestate.filter((item) => item.id != id);
-        // setRealestate(obj);
+        setRealestate(obj);
         toast({
           title: "Delete Successfully",
           status: "success",

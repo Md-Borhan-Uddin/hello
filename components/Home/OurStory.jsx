@@ -55,38 +55,14 @@ import {
               rounded={'md'}>
               Our Story
             </Text>
-            <Heading>Best Real Estate Company</Heading>
+            <Heading>About Us</Heading>
             <Text color={'gray.500'} fontSize={'lg'}>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore
+            We are a Saudi company based in Riyadh. We were founded by 4 partners; with four different backgrounds, One is an engineer with a career in real estate asset management, one with an IT background, another with marketing and advertising experience, and the last one an entrepreneur.
             </Text>
-            <Stack
-              spacing={4}
-              divider={
-                <StackDivider
-                  borderColor={useColorModeValue('gray.100', 'gray.700')}
-                />
-              }>
-              <Feature
-                icon={
-                  <Icon as={IoAnalyticsSharp} color={'yellow.500'} w={5} h={5} />
-                }
-                iconBg={useColorModeValue('yellow.100', 'yellow.900')}
-                text={'Business Planning'}
-              />
-              <Feature
-                icon={<Icon as={IoLogoBitcoin} color={'green.500'} w={5} h={5} />}
-                iconBg={useColorModeValue('green.100', 'green.900')}
-                text={'Financial Planning'}
-              />
-              <Feature
-                icon={
-                  <Icon as={IoSearchSharp} color={'purple.500'} w={5} h={5} />
-                }
-                iconBg={useColorModeValue('purple.100', 'purple.900')}
-                text={'Market Analysis'}
-              />
-            </Stack>
+            <Heading textAlign={'right'}>نبذة عن "دائما"</Heading>
+            <Text color={'gray.500'} fontSize={'lg'}>
+            "دائما" شركة سعودية مقرها الرياض. أسسها أربعة شركاء بخلفيات عملية مختلفة. اولهم مهندس بحياة عملية اغلبها في إدارة الممتلكات، و الثاني متخصص في التقنية، و الثالث ذو باع طويل في التسويق و الإعلان، و الرابع رائد أعمال.
+            </Text>
           </Stack>
           <Flex>
             <Image

@@ -231,12 +231,11 @@ const NavItem = ({ icon, href, children, ...rest }) => {
 const MobileNav = ({ onOpen, ...rest }) => {
   const router = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userData.user);
+  const user = useSelector((state) => state.activeUser.user);
   const { isOpen, onOpen: onModal, onClose } = useDisclosure();
 
   const notifications = useSelector((state)=>state.notifications.notification) 
  
-  
   const handleLogout = () => {
     deletetUser();
     dispatch(deleteActiveUser());
@@ -373,4 +372,4 @@ const MobileNav = ({ onOpen, ...rest }) => {
 
 
 
-export default memo(Sidebar)
+export default Sidebar

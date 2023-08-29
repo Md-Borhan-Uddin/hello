@@ -56,7 +56,7 @@ function App() {
       dispatch(setNotification({notification}))
       dispatch(setActiveUser({token:access_token,user:activeUser}))
    
-  },[dispatch])
+  },[notifiSuccess, userSuccess])
   
   return (
     <Suspense fallback={<LoadingSpiner />}>

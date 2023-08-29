@@ -1,27 +1,23 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { CustomModal } from "./modal";
-import { baseURL } from "../utility/baseURL";
-import axios from "axios";
 import { getUser } from "../utility/authentication";
 import React from "react";
+import baseAxios  from "../utility/axiosConfig";
 
-function AddButtonWithModal({
-  btnText,
-  children,
-  onOpen,
-  onClose,
-  isOpen,
-}) {
-  const { access_token, userType } = getUser();
+function AddButtonWithModal({ btnText, children, onOpen, onClose, isOpen }) {
+  const { userType } = getUser();
   const toast = useToast();
 
-  const headers = {
-    Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
+  const getMember = () => {
+    baseAxios
+      .get("/active-membership/")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const handleOpen = () => {
-    axios
-      .get(baseURL + "/active-membership/", { headers: headers })
+    baseAxios
+      .get("/active-membership/")
       .then((res) => {
         if (userType === "Admin") {
           onOpen();

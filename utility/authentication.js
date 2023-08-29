@@ -1,7 +1,6 @@
 
 import axios from 'axios';
 import { parseJwt } from './utlity';
-import { baseUrl } from './baseURL';
 
 
 
@@ -22,18 +21,7 @@ export const checkIfTokenExpired = () => {
     return isExpaire;
      
   };
-  export const getAccessToken = (refreshToken,router)=>{
-    axios.post(baseUrl.defaults.baseURL+"/refresh-token/",{"refresh":refreshToken})
-    .then(res=>{
-      localStorage.setItem('access_token', res.data.access)
-      
-    })
-    .catch(err=>{
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('refresh_token')
-      router('/login')
-    })
-  }
+
 
 
 

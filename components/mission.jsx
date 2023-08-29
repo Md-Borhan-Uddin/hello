@@ -15,7 +15,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 
-export default function Mission({reverse,title,text}) {
+export default function Mission({reverse,Etitle,Atitle,Etext,Atext}) {
   return (
     <Container maxW={'full'} overflow={'hidden'}>
       <Stack
@@ -27,36 +27,30 @@ export default function Mission({reverse,title,text}) {
         <Stack flex={1} spacing={{ base: 5, md: 10 }}>
           <Heading
             lineHeight={1.1}
-            fontWeight={600}
-            fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
+            fontWeight={400}
+            fontSize={{ base: 'xl', sm: '2xl', lg: '3xl' }}>
             
             <Text as={'span'} color={'red.400'}>
-              {title}
+              {Etitle}
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            {text}
+            {Etext}
           </Text>
-          <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
-            <Button
-              rounded={'full'}
-              size={'lg'}
-              fontWeight={'normal'}
-              px={6}
-              colorScheme={'red'}
-              bg={'red.400'}
-              _hover={{ bg: 'red.500' }}>
-              Get started
-            </Button>
-            <Button
-              rounded={'full'}
-              size={'lg'}
-              fontWeight={'normal'}
-              px={6}
-              leftIcon={<PlayIcon h={4} w={4} color={'gray.300'} />}>
-              How It Works
-            </Button>
-          </Stack>
+
+          <Heading
+            lineHeight={1.1}
+            fontWeight={400}
+            fontSize={{ base: 'xl', sm: '3xl', lg: '3xl' }}>
+            
+            <Text as={'span'} color={'red.400'}>
+              {Atitle}
+            </Text>
+          </Heading>
+          <Text color={'gray.500'}>
+            {Atext}
+          </Text>
+          
         </Stack>
         <Flex
           flex={1}

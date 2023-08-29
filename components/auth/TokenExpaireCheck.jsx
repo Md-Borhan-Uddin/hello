@@ -3,25 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { checkIfTokenExpired, getAccessToken } from '../../utility/authentication';
-import axios from 'axios';
-import { baseUrl } from '../../utility/baseURL';
+import { checkIfTokenExpired } from '../../utility/authentication';
+
+import { getAccessToken } from '../../utility/getToken';
 
 
 
-// const refreshAccessToken = async (refreshToken) => {
-//   console.log('acess token reguiest')
-//   try {
-//     const response = await axios.post(baseUrl.defaults.baseURL+"/refresh-token/",{"refresh":refreshToken});
-//     console.log('refresh', response)
-//     const { access } = response.data;
-//     return access;
-//   } catch (error) {
-//     console.log('error',error)
-//     return error
-    
-//   }
-// };
 
 
 

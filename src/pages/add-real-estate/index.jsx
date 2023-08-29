@@ -66,11 +66,13 @@ const AddState = () => {
           isEdit={isEdit}
           data={isEdit ? editItem : null}
           onClose={onClose}
+          setRealestate={setRealestate}
+          realestates={realestate}
         />
 
             </AddButtonWithModal>
         </HStack>
-        <RealestateList realestate={realestate} handleEdit={handleEdit} />
+        <RealestateList setRealestate={setRealestate} realestate={realestate} handleEdit={handleEdit} />
       </Box>
     </>
   );

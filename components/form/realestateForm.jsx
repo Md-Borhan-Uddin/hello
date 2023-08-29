@@ -40,7 +40,7 @@ const inputField = {
 };
 
 
-export default function RealestateForm({ isEdit, data, onClose }) {
+export default function RealestateForm({realestates, isEdit, data, onClose,setRealestate }) {
   const { access_token, userType } = getUser();
   const [uType, setUType] = useState("");
   const [country, setCountry] = useState([]);
@@ -178,7 +178,6 @@ export default function RealestateForm({ isEdit, data, onClose }) {
       } else {
         values.owner = false;
       }
-      console.log(new Date(values.cost_date));
 
       axios
         .post(baseURL + `/realestate/${userType}/`, values, {
@@ -189,15 +188,15 @@ export default function RealestateForm({ isEdit, data, onClose }) {
         })
         .then((res) => {
           // setUser(res.data)
-          setRealestate(res.data.results);
-          router(`/property-list/${userType}`);
+          setRealestate([...realestates, res.data.results]);
+          onClose()
         })
         .catch((error) => {
-          console.log(error.response);
-          setErrors(error.response.data);
-          if (error.response.status == 401) {
-            setErrors({ message: error.response.data.messages[0].message });
-          }
+          console.log(error);
+          // setErrors(error.response);
+          // if (error.response.status == 401) {
+          //   setErrors({ message: error.response.data.messages[0].message });
+          // }
           window.scrollTo(0, 0);
           setValues({
             name: values.name,

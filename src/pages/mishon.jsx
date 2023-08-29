@@ -6,9 +6,9 @@ import Mission from "../../components/mission";
 import TopSection from "../../components/topSection";
 
 function MishonAndVishon() {
-  const missionText = `Snippy is a rich coding snippets app that lets you create your own code
-  snippets, categorize them, and even sync them in the cloud so you can use them
-  anywhere. All that is free!`;
+  const missionTextE = `Enabling real estate owners to preserve and increase the value of their assets.  (through automating the ownership experience)`;
+  const missionTextA =
+    "تمكين ملاك العقارات السكنية و التجارية من الحفاظ على، و زيادة قيمة ممتلكاتهم. (عن طريق توفير أدوات تقنية لتطوير تجربة الملكية)";
   return (
     <Flex flexDirection={"column"}>
       <Box>
@@ -22,11 +22,24 @@ function MishonAndVishon() {
       </Box>
       <Box>
         <Box width={"full"}>
-          <Mission text={missionText} title={"Our Mission"} />
+          <Mission
+            Etext={missionTextE}
+            Atext={missionTextA}
+            Atitle={"الرسالة:"}
+            Etitle={"Our Mission"}
+          />
         </Box>
 
         <Box width={"full"}>
-          <Mission reverse text={missionText} title={"Our Mission"} />
+          <Mission
+            reverse
+            Etext={
+              "Becoming the second step a real estate takes after acquiring an asset."
+            }
+            Etitle={"Our Vision"}
+            Atext={"أن نكون الخطوة الثانية التي يتخذها مالك العقار بعد شراءه.."}
+            Atitle={"رؤيتنا:"}
+          />
         </Box>
       </Box>
     </Flex>
