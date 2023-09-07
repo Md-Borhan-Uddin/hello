@@ -49,10 +49,6 @@ export default function WithSubnavigation() {
       to: "/mission-and-vision",
     },
     {
-      label: "Leadership/Team",
-      to: "/team",
-    },
-    {
       label: "Contact Us",
       to: "/contact",
     },

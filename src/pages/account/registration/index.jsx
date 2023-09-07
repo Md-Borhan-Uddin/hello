@@ -19,7 +19,8 @@ import { useUserRegistrationMutation } from "../../../../data/auth/service/authS
 import { butifyErrors } from "../../../../utility/utlity";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../../../data/auth/slice/activeUserSlice";
-const getText = React.lazy(()=>import("../../../../components/cptcha/text_generate"));
+import getText from "../../../../components/cptcha/text_generate";
+// const getText = React.lazy(()=>import("../../../../components/cptcha/text_generate"));
 const Captcha = React.lazy(()=>import("../../../../components/cptcha/Captcha"));
 
 const inputdata = {
@@ -39,6 +40,7 @@ export default function Registration() {
   const [captcha, setCaptcha] = useState("");
   const [captchtext, setCaptchtext] = useState("");
   const toast = useToast();
+
 
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.activeUser);
