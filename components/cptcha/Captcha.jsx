@@ -1,8 +1,6 @@
 import { RepeatClockIcon } from "@chakra-ui/icons";
 import { Box, Input, InputGroup, InputRightAddon } from "@chakra-ui/react";
-import React, { useState } from "react";
-import bg from "/captcha-bg.jpeg";
-import getText from "./text_generate";
+
 
 export default function Captcha({
   value,
@@ -17,11 +15,9 @@ export default function Captcha({
   return (
     <div className="mb-3">
       <Box
-        backgroundImage={`url(${bg})`}
-        bgSize={"cover"}
-        bgPosition="center"
-        bgRepeat="no-repeat"
+        bg={'gray.200'}
         w={"100%"}
+        borderRadius={'8px'}
         border={"2px solid gray.100"}
         textAlign={"center"}
         fontSize={"1.5rem"}

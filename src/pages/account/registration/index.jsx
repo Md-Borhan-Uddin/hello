@@ -53,7 +53,7 @@ export default function Registration() {
     setCaptchtext(getText(6));
     dispatch(setActiveUser({ token: token, user: user }));
     if (token) {
-      router.push("/profile");
+      router("/profile");
     }
   }, [token]);
 
@@ -82,12 +82,11 @@ export default function Registration() {
           const res = await registerUser(values);
           if (res.data) {
             toast({
-              description: "Activation Link Send Your Email",
+              description: "Thank you for registering with us please complete your registration by verifying your email through the email which we sent to (entered value for email field), please note if you did not verify your email within 48 the registration will be canceled",
               status: "success",
               duration: 3000,
               isClosable: true,
             });
-            // useDispatch(setToken(getUser()))
             router("/login");
           }
           if (res.error) {
@@ -161,6 +160,7 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='20'
+                    minLength='8'
                   />
                   {errors.username && touched.username ? (
                     <FormErrorMessage>{errors.username}.</FormErrorMessage>
@@ -239,6 +239,7 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='10'
+                    minLength='3'
                   />
                   {errors.first_name && touched.first_name ? (
                     <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
@@ -258,6 +259,7 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='10'
+                    minLength='3'
                   />
                   {errors.middle_name && touched.middle_name ? (
                     <FormErrorMessage>{errors.middle_name}.</FormErrorMessage>
@@ -315,7 +317,7 @@ export default function Registration() {
                     <Input
                       type="text"
                       name="mobile_number"
-                      placeholder="+919876543210"
+                      placeholder="+9669876543210"
                       value={values.mobile_number}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -324,7 +326,7 @@ export default function Registration() {
                       borderRadius={"base"}
                       hasArrow
                       label={
-                        'Example: +919876543210'
+                        'Example: +9669876543210'
                       }
                     >
                       <InfoIcon />
@@ -348,7 +350,7 @@ export default function Registration() {
                 type="submit"
                 className="w-full text-white cursor-pointer bg-[rgb(38,220,118)] hover:bg-[rgb(38,220,118)] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
-                Create an account
+                Create An Account
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
