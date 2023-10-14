@@ -1,40 +1,9 @@
 
-// import axios from "axios";
-// import { checkIfTokenExpired, getUser } from "./authentication";
-// import { getAccessToken } from "./getToken";
-
-// let headers;
-
-
-// if (checkIfTokenExpired()) {
-//     headers = {
-//       "Content-Type": "multipart/form-data",
-//       Authorization: "Bearer " + String(getUser().access_token),
-//     };
-//   } else {
-//     getAccessToken(getUser().refresh_token)
-//     headers = {
-//       "Content-Type": "multipart/form-data",
-//       Authorization: "Bearer " + String(getUser().access_token),
-//     };
-//   }
-  
-//   // const BASEURL = "http://www.api.daimn.com/api"
-  
-  
-// export const baseAxios = axios.create({
-//     baseURL: BASEURL,
-//     headers: headers,
-//   });
-  
-
-
-  // axiosbaseAxios.js
 import axios from 'axios';
 
 
 const BASEURL = "http://127.0.0.1:8000/api";
-
+// const BASEURL = "http://www.api.daimn.com/api"
 
 
 const baseAxios = axios.create({
