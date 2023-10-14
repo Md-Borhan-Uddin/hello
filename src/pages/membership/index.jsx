@@ -52,6 +52,7 @@ import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { MdCheckCircle } from "react-icons/md";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import baseAxios from "../../../utility/axiosConfig";
 
 const inputdata = {
   price: 0,
@@ -91,7 +92,7 @@ function Membership() {
   };
 
   useEffect(() => {
-    axios
+    baseAxios
       .get(baseURL + "/package/", { headers: headers })
       .then((res) => {
         setPackages(res.data);
@@ -112,7 +113,7 @@ function Membership() {
     //   URL = baseURL + "/membership?is_active=True"
     // }
 
-    axios
+    baseAxios
       .get(baseURL + "/membership/", { headers: headers })
       .then((res) => {
         console.log("membership", res.data);
@@ -148,7 +149,7 @@ function Membership() {
       );
 
       console.log(values);
-      axios
+      baseAxios
         .post(baseURL + "/membership/", values, {
           headers: headers,
         })
@@ -200,6 +201,7 @@ function Membership() {
       expairModalonOpen();
     } else {
       onOpen();
+      
     }
   };
 
@@ -207,7 +209,7 @@ function Membership() {
     setIsEdit(true);
     const { value } = e.target;
     setId(value);
-    axios
+    baseAxios
       .get(baseURL + `/package/${value}/`, values, {
         headers: headers,
       })
@@ -255,7 +257,7 @@ function Membership() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    axios
+    baseAxios
       .patch(baseURL + `/package/${id}/`, values, {
         headers: headers,
       })
@@ -294,13 +296,13 @@ function Membership() {
 
   const handleDelete = (id) => {
 
-    axios
+    baseAxios
       .delete(baseURL + `/membership/${id}/`, {
         headers: headers,
       })
       .then((res) => {
         console.log(res);
-        axios
+        baseAxios
           .get(baseUrl.defaults.baseURL + "/membership/", { headers: headers })
           .then((res) => setMembership(res.data))
           .catch((error) => console.log(error));
@@ -334,7 +336,7 @@ function Membership() {
   const handlePackage = (e) => {
     const { value } = e.target;
     setPackageInput(value);
-    axios
+    baseAxios
       .get(baseUrl.defaults.baseURL + `/package/${value}/`, {
         headers: headers,
       })
@@ -349,11 +351,11 @@ function Membership() {
       expire_date:new Date(),
       is_pay: true
     }
-    axios.post(baseURL+'/membership/',data,{headers:headers})
+    baseAxios.post(baseURL+'/membership/',data,{headers:headers})
     .then(res=>{
-      console.log(res)
+      setMembership(res.data)
       toast({
-        title: 'The Free Membership activated Successfully',
+        title: 'Membership activated Successfully',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -371,6 +373,14 @@ function Membership() {
     })
   }
 
+  const handleMembershipBtn = ()=>{
+    console.log('click')
+    console.log(isOpen)
+    handleReset();
+    setIsEdit(false); 
+    onOpen()
+  }
+
 
   if (userType === "Admin") {
     return (
@@ -379,9 +389,9 @@ function Membership() {
           <HStack spacing={2} textAlign="center" mb="1rem">
             <Heading fontSize="4xl">All Membership</Heading>
             <Spacer />
-          <Button colorScheme="primary" onClick={()=>{handleReset();setIsEdit(false); onOpen()}}>
+          {/* <Button colorScheme="primary" onClick={handleMembershipBtn}>
             Add Membership
-          </Button>
+          </Button> */}
           </HStack>
           <Box>
             <TableContainer>
@@ -443,6 +453,7 @@ function Membership() {
             </TableContainer>
           </Box>
         </Box>
+        
       </>
     );
   } else {
@@ -582,7 +593,6 @@ function Membership() {
                       </Box>
                     )}
                     <HStack>
-                      {console.log(packagedata)}
                       {packagedata.default_price && (
                         <Box>
                           <Heading size="xs" textTransform="uppercase">
@@ -665,6 +675,7 @@ function Membership() {
           </HStack>
         </Box>
 
+        
         {/* Package Add modal */}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -886,6 +897,7 @@ function Membership() {
                             value={values.cvv}
                             onChange={handleChange}
                             placeholder="CVV"
+                            maxLength='3'
                           />
                           {errors.cvv && touched.cvv ? (
                             <FormErrorMessage>{errors.cvv}</FormErrorMessage>
@@ -906,7 +918,7 @@ function Membership() {
                       colorScheme="primary"
                       transition="ease-in-out 0.5s"
                       _hover={{ bgColor: "primary.600", color: "#fff" }}
-                      
+                      onClick={handleMembership}
                     >
                       Pay
                     </Button>
@@ -916,6 +928,7 @@ function Membership() {
             </ModalBody>
           </ModalContent>
         </Modal>
+        
 
         <Modal isOpen={expairModalisOpen} onClose={expairModalonClose}>
           <ModalOverlay />
@@ -940,7 +953,7 @@ function Membership() {
                 onClick={() => {
                   expairModalonClose();
                   onOpen();
-                  axios
+                  baseAxios
                     .delete(
                       baseUrl.defaults.baseURL + `/membership/${membership[0]?.id}/`,
                       {
@@ -949,7 +962,7 @@ function Membership() {
                     )
                     .then((res) => {
                       console.log(res);
-                      axios
+                      baseAxios
                         .get(baseUrl.defaults.baseURL + "/membership/", {
                           headers: headers,
                         })

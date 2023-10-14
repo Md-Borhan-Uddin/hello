@@ -158,7 +158,7 @@ function Sidebar({ children }) {
 
 const SidebarContent = ({ onClose, ...rest }) => {
   const user = useSelector((state) => state.activeUser.user);
-  // console.log('user', user)
+  
   return (
     <Box
       transition="3s ease"
@@ -191,7 +191,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
           </Text>
           {item.children &&
             item.children.map((link) => {
-              console.log('user',user)
               return user?.user_type === "Admin" ? (
                 <NavItem key={link.name} href={link.href} icon={link.icon}>
                   {link.name}

@@ -58,6 +58,7 @@ function Profile() {
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
+  console.log(profile)
   const [passworderrors, setPassworderrors] = useState([]);
   const [customerrors, setcustomerror] = useState([]);
   const toast = useToast();

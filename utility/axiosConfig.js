@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const BASEURL = "http://127.0.0.1:8000/api";
@@ -47,9 +48,16 @@ baseAxios.interceptors.response.use(
       if (refreshToken) {
         // Call your refresh token API and get a new access token
         const newAccessToken = await axios.post(BASEURL+"/refresh-token/",{"refresh":refreshToken});
-
+        console.log('refresh', newAccessToken)
         // Update the access token in storage
-        localStorage.setItem('access_token', newAccessToken);
+        try{
+
+          localStorage.setItem('access_token', newAccessToken);
+        }
+        catch(e){
+          const router = useNavigate()
+          router('/login')
+        }
 
         // Retry the original request with the new access token
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
