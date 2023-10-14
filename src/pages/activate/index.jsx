@@ -187,7 +187,8 @@ export default function Activate() {
             mt={"0.5rem"}
           >
             <Text mt={2} textAlign={"center"} color="gray.500">
-              your account active now you go with us
+            Thank you for verifying your email, now you can login and use 
+            the system and update your profile
             </Text>
             <Button
               backgroundColor={"rgb(38,220,118)"}

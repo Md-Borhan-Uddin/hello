@@ -14,13 +14,12 @@ import { userEditSchima } from "../../../Schima/index";
 import { getUser } from "../../../utility/authentication";
 import {useNavigate} from 'react-router-dom'
 import { BiEdit } from "react-icons/bi";
-
+import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 const SearchBox = React.lazy(()=>import("../../../components/SearchBox"));
 const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
 const Paginator = React.lazy(()=>import("../../../components/Paginator"));
-const RequireAuth = React.lazy(()=>import("../../../components/auth/TokenExpaireCheck"));
 const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
-
+// console.log(RequireAuth)
 function UserList() {
   const router = useNavigate()
   const toast = useToast();
