@@ -57,6 +57,7 @@ function Profile() {
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
+  const [passworderrors, setPassworderrors] = useState([]);
   const [customerrors, setcustomerror] = useState([]);
   const toast = useToast();
   const [changepassword, { isSuccess: isChangePasswordSuccess, isLoading }] =
@@ -208,36 +209,7 @@ function Profile() {
                 {profile?.user_type}
               </Text>
 
-              <Stack mt={8} direction={"row"} spacing={4}>
-                <Button
-                  flex={1}
-                  fontSize={"sm"}
-                  rounded={"full"}
-                  _focus={{
-                    bg: "gray.200",
-                  }}
-                >
-                  Message
-                </Button>
-                <Button
-                  flex={1}
-                  fontSize={"sm"}
-                  rounded={"full"}
-                  bg={"blue.400"}
-                  color={"white"}
-                  boxShadow={
-                    "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                  }
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                  _focus={{
-                    bg: "blue.500",
-                  }}
-                >
-                  Follow
-                </Button>
-              </Stack>
+              
             </Box>
           </Center>
           <Box>
@@ -281,8 +253,8 @@ function Profile() {
                         ) => {
                           const res = await changepassword(values);
                           if (res.data) {
-                            console.log(res.data);
-
+                            console.log('data',res.data);
+                            setPassworderrors([])
                             toast({
                               description: `${res.data.message}`,
                               status: "success",
@@ -292,9 +264,10 @@ function Profile() {
                             resetForm();
                           }
                           if (res.error) {
+
                             const e = butifyErrors(res.error.data);
                             console.log(res.error);
-                            setcustomerror(e);
+                            setPassworderrors(e);
                             window.scrollTo(0, 0);
                           }
                         }}
@@ -309,9 +282,9 @@ function Profile() {
                           isSubmitting,
                         }) => (
                           <form onSubmit={passwordSubmit}>
-                            {customerrors && (
+                            {passworderrors && (
                               <>
-                                {customerrors.map((item, i) => (
+                                {passworderrors.map((item, i) => (
                                   <p key={i} className="text-red-600">
                                     {item}
                                   </p>
@@ -366,6 +339,7 @@ function Profile() {
                               <button
                                 type="submit"
                                 className="text-secondary bg-[rgb(34,220,118)] hover:bg-primary font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+                                
                               >
                                 change
                               </button>

@@ -15,7 +15,7 @@ export default function ForgetPassword() {
       console.log(res.data)
       setEmail('')
       toast({
-        description: `${res.data.message}. Check your Email`,
+        description: 'Please check your email to complete password rest process',
         status: "success",
         duration: 5000,
         isClosable: true,
