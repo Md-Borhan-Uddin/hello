@@ -39,6 +39,7 @@ import {
 } from "../../../Schima";
 import { Formik, useFormik } from "formik";
 import { butifyErrors } from "../../../utility/utlity";
+import baseAxios from "../../../utility/axiosConfig";
 
 function Profile() {
   const profileData = {
@@ -76,7 +77,7 @@ function Profile() {
     initialValues: profileData,
     validationSchema: userUpdateSchima,
     onSubmit: (values, { setSubmitting }) => {
-      axios
+      baseAxios
         .patch(`${baseURL}/user-edit/${values.username}/`, values, {
           headers:  {
             "Content-type":"multipart/form-data",
@@ -84,12 +85,11 @@ function Profile() {
           },
         })
         .then((res) => {
-          console.log(res);
           const {data} = res
           setValues({
             first_name: data?.first_name,
             last_name: data?.last_name,
-            middel_name: data?.middel_name,
+            middel_name: data?.middel_name? data?.middel_name:"",
             username: data?.username,
             email: data?.email,
             mobile_number: data?.mobile_number,
@@ -105,7 +105,6 @@ function Profile() {
           });
         })
         .catch((err) => {
-          console.log("errors", err);
           const e = butifyErrors(err.error.data);
           setcustomerror(e);
           window.scrollTo(0, 0);
@@ -115,16 +114,14 @@ function Profile() {
 
   const handleImage = (e)=>{
     const image = e.target.files[0]
-    console.log(image)
-    axios
-        .patch(`${baseURL}/user-edit/${values.username}/`, {image:image}, {
+    
+    baseAxios.patch(`${baseURL}/user-edit/${values.username}/`, {image:image}, {
           headers: {
             "Content-type":"multipart/form-data",
             Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
           },
         })
         .then((res) => {
-          console.log(res);
           const {data} = res
           setValues({
             first_name: data?.first_name,
@@ -148,7 +145,7 @@ function Profile() {
     new_password: "",
   };
   useEffect(() => {
-    axios.get(baseURL+'/active-membership/',{headers:headers})
+    baseAxios.get(baseURL+'/active-membership/',{headers:headers})
     .then(res=>{
       console.log(res)
     })
@@ -158,7 +155,7 @@ function Profile() {
     setValues({
       first_name: profile?.first_name,
       last_name: profile?.last_name,
-      middel_name: profile?.middel_name,
+      middel_name: profile?.middel_name ? profile?.middel_name: "",
       username: profile?.username,
       email: profile?.email,
       mobile_number: profile?.mobile_number,
@@ -253,7 +250,6 @@ function Profile() {
                         ) => {
                           const res = await changepassword(values);
                           if (res.data) {
-                            console.log('data',res.data);
                             setPassworderrors([])
                             toast({
                               description: `${res.data.message}`,
@@ -266,7 +262,7 @@ function Profile() {
                           if (res.error) {
 
                             const e = butifyErrors(res.error.data);
-                            console.log(res.error);
+                            
                             setPassworderrors(e);
                             window.scrollTo(0, 0);
                           }
@@ -375,7 +371,6 @@ const UpdateForm = ({
   setFieldValue,
   customerrors,
 }) => {
-  console.log(errors);
   const [midname, setMidname] = useState('')
   useEffect(()=>{
     setFieldValue('middel_name',midname)
