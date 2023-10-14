@@ -15,6 +15,7 @@ import { getUser } from "../../../utility/authentication";
 import {useNavigate} from 'react-router-dom'
 import { BiEdit } from "react-icons/bi";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import baseAxios from "../../../utility/axiosConfig";
 const SearchBox = React.lazy(()=>import("../../../components/SearchBox"));
 const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
 const Paginator = React.lazy(()=>import("../../../components/Paginator"));
@@ -66,9 +67,10 @@ function UserList() {
       .catch((error) => console.log(error));
   }
 
+
   const fetchdata = (id, values, message) => {
     
-    axios
+    baseAxios
       .patch(baseUrl.defaults.baseURL + `/user-edit/${id}/`, values, {
         headers: headers,
       })
@@ -88,19 +90,11 @@ function UserList() {
         }
       })
       .catch((error) => {
-        // setcustomerror(error.response.data);
         console.log(error);
-        // if (error.response.status == 401) {
-        //   toast({
-        //     title: "you are Not Login Please login",
-        //     status: "success",
-        //     duration: 2000,
-        //     isClosable: true,
-        //   });
-        //   router("/login");
-        // }
+        
       });
   };
+  console.log('status',status)
   useEffect(()=>{
     axios.get(baseURL+'/all-user/',{headers:headers})
     .then((res)=>{
@@ -140,9 +134,11 @@ function UserList() {
   }
   const openActive = (e)=>{
     const { value, checked } = e.target;
+    console.log('checked',checked)
+    console.log('status in', status)
     setUserID(value)
     setCheck(checked)
-    setStatus(!check);
+    setStatus(!checked);
     statusOnOpen()
   }
 

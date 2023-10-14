@@ -32,16 +32,7 @@ export default function Login() {
   const { token, user } = useSelector((state) => state.activeUser);
 
   const [login, { isLoading }] = useUserLoginMutation();
-  // const captchtext = getText(6)
-
-  // useEffect(() => {
-  //   setCaptchtext(getText(6));
-
-  //   dispatch(setActiveUser({ token: token, user: user }));
-  //   if (token) {
-  //     router("/dashboard");
-  //   }
-  // }, [token]);
+ 
 
   const captchaHandle = (e) => {
     setCaptcha(e.target.value);
