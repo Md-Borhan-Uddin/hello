@@ -1,14 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import DeleteButton from '../../../components/deleteButton'
+import DeleteButton from "../../../components/deleteButton";
 import {
   Box,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Heading,
-  Input,
   List,
   ListItem,
   ListIcon,
@@ -28,7 +24,6 @@ import {
   ModalBody,
   ModalFooter,
   Stack,
-  Radio,
   StackDivider,
   Text,
   TableContainer,
@@ -40,19 +35,16 @@ import {
   Td,
   Badge,
   CardFooter,
-  RadioGroup,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import {
-  paymentSchima,
-} from "../../../Schima";
-import axios from "axios";
+import { paymentSchima } from "../../../Schima";
 import { baseURL, baseUrl } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useNavigate } from "react-router-dom";
 import { MdCheckCircle } from "react-icons/md";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
 import baseAxios from "../../../utility/axiosConfig";
+import Form from "./form";
 
 const inputdata = {
   price: 0,
@@ -83,10 +75,16 @@ function Membership() {
     onClose: expairModalonClose,
     onOpen: expairModalonOpen,
   } = useDisclosure();
+
+  const {
+    isOpen: extraAddFormOpen,
+    onClose: extraAddFormClose,
+    onOpen: extraAddFormOnOpen,
+  } = useDisclosure();
+
   const { access_token } = getUser();
 
   const priceId = useRef();
-
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
@@ -105,26 +103,16 @@ function Membership() {
   useEffect(() => {
     const { userType } = getUser();
     setUserType(userType);
-    // let URL;
-    // if(userType==="Admin"){
-    //   URL = baseURL + "/membership/"
-    // }
-    // else{
-    //   URL = baseURL + "/membership?is_active=True"
-    // }
 
     baseAxios
-      .get(baseURL + "/membership/", { headers: headers })
+      .get("/membership/", { headers: headers })
       .then((res) => {
-        console.log("membership", res.data);
         setMembership(res.data);
       })
       .catch((error) => {
         console.log("membership", error);
       });
   }, []);
-
-  
 
   const {
     values,
@@ -147,17 +135,14 @@ function Membership() {
       values.expire_date = new Date(
         `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
       );
-
-      console.log(values);
       baseAxios
-        .post(baseURL + "/membership/", values, {
+        .post("/membership/", values, {
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
-          
           if (res.status == 201) {
-            packages.push(res.data);
+            // packages.push(res.data);
+            // setMembership([res.data])
             toast({
               title: "Package create successfully",
               status: "success",
@@ -169,7 +154,6 @@ function Membership() {
           }
         })
         .catch((error) => {
-          console.log(error);
           if (error.response.data.non_field_errors) {
             error.response.data.non_field_errors.map((message) => {
               toast({
@@ -193,15 +177,12 @@ function Membership() {
     },
   });
 
-
-
   const handleShow = (e) => {
-    handleReset(e)
+    handleReset(e);
     if (membership[0]) {
       expairModalonOpen();
     } else {
       onOpen();
-      
     }
   };
 
@@ -210,11 +191,10 @@ function Membership() {
     const { value } = e.target;
     setId(value);
     baseAxios
-      .get(baseURL + `/package/${value}/`, values, {
+      .get(`/package/${value}/`, values, {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         onOpen();
         setValues({
           name: res.data?.name,
@@ -236,7 +216,6 @@ function Membership() {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Somethings wrong try again",
           status: "error",
@@ -258,11 +237,10 @@ function Membership() {
   const handleUpdate = (e) => {
     e.preventDefault();
     baseAxios
-      .patch(baseURL + `/package/${id}/`, values, {
+      .patch(`/package/${id}/`, values, {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         getPackage().then((res) => setPackages(res));
         toast({
           title: "update Successfully",
@@ -272,7 +250,6 @@ function Membership() {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Somethings wrong try again",
           status: "error",
@@ -295,15 +272,13 @@ function Membership() {
   };
 
   const handleDelete = (id) => {
-
     baseAxios
-      .delete(baseURL + `/membership/${id}/`, {
+      .delete(`/membership/${id}/`, {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         baseAxios
-          .get(baseUrl.defaults.baseURL + "/membership/", { headers: headers })
+          .get("/membership/", { headers: headers })
           .then((res) => setMembership(res.data))
           .catch((error) => console.log(error));
         toast({
@@ -314,7 +289,6 @@ function Membership() {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Somethings wrong try again",
           status: "error",
@@ -337,50 +311,54 @@ function Membership() {
     const { value } = e.target;
     setPackageInput(value);
     baseAxios
-      .get(baseUrl.defaults.baseURL + `/package/${value}/`, {
+      .get(`/package/${value}/`, {
         headers: headers,
       })
-      .then((res) => setPackagedata(res.data))
+      .then((res) => {
+        setPackagedata(res.data);
+      })
       .catch((error) => setcustomerror(error.response.data));
   };
 
-  const handleMembership = ()=>{
-    
+  const handleMembership = () => {
     const data = {
       package_id: parseInt(packageInput),
-      expire_date:new Date(),
-      is_pay: true
-    }
-    baseAxios.post(baseURL+'/membership/',data,{headers:headers})
-    .then(res=>{
-      setMembership(res.data)
-      toast({
-        title: 'Membership activated Successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+      expire_date: new Date(),
+      is_pay: true,
+    };
+    baseAxios
+      .post("/membership/", data, { headers: headers })
+      .then((res) => {
+        setMembership([res.data]);
+        toast({
+          title: "Membership activated Successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        onClose();
       })
-      onClose()
-    })
-    .catch(err=>{
-      console.log(err)
-      toast({
-        title: 'Somethings wrong try again',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
-    })
-  }
+      .catch((err) => {
+        toast({
+          title: "Somethings wrong try again",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+  };
 
-  const handleMembershipBtn = ()=>{
-    console.log('click')
-    console.log(isOpen)
+  const handleRenewal = () => {
     handleReset();
-    setIsEdit(false); 
-    onOpen()
-  }
+    setIsEdit(false);
+    onOpen();
+  };
 
+  const handleAddExtra = () => {
+    handleReset();
+    setIsEdit(false);
+    extraAddFormOnOpen();
+  };
 
   if (userType === "Admin") {
     return (
@@ -389,7 +367,7 @@ function Membership() {
           <HStack spacing={2} textAlign="center" mb="1rem">
             <Heading fontSize="4xl">All Membership</Heading>
             <Spacer />
-          {/* <Button colorScheme="primary" onClick={handleMembershipBtn}>
+            {/* <Button colorScheme="primary" onClick={handleMembershipBtn}>
             Add Membership
           </Button> */}
           </HStack>
@@ -442,7 +420,10 @@ function Membership() {
                             alignItems={"center"}
                             justifyContent={"center"}
                           >
-                            <DeleteButton handleDelete={handleDelete} id={item.id} />
+                            <DeleteButton
+                              handleDelete={handleDelete}
+                              id={item.id}
+                            />
                           </HStack>
                         </Td>
                       </Tr>
@@ -453,13 +434,11 @@ function Membership() {
             </TableContainer>
           </Box>
         </Box>
-        
       </>
     );
   } else {
     return (
       <>
-        
         <Box py={12} px={4}>
           <HStack spacing={2} mb="1rem" alignItems={"flex-start"}>
             <Box width={"50%"}>
@@ -469,7 +448,9 @@ function Membership() {
                     <HStack>
                       <Heading size="md">Active Package</Heading>
                       <Spacer />
-                      <Button colorScheme="primary">Renewal</Button>
+                      <Button colorScheme="primary" onClick={handleRenewal}>
+                        Renewal
+                      </Button>
                     </HStack>
                   </CardHeader>
 
@@ -547,9 +528,12 @@ function Membership() {
                     </Stack>
                   </CardBody>
                   <CardFooter>
-                    <Button colorScheme="primary" onClick={onOpen}>
-                      Add More Real Estate
-                    </Button>
+                    {membership[0]?.package
+                      .enabling_adding_extra_real_estate && (
+                      <Button colorScheme="primary" onClick={handleAddExtra}>
+                        Add More Real Estate
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               ) : (
@@ -562,7 +546,6 @@ function Membership() {
                   <HStack>
                     <Heading size="md">You Need More</Heading>
                     <Spacer />
-                    <Button colorScheme="teal">Renewal</Button>
                   </HStack>
                 </CardHeader>
 
@@ -675,7 +658,6 @@ function Membership() {
           </HStack>
         </Box>
 
-        
         {/* Package Add modal */}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -687,248 +669,33 @@ function Membership() {
                 <Box>
                   <Text>Are You Activate Free Membership?</Text>
                   <ModalFooter>
-                    <Button colorScheme="primary" mr={3} onClick={handleMembership}>
+                    <Button
+                      colorScheme="primary"
+                      mr={3}
+                      onClick={handleMembership}
+                    >
                       Active
                     </Button>
                     <Button onClick={onClose}>Cancel</Button>
                   </ModalFooter>
                 </Box>
               ) : (
-                <form onSubmit={handleSubmit}>
-                  <Box mb={2}>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
-                      <FormControl>
-                        <FormLabel
-                          color="secondary.600"
-                          fontWeight="semibold"
-                          fontSize="0.9rem"
-                        >
-                          Package price
-                        </FormLabel>
-                        <Input
-                          type="number"
-                          value={
-                            packagedata.pricing_approach ===
-                            "Based on number of real estate only"
-                              ? values.price
-                              : packagedata.default_price
-                          }
-                          ref={priceId}
-                          disabled
-                          color={"black"}
-                          fontWeight={"black"}
-                        />
-                      </FormControl>
-                      {packagedata.pricing_approach ===
-                        "Based on number of real estate only" && (
-                        <FormControl isInvalid={errors.real_estate_number}>
-                          <FormLabel
-                            color="secondary.600"
-                            fontWeight="semibold"
-                            fontSize="0.9rem"
-                          >
-                            Number of Real Estate
-                          </FormLabel>
-                          <Input
-                            type="number"
-                            name="real_estate_number"
-                            value={values.real_estate_number}
-                            placeholder="Number of Real Estate"
-                            onChange={(e) => {
-                              handleChange(e);
-                              const { value } = e.target;
-                              setFieldValue(
-                                "price",
-                                (
-                                  packagedata.price_per_real_estate *
-                                  parseInt(value)
-                                ).toString()
-                              );
-                            }}
-                          />
-                        </FormControl>
-                      )}
-                    </SimpleGrid>
-                  </Box>
-                  <FormControl isInvalid={errors.payment_method&&touched.payment_method} mb={3}>
-                    <FormLabel
-                      color="secondary.600"
-                      fontWeight="semibold"
-                      fontSize="0.9rem"
-                    >
-                      Payment Method
-                    </FormLabel>
-                    <RadioGroup
-                      onChange={(e) => {
-                        setFieldValue("payment_method", e);
-                        console.log(values);
-                      }}
-                      value={values.payment_method}
-                      name="payment_method"
-                    >
-                      <Stack direction="row">
-                        <Radio value="mada" onChange={handleChange}>
-                          Mada
-                        </Radio>
-                        <Radio value="credit" onChange={handleChange}>
-                          Credit Card
-                        </Radio>
-                        <Radio value="STC" onChange={handleChange}>
-                          STC Pay
-                        </Radio>
-                        <Radio value="Apple" onChange={handleChange}>
-                          Apple Pay
-                        </Radio>
-                      </Stack>
-                    </RadioGroup>
-                    {errors.payment_method &&
-                          touched.payment_method ? (
-                            <FormErrorMessage>
-                              {errors.payment_method}
-                            </FormErrorMessage>
-                          ) : null}
-                  </FormControl>
-
-                  <Box mb={2}>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                      {values.payment_method==="STC"&&<FormControl isInvalid={errors.mobile_number&&touched.mobile_number}>
-                        <FormLabel
-                          color="secondary.600"
-                          fontWeight="semibold"
-                          fontSize="0.9rem"
-                        >
-                          Mobile Number
-                        </FormLabel>
-                        <Input
-                          type="text"
-                          name="mobile_number"
-                          value={values.mobile_number}
-                          onChange={handleChange}
-                          placeholder="Mobile Number"
-                        />
-                        {errors.mobile_number && touched.mobile_number ? (
-                          <FormErrorMessage>
-                            {errors.mobile_number}
-                          </FormErrorMessage>
-                        ) : null}
-                      </FormControl>}
-                    </SimpleGrid>
-                  </Box>
-                  {(values.payment_method === "mada" ||
-                    values.payment_method === "credit") && (
-                    <Box mb={2}>
-                      <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                        <FormControl isInvalid={errors.card_holder_name&&touched.card_holder_name}>
-                          <FormLabel
-                            color="secondary.600"
-                            fontWeight="semibold"
-                            fontSize="0.9rem"
-                          >
-                            Card Holder Name
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            name="card_holder_name"
-                            value={values.card_holder_name}
-                            onChange={handleChange}
-                            placeholder="Card Holder Name"
-                          />
-                          {errors.card_holder_name &&
-                          touched.card_holder_name ? (
-                            <FormErrorMessage>
-                              {errors.card_holder_name}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                        <FormControl isInvalid={errors.card_number&&touched.card_number}>
-                          <FormLabel
-                            color="secondary.600"
-                            fontWeight="semibold"
-                            fontSize="0.9rem"
-                          >
-                            Card Number
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            name="card_number"
-                            value={values.card_number}
-                            onChange={handleChange}
-                            placeholder="Card number"
-                          />
-                          {errors.card_number && touched.card_number ? (
-                            <FormErrorMessage>
-                              {errors.card_number}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-
-                        <FormControl isInvalid={errors.expire_date&&touched.expire_date}>
-                          <FormLabel
-                            color="secondary.600"
-                            fontWeight="semibold"
-                            fontSize="0.9rem"
-                          >
-                            Expiration Date
-                          </FormLabel>
-                          <Input
-                            type="month"
-                            name="expire_date"
-                            value={values.expire_date}
-                            onChange={handleChange}
-                            placeholder="Expiration Date"
-                          />
-                          {errors.expire_date && touched.expire_date ? (
-                            <FormErrorMessage>
-                              {errors.expire_date}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                        <FormControl isInvalid={errors.cvv}>
-                          <FormLabel
-                            color="secondary.600"
-                            fontWeight="semibold"
-                            fontSize="0.9rem"
-                          >
-                            CVV
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            name="cvv"
-                            value={values.cvv}
-                            onChange={handleChange}
-                            placeholder="CVV"
-                            maxLength='3'
-                          />
-                          {errors.cvv && touched.cvv ? (
-                            <FormErrorMessage>{errors.cvv}</FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </SimpleGrid>
-                    </Box>
-                  )}
-
-                  <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={onClose}>
-                      Close
-                    </Button>
-
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      colorScheme="primary"
-                      transition="ease-in-out 0.5s"
-                      _hover={{ bgColor: "primary.600", color: "#fff" }}
-                      onClick={handleMembership}
-                    >
-                      Pay
-                    </Button>
-                  </ModalFooter>
-                </form>
+                <Form
+                  handleSubmit={handleSubmit}
+                  touched={touched}
+                  setFieldValue={setFieldValue}
+                  handleMembership={handleMembership}
+                  values={values}
+                  onClose={onClose}
+                  errors={errors}
+                  priceId={priceId}
+                  handleChange={handleChange}
+                  packagedata={Object.keys(packagedata).length > 0 ? 'packagedata' : membership[0]?.package}
+                />
               )}
             </ModalBody>
           </ModalContent>
         </Modal>
-        
 
         <Modal isOpen={expairModalisOpen} onClose={expairModalonClose}>
           <ModalOverlay />
@@ -954,24 +721,18 @@ function Membership() {
                   expairModalonClose();
                   onOpen();
                   baseAxios
-                    .delete(
-                      baseUrl.defaults.baseURL + `/membership/${membership[0]?.id}/`,
-                      {
-                        headers: headers,
-                      }
-                    )
+                    .delete(`/membership/${membership[0]?.id}/`, {
+                      headers: headers,
+                    })
                     .then((res) => {
-                      console.log(res);
                       baseAxios
-                        .get(baseUrl.defaults.baseURL + "/membership/", {
+                        .get("/membership/", {
                           headers: headers,
                         })
                         .then((res) => setMembership(res.data))
                         .catch((error) => console.log(error));
-                      
                     })
                     .catch((error) => {
-                      console.log(error);
                       toast({
                         title: "Somethings wrong try again",
                         status: "error",
@@ -996,11 +757,49 @@ function Membership() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+
+        {/* //extraAddForm */}
+        <Modal isOpen={extraAddFormOpen} onClose={extraAddFormClose}>
+          <ModalOverlay />
+          <ModalContent maxW={"50%"}>
+            <ModalHeader>Payment Information</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {packagedata.is_free ? (
+                <Box>
+                  <Text>Are You Activate Free Membership?</Text>
+                  <ModalFooter>
+                    <Button
+                      colorScheme="primary"
+                      mr={3}
+                      onClick={handleMembership}
+                    >
+                      Active
+                    </Button>
+                    <Button onClick={onClose}>Cancel</Button>
+                  </ModalFooter>
+                </Box>
+              ) : (
+                <Form
+                  handleSubmit={handleSubmit}
+                  exterRealestete={true}
+                  touched={touched}
+                  setFieldValue={setFieldValue}
+                  handleMembership={handleMembership}
+                  values={values}
+                  onClose={onClose}
+                  errors={errors}
+                  priceId={priceId}
+                  handleChange={handleChange}
+                  packagedata={Object.keys(packagedata).length > 0 ? 'packagedata' : membership[0]?.package}
+                />
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </>
     );
   }
 }
 
-
-
-export default RequireAuth(Membership)
+export default RequireAuth(Membership);
