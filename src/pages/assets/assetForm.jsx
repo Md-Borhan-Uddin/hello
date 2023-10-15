@@ -42,7 +42,6 @@ const inputdata = {
   };
 
 function AssetForm({isEdit,onClose,data,update}) {
-  const [assets, setAssets] = useState([]);
   const [realestate, setRealestate] = useState([]);
   const router = useNavigate();
   const toast = useToast();
@@ -116,7 +115,6 @@ function AssetForm({isEdit,onClose,data,update}) {
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
           update(res.data);
 
           toast({
@@ -129,7 +127,6 @@ function AssetForm({isEdit,onClose,data,update}) {
           handleReset();
         })
         .catch((error) => {
-          console.log(error);
           if (error.response.data.non_field_errors) {
             error.response.data.non_field_errors.map((message) => {
               toast({
@@ -182,12 +179,11 @@ function AssetForm({isEdit,onClose,data,update}) {
   const handleUpdate = (e) => {
     e.preventDefault();
     baseAxios
-      .patch(baseUrl.defaults.baseURL + `/assets/${id}/`, values, {
+      .patch(baseUrl.defaults.baseURL + `/assets/${data?.id}/`, values, {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
-        getAssets().then((res) => setAssets(res));
+        update(res.data)
         toast({
           title: "update Successfully",
           status: "success",
@@ -196,7 +192,6 @@ function AssetForm({isEdit,onClose,data,update}) {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Somethings wrong try again",
           status: "error",

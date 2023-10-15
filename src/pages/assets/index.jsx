@@ -82,7 +82,6 @@ function Assets() {
     setIsEdit(true);
     const { value } = e.target;
     const data = assets.filter(item=>item.id==value)
-    console.log('data',data)
     setEditItem(data[0])
     onOpen()
     
@@ -96,7 +95,6 @@ function Assets() {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         getAssets().then((res) => setAssets(res));
         toast({
           title: "Delete Successfully",
@@ -106,7 +104,6 @@ function Assets() {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Somethings wrong try again",
           status: "error",
@@ -124,8 +121,9 @@ function Assets() {
         }
       });
   };
-  const updateAssert = (item)=>{
-    setAssets([...assets,item])
+  const updateAssert = (updateItem)=>{
+    const newasset = assets.filter(item=>item.id != updateItem.id)
+    setAssets([...newasset,updateItem])
   }
   return (
     <>
@@ -203,15 +201,6 @@ function Assets() {
                           >
                             Edit
                           </Button>
-
-                          {/* <Button
-                            aria-label="deletebtn"
-                            onClick={handleDelete}
-                            value={item.id}
-                            colorScheme="red"
-                          >
-                            Delete
-                          </Button> */}
                           <DeleteButton
                             handleDelete={handleDelete}
                             id={item.id}
