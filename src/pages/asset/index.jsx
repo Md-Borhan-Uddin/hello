@@ -7,6 +7,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Select,
   Text,
   useDisclosure,
   useToast,
@@ -20,13 +21,14 @@ import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { deleteItem, getObjects } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import baseAxios from '../../../utility/axiosConfig'
 const DeleteButton = React.lazy(()=>import("../../../components/deleteButton"));
 const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
 
 
 const inputdata = {
-  brand: "",
-  type: "",
+  brand_id: "",
+  type_id: "",
 };
 
 function Assert() {
@@ -36,6 +38,8 @@ function Assert() {
   const router = useNavigate();
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
+  const [category, setCategory] = useState([])
+  const [brands, setBrands] = useState([])
  
   const {
     isOpen,
@@ -61,20 +65,16 @@ function Assert() {
     initialValues: inputdata,
     validationSchema:assetSchima,
     onSubmit: (values, { setSubmitting }) => {
-      
-      axios
+      baseAxios
         .post(baseURL + "/asset/", values, {
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
-          // setBrands([...brands, res.data]);
           setAssets([...assets,res.data])
-          console.log(assets)
           
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
           setcustomerror(error.response.data)
           if(error.response.data.non_field_errors){
             error.response.data.non_field_errors.map((message)=>{
@@ -104,10 +104,28 @@ function Assert() {
     },
   });
 
+
   useEffect(() => {
     getObjects("/asset/", headers, setAssets);
     
-  }, []);
+    //get category
+    baseAxios.get('/assert-type/',{headers:headers})
+    .then(res=>{
+      setCategory(res.data)
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+    //get brand
+    baseAxios.get('/assert-brand/',{headers:headers})
+    .then(res=>{
+      setBrands(res.data)
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  },[])
+
   
 
   const handleAdd = ()=>{
@@ -123,15 +141,15 @@ function Assert() {
     const cat = assets.filter((e) => e.id == value);
     onOpen();
     setValues({
-      brand: cat[0]?.brand,
-      type: cat[0]?.type,
+      brand_id: cat[0]?.brand.id,
+      type_id: cat[0]?.type.id,
     });
   };
 
  
   const assetUpdate = (e) => {
     e.preventDefault();
-    axios
+    baseAxios
     .patch(`${baseURL}/asset/${id}/`, values, {
       headers: headers,
     })
@@ -160,7 +178,6 @@ function Assert() {
         duration: 2000,
         isClosable: true,
       });
-      console.log(error);
     });
     
     
@@ -216,10 +233,10 @@ function Assert() {
                       scope="row"
                       className="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {item?.type}
+                      {item?.type.name}
                     </td>
                     <td className="px-6 py-4">
-                    {item?.brand}
+                    {item?.brand.name}
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -259,39 +276,50 @@ function Assert() {
           className="space-y-3 md:space-y-4"
           onSubmit={handleSubmit}
         >
-          <FormControl isInvalid={errors.type}>
+          <FormControl isInvalid={errors.type_id}>
             <FormLabel>Category</FormLabel>
-            <Input 
-            placeholder="Category" 
-            name="type" 
-            value={values.type} 
-            onChange={handleChange}
-            onBlur={handleBlur}
-            maxLength='20'
-            />
+            
+            <Select
+                placeholder="Category" 
+                name="type_id" 
+                value={values.type_id} 
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                {category.map((item, i) => (
+                  <option key={i} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </Select>
               
-            {errors.type && touched.type ? (
-              <FormErrorMessage>{errors.type}.</FormErrorMessage>
+            {errors.type_id && touched.type_id ? (
+              <FormErrorMessage>{errors.type_id}.</FormErrorMessage>
             ) : null}
-            {customerror.type ? (
-              <p className="text-red-600">{customerror.type.message}.</p>
+            {customerror.type_id ? (
+              <p className="text-red-600">{customerror.type_id.message}.</p>
             ) : null}
           </FormControl>
-          <FormControl isInvalid={errors.brand && touched.brand}>
-          <Input 
-          placeholder="Select Brand" 
-          name="brand" 
-          value={values.brand} 
-          onChange={handleChange}
-          onBlur={handleBlur}
-          maxLength='20'
-          />
-            
-            {errors.brand && touched.brand ? (
-              <FormErrorMessage>{errors.is_active}.</FormErrorMessage>
+          <FormControl isInvalid={errors.brand_id && touched.brand_id}>
+          
+            <Select
+                placeholder="Select Brand" 
+                name="brand_id" 
+                value={values.brand_id} 
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                {brands.map((item, i) => (
+                  <option key={i} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </Select>
+            {errors.brand_id && touched.brand_id ? (
+              <FormErrorMessage>{errors.brand_id}.</FormErrorMessage>
             ) : null}
-            {customerror.brand ? (
-              <p className="text-red-600">{customerror.brand.message}.</p>
+            {customerror.brand_id ? (
+              <p className="text-red-600">{customerror.brand_id.message}.</p>
             ) : null}
           </FormControl>
           {isEdit ? (
@@ -312,7 +340,6 @@ function Assert() {
           )}
         </form>
       </CustomModal>
-
       
     </>
   );

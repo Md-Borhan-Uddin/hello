@@ -52,7 +52,7 @@ baseAxios.interceptors.response.use(
         // Update the access token in storage
         try{
 
-          localStorage.setItem('access_token', newAccessToken);
+          localStorage.setItem('access_token', newAccessToken.data.access);
         }
         catch(e){
           const router = useNavigate()
