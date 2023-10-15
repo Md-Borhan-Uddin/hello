@@ -96,6 +96,14 @@ function Assert() {
             });
             router("/login");
           }
+          if (error.response.status == 500) {
+            toast({
+              title: "somethings wrong try again",
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
+          }
           // categoryHandleReset()
           // categoryOnClose();
         });
