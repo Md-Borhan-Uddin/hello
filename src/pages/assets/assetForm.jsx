@@ -20,6 +20,7 @@ import { useFormik } from "formik";
 import { blobUrlToFile, months } from "../../../utility/utlity";
 import CurrencyList from "currency-list";
 import axios from "axios";
+import baseAxios from "../../../utility/axiosConfig";
 import { getObjects } from "../../../utility/category_brand";
 
 
@@ -40,7 +41,7 @@ const inputdata = {
     assert_file: "",
   };
 
-function AssetForm({isEdit,onClose,data}) {
+function AssetForm({isEdit,onClose,data,update}) {
   const [assets, setAssets] = useState([]);
   const [realestate, setRealestate] = useState([]);
   const router = useNavigate();
@@ -61,7 +62,7 @@ function AssetForm({isEdit,onClose,data}) {
     const cr = Object.keys(CurrencyList.getAll().af);
     cr.map((item) => cur.push({ key: item, value: item }));
     setCurrency(cur);
-    axios
+    baseAxios
       .get(`${baseURL}/assert-type/`, { headers: headers })
       .then((res) => {
         setTypes(res.data);
@@ -70,7 +71,7 @@ function AssetForm({isEdit,onClose,data}) {
       });
 
 
-      axios
+      baseAxios
       .get(`${baseURL}/assert-brand/`, { headers: headers })
       .then((res) => {
         setBrands(res.data);
@@ -79,7 +80,7 @@ function AssetForm({isEdit,onClose,data}) {
       });
     
 
-    axios
+    baseAxios
       .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
       .then((res) => {
         setRealestate(res.data.results);
@@ -110,17 +111,16 @@ function AssetForm({isEdit,onClose,data}) {
     initialValues: inputdata,
     validationSchema: assetsSchema,
     onSubmit: (values, { setSubmitting }) => {
-      console.log(values);
-      axios
+      baseAxios
         .post(baseUrl.defaults.baseURL + "/assets/", values, {
           headers: headers,
         })
         .then((res) => {
           console.log(res);
-          setAssets([...assets, res.data]);
+          update(res.data);
 
           toast({
-            title: "Package create successfully",
+            title: "Asset Create Successfully",
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -181,7 +181,7 @@ function AssetForm({isEdit,onClose,data}) {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    axios
+    baseAxios
       .patch(baseUrl.defaults.baseURL + `/assets/${id}/`, values, {
         headers: headers,
       })

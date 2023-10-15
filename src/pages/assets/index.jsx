@@ -31,6 +31,7 @@ const DeleteButton = React.lazy(() =>
 
 import AddButtonWithModal from "../../../components/addButtonWithModal";
 import AssetForm from "./assetForm";
+import baseAxios from "../../../utility/axiosConfig";
 
 function Assets() {
   const [isEdit, setIsEdit] = useState(false);
@@ -65,7 +66,7 @@ function Assets() {
 
   useEffect(() => {
     
-    axios
+    baseAxios
       .get(baseURL + "/assets/", { headers: headers })
       .then((res) => {
         setAssets(res.data);
@@ -90,7 +91,7 @@ function Assets() {
   
 
   const handleDelete = (id) => {
-    axios
+    baseAxios
       .delete(baseUrl.defaults.baseURL + `/assets/${id}/`, {
         headers: headers,
       })
@@ -123,7 +124,9 @@ function Assets() {
         }
       });
   };
-
+  const updateAssert = (item)=>{
+    setAssets([...assets,item])
+  }
   return (
     <>
       <Box py={12} px={4}>
@@ -142,6 +145,7 @@ function Assets() {
               isEdit={isEdit}
               data={isEdit ? editItem : null}
               onClose={onClose}
+              update={updateAssert}
             />
           </AddButtonWithModal>
           
@@ -152,7 +156,7 @@ function Assets() {
               <Thead bg={"gray.200"}>
                 <Tr>
                   <Th>Name</Th>
-                  <Th>Duration(Date/Month)</Th>
+                  <Th>Purchesing Date</Th>
                   <Th>Free/Active</Th>
                   <Th>Price</Th>
                   <Th textAlign={"center"}>Action</Th>
@@ -164,7 +168,7 @@ function Assets() {
                     <Tr key={item.id}>
                       <Td>{item.name}</Td>
                       <Td>
-                        {item.duration_date}/{item.duration_month}
+                        {item.purchasing_date}
                       </Td>
                       <Td>
                         <Flex>
@@ -188,7 +192,7 @@ function Assets() {
                           )}
                         </Flex>
                       </Td>
-                      <Td>{item.default_price}</Td>
+                      <Td>{item.purchasing_price}</Td>
                       <Td>
                         <HStack alignItems={"center"} justifyContent={"center"}>
                           <Button
