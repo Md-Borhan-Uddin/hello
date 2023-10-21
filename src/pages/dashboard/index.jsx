@@ -1,4 +1,3 @@
-
 import {
   Chart as ChartJS,
   ArcElement,
@@ -25,7 +24,7 @@ import { useDispatch } from "react-redux";
 import { setLoginUser } from "../../../data/auth/slice/userSlice";
 import {useGetRealestateQuery} from "../../../data/auth/service/realestateService"
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-
+import baseAxios from '../../../utility/axiosConfig'
 const CustomChart = React.lazy(()=>import("../../../components/DashboardChart"));
 ChartJS.register(
   ArcElement,
@@ -111,6 +110,7 @@ function Dashboard() {
   
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log("render page");
     if(realestateIsSuccess){
       
       const country = realestateCount.country
@@ -134,11 +134,10 @@ function Dashboard() {
     setUsertype(userType);
     dispatch(setLoginUser({user:activeUser}))
 
-    fetch(baseURL + "/membership/", { headers: headers })
-      .then((res) => res.json())
-      .then((data) => {
-        const activeObject = data.filter((item)=>new Date(item.expire_date)>new Date())
-        const inactiveObject = data.filter((item)=>new Date(item.expire_date)>new Date())
+    baseAxios.get("/membership/", { headers: headers })
+      .then((res) => {
+        const activeObject = res.data.filter((item)=>new Date(item.expire_date)>new Date())
+        const inactiveObject = res.data.filter((item)=>new Date(item.expire_date)>new Date())
         
         setActiveMembership(activeObject)
         setInactiveMembership(inactiveObject)
@@ -148,11 +147,10 @@ function Dashboard() {
       });
 
     if (userType === "Admin") {
-      fetch(baseURL + "/all-user/", { headers: headers })
-        .then((res) => res.json())
-        .then((data) => {
+      baseAxios.get("/all-user/", { headers: headers })
+        .then((res) => {
           let u = [];
-          data.results.map((item) =>
+          res.data.results.map((item) =>
             u.push({ key: item.username, value: item.id.toString() })
           );
           setUsers(u);
@@ -164,7 +162,9 @@ function Dashboard() {
   }, [changeUser, realestateCount, activeUser]);
   const handleChange = (e) => {
     const { value } = e.target;
-    
+    baseAxios.get(`/user/${value}/`,{headers:headers})
+    .then(res=>setUsertype(res.data.user_type))
+    .catch(err=>console.log(err))
 
     setChangeUser(value);
   };
@@ -234,7 +234,7 @@ function Dashboard() {
   ) :(
     <div className="">
       <div className="">
-        {usertype === "Admin" && (
+        {getUser().userType === "Admin" && (
           <div className="pb-4 bg-white dark:bg-gray-900">
             <Box padding={4} bg={"inherit"}>
               <Text margin={2}>Select User For See Dashboard</Text>
