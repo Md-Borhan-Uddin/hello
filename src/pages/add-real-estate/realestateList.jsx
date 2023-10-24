@@ -26,6 +26,7 @@ function RealestateList({ realestate,handleEdit,setRealestate }) {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
   const toast = useToast()
+  console.log(realestate)
 
   const handleDelete = (id) => {
     axios

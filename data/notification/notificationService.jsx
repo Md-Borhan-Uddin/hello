@@ -9,7 +9,7 @@ export const notificationAPI = baseCreateAPI.injectEndpoints({
     getNotification: builder.query({
       query: () => {
         return {
-            url:'/notification/',
+          url:'/notification/',
         }
       },
     }),

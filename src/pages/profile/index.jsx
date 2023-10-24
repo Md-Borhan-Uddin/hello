@@ -58,7 +58,6 @@ function Profile() {
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
-  console.log(profile)
   const [passworderrors, setPassworderrors] = useState([]);
   const [customerrors, setcustomerror] = useState([]);
   const toast = useToast();
@@ -115,11 +114,10 @@ function Profile() {
 
   const handleImage = (e)=>{
     const image = e.target.files[0]
-    
-    baseAxios.patch(`${baseURL}/user-edit/${values.username}/`, {image:image}, {
+    console.log('values', values)
+    baseAxios.patch(`/user-edit/${values.username}/`, {image:image}, {
           headers: {
             "Content-type":"multipart/form-data",
-            Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
           },
         })
         .then((res) => {

@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import CurrencyList from "currency-list";
-import axios from "axios";
 import {
   Button,
   FormControl,
@@ -11,6 +10,7 @@ import {
   Radio,
   Select,
   ModalFooter,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate, Link } from "react-router-dom";
 import { getObjects } from "../../utility/property";
@@ -18,6 +18,7 @@ import useGeolocation from "../../hooks/geoLocation";
 import { propertyAddSchima } from "../../Schima";
 import { baseURL } from "../../utility/baseURL";
 import { getUser } from "../../utility/authentication";
+import baseAxios from "../../utility/axiosConfig";
 
 const inputField = {
   name: "",
@@ -51,19 +52,38 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
   const [location, setLocation] = useState([]);
   const [error, setErrors] = useState([]);
   const router = useNavigate();
-
+  const toast = useToast()
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
   const geoLocation = useGeolocation();
 
   const addValue = (setValues, data) => {
+    const blobUrlToFile = (blobUrl) => new Promise((resolve) => {
+      fetch(blobUrl).then((res) => {
+        res.blob().then((blob) => {
+          // please change the file.extension with something more meaningful
+          // or create a utility function to parse from URL
+          const file = new File([blob], 'file.extension', {type: blob.type})
+          resolve(file)
+          return file
+        })
+      })
+      
+    })
+    console.log(data);
+    let image;
+    blobUrlToFile(data.photo).then(res=>{
+
+      console.log('image', res);
+      image = res
+    })
     setValues({
       name: data.name,
-      photo: data.photo,
+      photo: image,
       country: data.country,
-      city: data.citu,
-      type_id: data.type_id,
+      city: data.city,
+      type_id: data.type.id,
       property_age_years: data.property_age_years,
       property_age_months: data.property_age_months,
       rented: data.rented,
@@ -74,7 +94,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       purpose: data.purpose,
       number_of_floors: data.number_of_floors,
       invoice_file: data.invoice_file,
-      user_id: data.user_id,
+      user_id: data.user.id,
       location: data.location,
     });
   };
@@ -84,8 +104,8 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
     const { value } = e.target;
     setFieldValue("country", value);
 
-    axios
-      .get(`${baseURL}/city/${value}/?is_active=True`, { headers: headers })
+    baseAxios
+      .get(`/city/${value}/?is_active=True`)
       .then((res) => {
         let c = [];
         res.data.map((item) => c.push({ key: item.name, value: item.id }));
@@ -106,14 +126,16 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    axios
-      .patch(baseURL + `/realestate/edit/${id}/`, values, {
+    console.log(values);
+    delete values.photo
+    baseAxios
+      .patch(baseURL + `/realestate/edit/${data[0].id}/`, values, {
         headers: headers,
       })
       .then((res) => {
         console.log("data", res);
-        // const obj = realestate.filter(item=>item.id!=id)
-        // setRealestate(obj)
+        
+        setRealestate([...realestates, res.data.data])
         toast({
           title: "update Successfully",
           status: "success",
@@ -178,25 +200,20 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       } else {
         values.owner = false;
       }
-
-      axios
-        .post(baseURL + `/realestate/${userType}/`, values, {
+      console.log('value', values);
+      baseAxios
+        .post(`/realestate/${userType}/`, values, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: "Bearer " + String(access_token),
           },
         })
         .then((res) => {
-          // setUser(res.data)
-          setRealestate([...realestates, res.data.results]);
+          setRealestate([...realestates, res.data.data]);
           onClose()
         })
         .catch((error) => {
           console.log(error);
-          // setErrors(error.response);
-          // if (error.response.status == 401) {
-          //   setErrors({ message: error.response.data.messages[0].message });
-          // }
           window.scrollTo(0, 0);
           setValues({
             name: values.name,
@@ -222,6 +239,9 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
   });
 
   useEffect(() => {
+    if (!isEdit && !data){
+      handleReset()
+    }
     if (isEdit && data) {
       addValue(setValues, data[0]);
     }
@@ -240,22 +260,20 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
 
     setUType(userType);
 
-    fetch(baseURL + "/real-estate-type/")
-      .then((res) => res.json())
-      .then((data) => {
+    baseAxios.get("/real-estate-type/")
+      .then((res) => {
         let type = [];
-        data.map((item) =>
+        res.data.map((item) =>
           type.push({ key: item.name, value: item.id.toString() })
         );
         setType(type);
       });
 
     if (uType === "Admin") {
-      fetch(baseURL + "/all-user/")
-        .then((res) => res.json())
-        .then((data) => {
+      baseAxios.get("/all-user/")
+        .then((res) => {
           let u = [];
-          data.results.map((item) =>
+          res.data.results.map((item) =>
             u.push({ key: item.username, value: item.id.toString() })
           );
           setUser(u);

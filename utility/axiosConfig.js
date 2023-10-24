@@ -48,7 +48,7 @@ baseAxios.interceptors.response.use(
       if (refreshToken) {
         // Call your refresh token API and get a new access token
         const newAccessToken = await axios.post(BASEURL+"/refresh-token/",{"refresh":refreshToken});
-        console.log('refresh', newAccessToken)
+        
         // Update the access token in storage
         try{
 
@@ -60,7 +60,7 @@ baseAxios.interceptors.response.use(
         }
 
         // Retry the original request with the new access token
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken.data.access}`;
         return baseAxios(originalRequest);
       }
     }

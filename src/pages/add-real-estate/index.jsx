@@ -63,12 +63,12 @@ const AddState = () => {
             btnText={"Add Real Estate"}
           >
             <RealestateForm
-          isEdit={isEdit}
-          data={isEdit ? editItem : null}
-          onClose={onClose}
-          setRealestate={setRealestate}
-          realestates={realestate}
-        />
+              isEdit={isEdit}
+              data={isEdit ? editItem : null}
+              onClose={onClose}
+              setRealestate={setRealestate}
+              realestates={realestate}
+            />
 
             </AddButtonWithModal>
         </HStack>
