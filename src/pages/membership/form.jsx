@@ -11,19 +11,60 @@ import {
     Radio,
     RadioGroup,
   } from "@chakra-ui/react";
-import { useRef } from "react";
-
+import { useEffect, useState } from "react";
+import baseAxios from "../../../utility/axiosConfig";
 
 
 
 
 
 function Form({
-    handleSubmit,handleChange,packagedata, 
-    priceId, errors, values, onClose,
-    handleMembership,setFieldValue, touched, exterRealestete
+    handleSubmit,packagedata, 
+    priceId, errors, values,
+    setFieldValue, touched, exterRealestete
   }) {
+    const [checkoutId, setCheckoutId] = useState("")
+    useEffect(()=>{
+      baseAxios.post(
+        `/checkout-id/${packagedata.id}/`
+      )
+      .then(res=>{
+        setCheckoutId(res.data.data.id)
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }, [])
+
+    const handleChange = (e)=>{
+      let cardForm;
+      let hyperpayForm;
+      try {
+        hyperpayForm = document.getElementsByClassName("wpwl-form")
+        hyperpayForm[0].parentElement.remove()
+        document.getElementById("form-container").innerHTML = `<form id="card-form" action="http://www.localhost:5173">
+      
+        </form>`
+      } catch (error) {
+        
+      }
+      cardForm = document.getElementById("card-form")
+      if (!cardForm.classList.contains("paymentWidget")){
+        cardForm.classList.add("paymentWidgets")
+      }
+      
+      cardForm.setAttribute(
+        "data-brands", e.target.value
+      )
+      // Load external script dynamically
+    const script = document.createElement('script');
+    script.src = `https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
+    script.defer = true;
+    document.head.appendChild(script);
+    }
   return (
+    
+    <>
     <form onSubmit={handleSubmit}>
       <Box mb={2}>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
@@ -93,163 +134,34 @@ function Form({
         <RadioGroup
           onChange={(e) => {
             setFieldValue("payment_method", e);
-            console.log(values);
           }}
           value={values.payment_method}
           name="payment_method"
         >
           <Stack direction="row">
-            <Radio value="mada" onChange={handleChange}>
+            <Radio value="MADA" onChange={handleChange}>
               Mada
             </Radio>
-            <Radio value="credit" onChange={handleChange}>
+            <Radio value="VISA MASTER" onChange={handleChange}>
               Credit Card
             </Radio>
-            <Radio value="STC" onChange={handleChange}>
+            <Radio value="STC_PAY" onChange={handleChange}>
               STC Pay
             </Radio>
-            <Radio value="Apple" onChange={handleChange}>
+            <Radio value="APPLEPAY">
               Apple Pay
             </Radio>
           </Stack>
         </RadioGroup>
-        {errors.payment_method && touched.payment_method ? (
-          <FormErrorMessage>{errors.payment_method}</FormErrorMessage>
-        ) : null}
-      </FormControl>
-
-      <Box mb={2}>
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-          {values.payment_method === "STC" && (
-            <FormControl
-              isInvalid={errors.mobile_number && touched.mobile_number}
-            >
-              <FormLabel
-                color="secondary.600"
-                fontWeight="semibold"
-                fontSize="0.9rem"
-              >
-                Mobile Number
-              </FormLabel>
-              <Input
-                type="text"
-                name="mobile_number"
-                value={values.mobile_number}
-                onChange={handleChange}
-                placeholder="Mobile Number"
-              />
-              {errors.mobile_number && touched.mobile_number ? (
-                <FormErrorMessage>{errors.mobile_number}</FormErrorMessage>
-              ) : null}
-            </FormControl>
-          )}
-        </SimpleGrid>
-      </Box>
-      {(values.payment_method === "mada" ||
-        values.payment_method === "credit") && (
-        <Box mb={2}>
-          <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-            <FormControl
-              isInvalid={errors.card_holder_name && touched.card_holder_name}
-            >
-              <FormLabel
-                color="secondary.600"
-                fontWeight="semibold"
-                fontSize="0.9rem"
-              >
-                Card Holder Name
-              </FormLabel>
-              <Input
-                type="text"
-                name="card_holder_name"
-                value={values.card_holder_name}
-                onChange={handleChange}
-                placeholder="Card Holder Name"
-              />
-              {errors.card_holder_name && touched.card_holder_name ? (
-                <FormErrorMessage>{errors.card_holder_name}</FormErrorMessage>
-              ) : null}
-            </FormControl>
-            <FormControl isInvalid={errors.card_number && touched.card_number}>
-              <FormLabel
-                color="secondary.600"
-                fontWeight="semibold"
-                fontSize="0.9rem"
-              >
-                Card Number
-              </FormLabel>
-              <Input
-                type="text"
-                name="card_number"
-                value={values.card_number}
-                onChange={handleChange}
-                placeholder="Card number"
-              />
-              {errors.card_number && touched.card_number ? (
-                <FormErrorMessage>{errors.card_number}</FormErrorMessage>
-              ) : null}
-            </FormControl>
-
-            <FormControl isInvalid={errors.expire_date && touched.expire_date}>
-              <FormLabel
-                color="secondary.600"
-                fontWeight="semibold"
-                fontSize="0.9rem"
-              >
-                Expiration Date
-              </FormLabel>
-              <Input
-                type="month"
-                name="expire_date"
-                value={values.expire_date}
-                onChange={handleChange}
-                placeholder="Expiration Date"
-              />
-              {errors.expire_date && touched.expire_date ? (
-                <FormErrorMessage>{errors.expire_date}</FormErrorMessage>
-              ) : null}
-            </FormControl>
-            <FormControl isInvalid={errors.cvv}>
-              <FormLabel
-                color="secondary.600"
-                fontWeight="semibold"
-                fontSize="0.9rem"
-              >
-                CVV
-              </FormLabel>
-              <Input
-                type="text"
-                name="cvv"
-                value={values.cvv}
-                onChange={handleChange}
-                placeholder="CVV"
-                maxLength="3"
-              />
-              {errors.cvv && touched.cvv ? (
-                <FormErrorMessage>{errors.cvv}</FormErrorMessage>
-              ) : null}
-            </FormControl>
-          </SimpleGrid>
-        </Box>
-      )}
-
-      <ModalFooter>
-        <Button colorScheme="blue" mr={3} onClick={onClose}>
-          Close
-        </Button>
-
-        <Button
-          type="submit"
-          variant="outline"
-          colorScheme="primary"
-          transition="ease-in-out 0.5s"
-          _hover={{ bgColor: "primary.600", color: "#fff" }}
-          onClick={handleMembership}
-        >
-          Pay
-        </Button>
-      </ModalFooter>
+        </FormControl>
     </form>
+    <div id="form-container">
+    <form id="card-form" action="http://www.localhost:5173">
+      
+      </form>
+    </div>
+    
+    </>
   );
 }
 

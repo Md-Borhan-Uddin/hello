@@ -178,6 +178,11 @@ function Membership() {
   });
 
   const handleShow = (e) => {
+    // Load external script dynamically
+    const script = document.createElement('script');
+    script.src = 'https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=4D9F4E384C25E1A43F75D7FAABB61AD8.uat01-vm-tx02';
+    script.defer = true;
+    document.head.appendChild(script);
     handleReset(e);
     if (membership[0]) {
       expairModalonOpen();
@@ -689,8 +694,7 @@ function Membership() {
                   onClose={onClose}
                   errors={errors}
                   priceId={priceId}
-                  handleChange={handleChange}
-                  packagedata={Object.keys(packagedata).length > 0 ? 'packagedata' : membership[0]?.package}
+                  packagedata={Object.keys(packagedata).length > 0 ? packagedata : membership[0]?.package}
                 />
               )}
             </ModalBody>

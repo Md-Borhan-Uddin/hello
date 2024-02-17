@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.wpwl-button-pay{
+    background-color: #449d44;
+}

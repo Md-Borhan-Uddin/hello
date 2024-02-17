@@ -27,7 +27,7 @@ const GeneratePDF = React.lazy(()=>import("../../../components/GeneratePDF"));
 
 function EffectReport() {
   const [realestate, setRealesate] = useState([]);
-
+  const  [isEdit, setIsEdit] = useState(false)
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { access_token, userType } = getUser();
 
