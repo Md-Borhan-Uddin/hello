@@ -5,7 +5,6 @@ import {
   Avatar,
   AvatarBadge,
   Box,
-  Button,
   Center,
   FormControl,
   FormErrorMessage,
@@ -15,7 +14,6 @@ import {
   IconButton,
   Input,
   InputGroup,
-  Stack,
   Tab,
   TabIndicator,
   TabList,
@@ -27,7 +25,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { HiOutlineCamera } from "react-icons/hi";
-import axios from "axios";
 import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { useGetUserQuery } from "../../../data/auth/service/userServide";
@@ -40,7 +37,8 @@ import {
 import { Formik, useFormik } from "formik";
 import { butifyErrors } from "../../../utility/utlity";
 import baseAxios from "../../../utility/axiosConfig";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveUser } from "../../../data/auth/slice/activeUserSlice";
 function Profile() {
   const profileData = {
     username: "",
@@ -53,11 +51,13 @@ function Profile() {
   // const [user, setUser] = useState({})
   const [photo, setPhoto] = useState('')
   const { access_token } = getUser();
-  const { data: profile, isSuccess: isProfileSuccess } =
-    useGetUserQuery(access_token);
+  const profile = useSelector((state)=> state.activeUser.user)
+  // const { data: profile, isSuccess: isProfileSuccess } =
+  //   useGetUserQuery(access_token);
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
+  const dispatch = useDispatch()
   const [passworderrors, setPassworderrors] = useState([]);
   const [customerrors, setcustomerror] = useState([]);
   const toast = useToast();
@@ -86,6 +86,7 @@ function Profile() {
         })
         .then((res) => {
           const {data} = res
+          dispatch(setActiveUser({token:access_token,user:data}))
           setValues({
             first_name: data?.first_name,
             last_name: data?.last_name,
@@ -111,10 +112,11 @@ function Profile() {
         });
     },
   });
-
+  // console.log("activeUser", activeUser)
   const handleImage = (e)=>{
     const image = e.target.files[0]
     console.log('values', values)
+    // console.log("update data", profile)
     baseAxios.patch(`/user-edit/${values.username}/`, {image:image}, {
           headers: {
             "Content-type":"multipart/form-data",
@@ -122,13 +124,14 @@ function Profile() {
         })
         .then((res) => {
           const {data} = res
+          dispatch(setActiveUser({token:access_token,user:data}))
           setValues({
-            first_name: data?.first_name,
-            last_name: data?.last_name,
-            middel_name: data?.middel_name,
+            first_name: data?.first_name? data.first_name:"",
+            last_name: data?.last_name? data.last_name:"",
+            middel_name: data?.middel_name? data.middel_name:"",
             username: data?.username,
             email: data?.email,
-            mobile_number: data?.mobile_number,
+            mobile_number: data?.mobile_number? data.mobile_number:"",
             
           });
           setPhoto(data?.image)
