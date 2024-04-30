@@ -258,6 +258,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               name="name"
               value={values.name}
+              autoComplete="off"
             />
             {errors.name && touched.name ? (
               <FormErrorMessage>{errors.name}</FormErrorMessage>
@@ -356,6 +357,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               name="model"
               value={values.model}
+              autoComplete="off"
             />
             {errors.model && touched.model ? (
               <FormErrorMessage>{errors.model}</FormErrorMessage>
@@ -426,6 +428,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="purchasing_price"
               value={values.purchasing_price}
               onChange={handleChange}
+              autoComplete="off"
             />
             {errors.purchasing_price && touched.purchasing_price ? (
               <FormErrorMessage>{errors.purchasing_price}</FormErrorMessage>
@@ -506,6 +509,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               name="floor_name"
               value={values.floor_name}
+              autoComplete="off"
             />
             {errors.floor_name && touched.floor_name ? (
               <FormErrorMessage>{errors.floor_name}</FormErrorMessage>
@@ -525,6 +529,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               name="room_name"
               value={values.room_name}
+              autoComplete="off"
             />
             {errors.room_name && touched.room_name ? (
               <FormErrorMessage>{errors.room_name}</FormErrorMessage>

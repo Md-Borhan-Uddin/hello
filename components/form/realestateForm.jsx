@@ -211,9 +211,21 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
         .then((res) => {
           setRealestate([...realestates, res.data.data]);
           onClose()
+          toast({
+            title: "Real Estate Add Successfully",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
         })
         .catch((error) => {
           console.log(error);
+          toast({
+            title: "Somethings went wrong",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
           window.scrollTo(0, 0);
           setValues({
             name: values.name,
@@ -292,6 +304,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
           value={values.name}
           onChange={handleChange}
           onBlur={handleBlur}
+          maxLength={100}
         />
         {errors.name && touched.name ? (
           <FormErrorMessage>{errors.name}.</FormErrorMessage>

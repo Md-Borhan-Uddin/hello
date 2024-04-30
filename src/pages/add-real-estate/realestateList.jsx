@@ -86,7 +86,7 @@ function RealestateList({ realestate,handleEdit,setRealestate }) {
                   <Td>{item.realestate_id}</Td>
                   <Td>{item.name}</Td>
                   <Td>{item.cost_currency}</Td>
-                  <Td>{item.purchasing_cost}</Td>
+                  <Td>{item.purchasing_cost.toLocaleString()}</Td>
                   <Td>{item.type.name}</Td>
                   <Td>
                     <HStack alignItems={"center"} justifyContent={"center"}>

@@ -160,7 +160,7 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='20'
-                    minLength='8'
+                    autoComplete="off"
                   />
                   {errors.username && touched.username ? (
                     <FormErrorMessage>{errors.username}.</FormErrorMessage>
@@ -239,7 +239,6 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='10'
-                    minLength='3'
                   />
                   {errors.first_name && touched.first_name ? (
                     <FormErrorMessage>{errors.first_name}.</FormErrorMessage>
@@ -259,7 +258,6 @@ export default function Registration() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength='10'
-                    minLength='3'
                   />
                   {errors.middle_name && touched.middle_name ? (
                     <FormErrorMessage>{errors.middle_name}.</FormErrorMessage>
