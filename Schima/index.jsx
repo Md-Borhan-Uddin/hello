@@ -195,6 +195,7 @@ export const propertyEditSchima = Yup.object({
 
 export const categoryANDBrandSchima = Yup.object({
   name:Yup.string().max(20).required('Must Fill Name Field'),
+  category: Yup.number().required(),
   is_active: Yup.bool().optional()
 })
 

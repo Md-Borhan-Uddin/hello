@@ -68,6 +68,7 @@ export const editItem = (
       const obj = state.map((item) => {
         if (item.id == data.id) {
           item.name = data.name;
+          item.category = data.category
           item.is_active = data.is_active;
         }
         return item

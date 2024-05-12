@@ -9,6 +9,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Select,
   Switch,
   Text,
   useDisclosure,
@@ -21,24 +22,33 @@ import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
 import { BiEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { deleteItem, editItem, getObjects } from "../../../utility/category_brand";
+import {
+  deleteItem,
+  editItem,
+  getObjects,
+} from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
-const CustomModal = React.lazy(()=>import("../../../components/UserEditModal"));
-const DeleteButton = React.lazy(()=>import('../../../components/deleteButton'))
-
-
-
-
+const CustomModal = React.lazy(() =>
+  import("../../../components/UserEditModal")
+);
+const DeleteButton = React.lazy(() =>
+  import("../../../components/deleteButton")
+);
 
 function CategoryBrand() {
   const inputdata = {
     name: "",
     is_active: false,
   };
+  const brandinputdata = {
+    name: "",
+    category: "",
+    is_active: false,
+  };
   const [categorys, setCategorys] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [brands, setBrands] = useState([]);
-  const [id,setId] = useState()
+  const [id, setId] = useState();
   const router = useNavigate();
   const toast = useToast();
   const [customerror, setcustomerror] = useState({});
@@ -66,12 +76,11 @@ function CategoryBrand() {
     handleSubmit: categoryHandleSubmit,
     handleReset: categoryHandleReset,
     touched: categoryTouched,
-    handleBlur:categoryHandleBlur
+    handleBlur: categoryHandleBlur,
   } = useFormik({
     initialValues: inputdata,
     validationSchema: categoryANDBrandSchima,
     onSubmit: (values, { setSubmitting }) => {
-      
       axios
         .post(baseURL + "/assert-type/", values, {
           headers: headers,
@@ -89,17 +98,16 @@ function CategoryBrand() {
         })
         .catch((error) => {
           console.log(error.response.data.non_field_errors);
-          setcustomerror(error.response.data)
-          if(error.response.data.non_field_errors){
-            error.response.data.non_field_errors.map((message)=>{
-
+          setcustomerror(error.response.data);
+          if (error.response.data.non_field_errors) {
+            error.response.data.non_field_errors.map((message) => {
               toast({
                 title: message,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
               });
-            })
+            });
           }
           if (error.response.status == 401) {
             toast({
@@ -111,8 +119,8 @@ function CategoryBrand() {
             router.push("/account/login");
           }
         });
-        categoryHandleReset()
-        categoryOnClose();
+      categoryHandleReset();
+      categoryOnClose();
 
       //   onClose();
       //   window.location.reload();
@@ -127,12 +135,12 @@ function CategoryBrand() {
     handleSubmit: brandHandleSubmit,
     handleReset: brandHandleReset,
     touched: brandTouched,
-    handleBlur:brandHandleBlur,
+    handleBlur: brandHandleBlur,
   } = useFormik({
-    initialValues: inputdata,
+    initialValues: brandinputdata,
     validationSchema: categoryANDBrandSchima,
     onSubmit: (values, { setSubmitting }) => {
-      brandHandleReset()
+      brandHandleReset();
       axios
         .post(baseURL + "/assert-brand/", values, {
           headers: headers,
@@ -140,21 +148,19 @@ function CategoryBrand() {
         .then((res) => {
           console.log(res);
           setBrands([...brands, res.data]);
-          
         })
         .catch((error) => {
           console.log(error);
-          setcustomerror(error.response.data)
-          if(error.response.data.non_field_errors){
-            error.response.data.non_field_errors.map((message)=>{
-
+          setcustomerror(error.response.data);
+          if (error.response.data.non_field_errors) {
+            error.response.data.non_field_errors.map((message) => {
               toast({
                 title: message,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
               });
-            })
+            });
           }
           if (error.response.status == 401) {
             toast({
@@ -168,11 +174,10 @@ function CategoryBrand() {
           // categoryHandleReset()
           // categoryOnClose();
         });
-        brandHandleReset()
-        brandOnClose();
+      brandHandleReset();
+      brandOnClose();
     },
   });
-
 
   useEffect(() => {
     getObjects("/assert-type/", headers, setCategorys);
@@ -182,7 +187,7 @@ function CategoryBrand() {
   const categoryEdit = (e) => {
     setIsEdit(true);
     const { value } = e.target;
-    setId(value)
+    setId(value);
     const cat = categorys.filter((e) => e.id == value);
     categoryOnOpen();
     categorySetValues({
@@ -194,12 +199,13 @@ function CategoryBrand() {
   const brandEdit = (e) => {
     setIsEdit(true);
     const { value } = e.target;
-    setId(value)
+    setId(value);
     const cat = brands.filter((e) => e.id == value);
 
     brandOnOpen();
     brandSetValues({
       name: cat[0]?.name,
+      category: cat[0]?.category.id,
       is_active: cat[0]?.is_active,
     });
   };
@@ -215,7 +221,7 @@ function CategoryBrand() {
       brands,
       toast
     );
-    
+
     brandOnClose();
   };
 
@@ -230,7 +236,7 @@ function CategoryBrand() {
       categorys,
       toast
     );
-    
+
     categoryOnClose();
   };
 
@@ -240,7 +246,7 @@ function CategoryBrand() {
       "/assert-type/",
       headers,
       value,
-      {is_active:checked},
+      { is_active: checked },
       categorySetValues,
       categorys,
       toast
@@ -253,7 +259,7 @@ function CategoryBrand() {
       "/assert-brand/",
       headers,
       value,
-      {is_active:checked},
+      { is_active: checked },
       brandSetValues,
       brands,
       toast
@@ -261,8 +267,6 @@ function CategoryBrand() {
   };
 
   const categoryDelete = (id) => {
-
-
     const res = deleteItem(
       "/assert-type/",
       headers,
@@ -271,19 +275,22 @@ function CategoryBrand() {
       categorys,
       toast
     );
-    
   };
 
   const brandDelete = (id) => {
-    
-
-    const res = deleteItem("/assert-brand/", headers, id, setBrands, brands,toast);
-    
+    const res = deleteItem(
+      "/assert-brand/",
+      headers,
+      id,
+      setBrands,
+      brands,
+      toast
+    );
   };
   return (
     <>
-      <Flex gap={3} overflowX={'auto'}>
-      <Box w={{base:'100%',md:'50%'}} pl={'10px'}>
+      <Flex gap={3} overflowX={"auto"}>
+        <Box w={{ base: "100%", md: "50%" }} pl={"10px"}>
           <Flex
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -332,12 +339,11 @@ function CategoryBrand() {
                       {item.name}
                     </th>
                     <td className="px-6 py-4">
-                      
-                        <Switch
-                          value={item.id}
-                          onChange={categoryStatus}
-                          isChecked={item.is_active}
-                        />
+                      <Switch
+                        value={item.id}
+                        onChange={categoryStatus}
+                        isChecked={item.is_active}
+                      />
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -350,7 +356,10 @@ function CategoryBrand() {
                         >
                           Edit
                         </Button>
-                        <DeleteButton handleDelete={categoryDelete} id={item.id}/>
+                        <DeleteButton
+                          handleDelete={categoryDelete}
+                          id={item.id}
+                        />
                       </HStack>
                     </td>
                   </tr>
@@ -359,7 +368,7 @@ function CategoryBrand() {
             </tbody>
           </table>
         </Box>
-        <Box w={{base:'100%',md:'50%'}} pr={'10px'}>
+        <Box w={{ base: "100%", md: "50%" }} pr={"10px"}>
           <Flex
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -369,7 +378,11 @@ function CategoryBrand() {
               Brand List
             </Text>
             <Button
-              onClick={()=>{brandHandleReset();setIsEdit(false); brandOnOpen()}}
+              onClick={() => {
+                brandHandleReset();
+                setIsEdit(false);
+                brandOnOpen();
+              }}
               backgroundColor={"rgb(34,220,118)"}
               _hover={{ backgroundColor: "rgb(58, 187, 116)" }}
             >
@@ -381,6 +394,9 @@ function CategoryBrand() {
               <tr>
                 <th scope="col" className="px-6 py-3">
                   name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Category
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Status
@@ -403,13 +419,15 @@ function CategoryBrand() {
                     >
                       {item.name}
                     </td>
+                    <td className="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {item.category?.name}
+                    </td>
                     <td className="px-6 py-4 flex items-center justify-center">
-                    <Switch
-                          value={item.id}
-                          onChange={brandStatus}
-                          isChecked={item.is_active}
-                        />
-                        
+                      <Switch
+                        value={item.id}
+                        onChange={brandStatus}
+                        isChecked={item.is_active}
+                      />
                     </td>
                     <td className="px-6 py-4">
                       <HStack alignItems={"center"} justifyContent={"center"}>
@@ -423,8 +441,7 @@ function CategoryBrand() {
                           Edit
                         </Button>
 
-                        
-                        <DeleteButton handleDelete={brandDelete} id={item.id}/>
+                        <DeleteButton handleDelete={brandDelete} id={item.id} />
                       </HStack>
                     </td>
                   </tr>
@@ -457,7 +474,7 @@ function CategoryBrand() {
               value={categoryValues.name}
               onChange={categoryHandleChange}
               onBlur={categoryHandleBlur}
-              maxLength='20'
+              maxLength="20"
             />
             {categoryErrors.name && categoryTouched.name ? (
               <FormErrorMessage>{categoryErrors.name}.</FormErrorMessage>
@@ -466,7 +483,9 @@ function CategoryBrand() {
               <p className="text-red-600">{customerror.name.message}.</p>
             ) : null}
           </FormControl>
-          <FormControl isInvalid={categoryErrors.is_active && categoryTouched.is_active}>
+          <FormControl
+            isInvalid={categoryErrors.is_active && categoryTouched.is_active}
+          >
             <Checkbox
               onChange={categoryHandleChange}
               name="is_active"
@@ -522,10 +541,33 @@ function CategoryBrand() {
               value={brandValues.name}
               onChange={brandHandleChange}
               onBlur={brandHandleBlur}
-              maxLength='20'
+              maxLength="20"
             />
             {brandErrors.name && brandTouched.name ? (
               <FormErrorMessage>{brandErrors.name}.</FormErrorMessage>
+            ) : null}
+            {customerror.name ? (
+              <p className="text-red-600">{customerror.name.message}.</p>
+            ) : null}
+          </FormControl>
+          <FormControl
+            isInvalid={brandErrors.category && brandTouched.category}
+          >
+            <FormLabel>Category</FormLabel>
+            <Select
+              placeholder="Select Category"
+              name="category"
+              value={brandValues.category}
+              onChange={brandHandleChange}
+            >
+              {categorys.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Select>
+            {brandErrors.category && brandTouched.category ? (
+              <FormErrorMessage>{brandErrors.category}.</FormErrorMessage>
             ) : null}
             {customerror.name ? (
               <p className="text-red-600">{customerror.name.message}.</p>
@@ -569,5 +611,4 @@ function CategoryBrand() {
   );
 }
 
-
-export default RequireAuth(CategoryBrand)
+export default RequireAuth(CategoryBrand);
