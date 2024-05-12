@@ -46,12 +46,11 @@ function EditState() {
     type_id : "",
     property_age_years : "",
     property_age_months : "",
-    rented : "",
-    owner : "",
+    authorized : "",
     purchasing_cost : "",
     cost_currency : "",
     cost_date : "",
-    purpose : 'commercial',
+    purpose : '',
     number_of_floors : "",
     invoice_file : "",
     user_id:""
@@ -65,18 +64,6 @@ function EditState() {
       if(!values.invoice_file){
         console.log("delete invoice field")
         delete values.invoice_file
-      }
-      if(values.rented === 'rented'){
-        values.rented = true;
-      }
-      else{
-        values.rented = false;
-      }
-      if(values.owner === 'owner'){
-        values.owner = true;
-      }
-      else{
-        values.owner = false;
       }
       
       if(!access_token){
@@ -180,8 +167,7 @@ function EditState() {
                 type_id :data?.type.id,
                 property_age_years : data?.property_age_years,
                 property_age_months : data?.property_age_months,
-                rented : data?.rented,
-                owner : data?.owner,
+                authorized : data?.authorized,
                 purchasing_cost :data?.purchasing_cost,
                 cost_currency : data?.cost_currency,
                 cost_date : data?.cost_date,
@@ -427,24 +413,23 @@ function EditState() {
             </div>
             <div className="md:flex justify-between">
               <div className="md:w-1/2">
-                <InputFormRadio
-                  name="rented"
-                  sideText="Rented"
-                  onclick={handleChange}
-                  checked = {values.rented}
-                  value='rented'
-                  error={errors.rented && touched.rented?errors.rented:null}
-                />
-              </div>
-              <div className="md:w-1/2 md:ml-2">
-                <InputFormRadio
-                  name="owner"
-                  onclick={handleChange}
-                  sideText="Are You the Owner"
-                  value='owner'
-                  checked = {values.owner}
-                  error={errors.owner && touched.owner?errors.owner:null}
-                />
+              <FormControl isInvalid={errors.authorized && touched.authorized}>
+          <FormLabel>Owned or Rented</FormLabel>
+            <RadioGroup
+              onBlur={handleBlur}
+              onChange={(e)=>setFieldValue("authorized", e)}
+              borderColor={"gray.400"}
+              name="authorized"
+            >
+              <Stack spacing={4} direction="row">
+                <Radio value="owned">Owned</Radio>
+                <Radio value="rented">Rented</Radio>
+              </Stack>
+            </RadioGroup>
+            {errors.authorized && touched.authorized ? (
+              <FormErrorMessage>{errors.authorized}.</FormErrorMessage>
+            ) : null}
+          </FormControl>
               </div>
             </div>
 

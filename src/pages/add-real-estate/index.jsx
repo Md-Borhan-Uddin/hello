@@ -28,6 +28,12 @@ const AddState = () => {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
 
+  const onOpenAddForm = ()=>{
+    setIsEdit(false)
+    setEditItem({})
+    onOpen()
+  }
+
   useEffect(() => {
     axios
       .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
@@ -57,7 +63,7 @@ const AddState = () => {
           </Heading>
           <Spacer />
           <AddButtonWithModal
-            onOpen={onOpen}
+            onOpen={onOpenAddForm}
             onClose={onClose}
             isOpen={isOpen}
             btnText={"Add Real Estate"}

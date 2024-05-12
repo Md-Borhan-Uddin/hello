@@ -42,28 +42,3 @@ const CommonSelect = ({
 
 export default CommonSelect;
 
-
-
-
-
-
-/*
-
-estateName
-image
-countryName
-cityName
-Location
-stateType
-ageYear
-propertyMonths
-rented
-ownerCheck
-purchasingCost
-costCurrency
-date
-purpose
-floorName
-invoice
-
-*/

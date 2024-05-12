@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import CurrencyList from "currency-list";
+// import CurrencyList from "currency-list";
 import {
   Button,
   FormControl,
@@ -11,9 +11,10 @@ import {
   Select,
   ModalFooter,
   useToast,
+  RadioGroup,
+  Stack,
 } from "@chakra-ui/react";
 import { useNavigate, Link } from "react-router-dom";
-import { getObjects } from "../../utility/property";
 import useGeolocation from "../../hooks/geoLocation";
 import { propertyAddSchima } from "../../Schima";
 import { baseURL } from "../../utility/baseURL";
@@ -28,56 +29,61 @@ const inputField = {
   type_id: "",
   property_age_years: "",
   property_age_months: "",
-  rented: "",
-  owner: "",
+  authorized: "",
   purchasing_cost: "",
-  cost_currency: "",
+  cost_currency: "SAR",
   cost_date: "",
-  purpose: "commercial",
+  purpose: "",
   number_of_floors: "",
   invoice_file: "",
   user_id: "",
   location: [],
 };
 
-
-export default function RealestateForm({realestates, isEdit, data, onClose,setRealestate }) {
+export default function RealestateForm({
+  realestates,
+  isEdit,
+  data,
+  onClose,
+  setRealestate,
+}) {
   const { access_token, userType } = getUser();
   const [uType, setUType] = useState("");
   const [country, setCountry] = useState([]);
   const [city, setCity] = useState([]);
-  const [currency, setCurrency] = useState([]);
+  const [currency, setCurrency] = useState(["SAR", "USD"]);
   const [type, setType] = useState([]);
   const [user, setUser] = useState([]);
   const [location, setLocation] = useState([]);
   const [error, setErrors] = useState([]);
   const router = useNavigate();
-  const toast = useToast()
+  const toast = useToast();
   const headers = {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
   const geoLocation = useGeolocation();
 
   const addValue = (setValues, data) => {
-    const blobUrlToFile = (blobUrl) => new Promise((resolve) => {
-      fetch(blobUrl).then((res) => {
-        res.blob().then((blob) => {
-          // please change the file.extension with something more meaningful
-          // or create a utility function to parse from URL
-          const file = new File([blob], 'file.extension', {type: blob.type})
-          resolve(file)
-          return file
-        })
-      })
-      
-    })
+    const blobUrlToFile = (blobUrl) =>
+      new Promise((resolve) => {
+        fetch(blobUrl).then((res) => {
+          res.blob().then((blob) => {
+            // please change the file.extension with something more meaningful
+            // or create a utility function to parse from URL
+            const file = new File([blob], "file.extension", {
+              type: blob.type,
+            });
+            resolve(file);
+            return file;
+          });
+        });
+      });
     console.log(data);
     let image;
-    blobUrlToFile(data.photo).then(res=>{
-
-      console.log('image', res);
-      image = res
-    })
+    blobUrlToFile(data.photo).then((res) => {
+      console.log("image", res);
+      image = res;
+    });
     setValues({
       name: data.name,
       photo: image,
@@ -86,8 +92,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       type_id: data.type.id,
       property_age_years: data.property_age_years,
       property_age_months: data.property_age_months,
-      rented: data.rented,
-      owner: data.owner,
+      authorized: data.authorized,
       purchasing_cost: data.purchasing_cost,
       cost_currency: data.cost_currency,
       cost_date: data.cost_date,
@@ -127,15 +132,15 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(values);
-    delete values.photo
+    delete values.photo;
     baseAxios
       .patch(baseURL + `/realestate/edit/${data[0].id}/`, values, {
         headers: headers,
       })
       .then((res) => {
         console.log("data", res);
-        
-        setRealestate([...realestates, res.data.data])
+
+        setRealestate([...realestates, res.data.data]);
         toast({
           title: "update Successfully",
           status: "success",
@@ -190,17 +195,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       if (!values.invoice_file) {
         delete values.invoice_file;
       }
-      if (values.rented === "rented") {
-        values.rented = true;
-      } else {
-        values.rented = false;
-      }
-      if (values.owner === "owner") {
-        values.owner = true;
-      } else {
-        values.owner = false;
-      }
-      console.log('value', values);
+      console.log("value", values);
       baseAxios
         .post(`/realestate/${userType}/`, values, {
           headers: {
@@ -210,7 +205,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
         })
         .then((res) => {
           setRealestate([...realestates, res.data.data]);
-          onClose()
+          onClose();
           toast({
             title: "Real Estate Add Successfully",
             status: "success",
@@ -235,8 +230,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
             type_id: values.type_id,
             property_age_years: values.property_age_years,
             property_age_months: values.property_age_months,
-            rented: values.rented,
-            owner: values.owner,
+            authorized: values.authorized,
             purchasing_cost: values.purchasing_cost,
             cost_currency: values.cost_currency,
             cost_date: values.cost_date,
@@ -250,9 +244,11 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
     },
   });
 
+
   useEffect(() => {
-    if (!isEdit && !data){
-      handleReset()
+    if (!isEdit && !data) {
+      handleReset();
+      console.log("reset")
     }
     if (isEdit && data) {
       addValue(setValues, data[0]);
@@ -262,34 +258,31 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       setLocation([geoLocation.coordinates.lat, geoLocation.coordinates.lng]);
     }
 
-    let c = [{ key: "Please select", value: "" }];
-    getObjects("/country/?is_active=True", headers, setCountry);
-
-    const cur = [];
-    const cr = Object.keys(CurrencyList.getAll().af);
-    cr.map((item) => cur.push({ key: item, value: item }));
-    setCurrency(cur);
-
     setUType(userType);
+    baseAxios.get(
+      "/country/?is_active=True"
+    ).then(res=>{
+      let c = [];
+      res.data.map((item)=>c.push({ key: item.name, value: item.id }))
+      setCountry(c)
+    })
 
-    baseAxios.get("/real-estate-type/")
-      .then((res) => {
-        let type = [];
-        res.data.map((item) =>
-          type.push({ key: item.name, value: item.id.toString() })
-        );
-        setType(type);
-      });
+    baseAxios.get("/real-estate-type/").then((res) => {
+      let type = [];
+      res.data.map((item) =>
+        type.push({ key: item.name, value: item.id.toString() })
+      );
+      setType(type);
+    });
 
     if (uType === "Admin") {
-      baseAxios.get("/all-user/")
-        .then((res) => {
-          let u = [];
-          res.data.results.map((item) =>
-            u.push({ key: item.username, value: item.id.toString() })
-          );
-          setUser(u);
-        });
+      baseAxios.get("/all-user/").then((res) => {
+        let u = [];
+        res.data.results.map((item) =>
+          u.push({ key: item.username, value: item.id.toString() })
+        );
+        setUser(u);
+      });
     }
   }, [geoLocation.loaded]);
 
@@ -399,8 +392,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
       </div>
 
       <div className="md:flex justify-between">
-        <div className={uType === "Admin" ? "md:w-1/2 flex" : "w-full flex"}>
-          <div className="md:w-1/2 md:ml-2">
+        <div className="md:ml-2 md:w-1/2">
             <FormControl
               isInvalid={
                 errors.property_age_years && touched.property_age_years
@@ -409,7 +401,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
               <FormLabel>Age of the Property (Years)</FormLabel>
               <Input
                 placeholder="Age of the Property (Years) "
-                type="number"
+                type="text"
                 name="property_age_years"
                 value={values.property_age_years}
                 onChange={handleChange}
@@ -448,6 +440,27 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
               ) : null}
             </FormControl>
           </div>
+        
+      </div>
+      <div className="md:flex justify-between">
+        <div className="md:w-1/2 md:ml-2">
+          <FormControl isInvalid={errors.authorized && touched.authorized}>
+          <FormLabel>Owned or Rented</FormLabel>
+            <RadioGroup
+              onBlur={handleBlur}
+              onChange={(e)=>setFieldValue("authorized", e)}
+              borderColor={"gray.400"}
+              name="authorized"
+            >
+              <Stack spacing={4} direction="row">
+                <Radio value="owned">Owned</Radio>
+                <Radio value="rented">Rented</Radio>
+              </Stack>
+            </RadioGroup>
+            {errors.authorized && touched.authorized ? (
+              <FormErrorMessage>{errors.authorized}.</FormErrorMessage>
+            ) : null}
+          </FormControl>
         </div>
         {uType === "Admin" && (
           <div className="md:w-1/2 md:ml-2">
@@ -471,40 +484,6 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
             </FormControl>
           </div>
         )}
-      </div>
-      <div className="md:flex justify-between">
-        <div className="md:w-1/2 md:ml-2">
-          <FormControl isInvalid={errors.rented && touched.rented}>
-            <Radio
-              name="rented"
-              borderColor={"gray.400"}
-              onChange={handleChange}
-              value="rented"
-              onBlur={handleBlur}
-            >
-              Are You the Renter
-            </Radio>
-            {errors.rented && touched.rented ? (
-              <FormErrorMessage>{errors.rented}.</FormErrorMessage>
-            ) : null}
-          </FormControl>
-        </div>
-        <div className="md:w-1/2 md:ml-2">
-          <FormControl isInvalid={errors.owner && touched.owner}>
-            <Radio
-              name="owner"
-              borderColor={"gray.400"}
-              onChange={handleChange}
-              value="owner"
-              onBlur={handleBlur}
-            >
-              Are You the Owner
-            </Radio>
-            {errors.owner && touched.owner ? (
-              <FormErrorMessage>{errors.owner}.</FormErrorMessage>
-            ) : null}
-          </FormControl>
-        </div>
       </div>
 
       <div className="md:flex justify-between">
@@ -536,10 +515,14 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
               onChange={handleChange}
               onBlur={handleBlur}
               name="cost_currency"
+              defaultValue={values.cost_currency}
             >
               {currency.map((item, i) => (
-                <option key={i} value={item.value}>
-                  {item.key}
+                <option
+                  key={i}
+                  value={item}
+                >
+                  {item}
                 </option>
               ))}
             </Select>
@@ -560,7 +543,7 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
               value={values.cost_date}
               onBlur={handleBlur}
               onChange={handleChange}
-              min={new Date().toISOString().slice(0, 10)}
+              max={new Date().toISOString().slice(0, 10)}
             />
             {errors.cost_date && touched.cost_date ? (
               <FormErrorMessage>{errors.cost_date}.</FormErrorMessage>
@@ -569,15 +552,19 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
         </div>
         <div className="md:w-1/2 md:ml-2 mt-4">
           <FormControl isInvalid={errors.purpose && touched.purpose}>
-            <Radio
-              name="purpose"
-              borderColor={"gray.400"}
-              onChange={handleChange}
-              value="purpose"
+            <FormLabel>Purpose</FormLabel>
+            <RadioGroup
               onBlur={handleBlur}
+              onChange={(e)=>setFieldValue("purpose", e)}
+              borderColor={"gray.400"}
+              name="purpose"
+              value={values.purpose}
             >
-              This is Commercial Property
-            </Radio>
+              <Stack spacing={4} direction="row">
+                <Radio value="commercial">Commercial</Radio>
+                <Radio value="personal">Personal</Radio>
+              </Stack>
+            </RadioGroup>
             {errors.purpose && touched.purpose ? (
               <FormErrorMessage>{errors.purpose}.</FormErrorMessage>
             ) : null}
@@ -597,7 +584,6 @@ export default function RealestateForm({realestates, isEdit, data, onClose,setRe
               value={values.number_of_floors}
               onChange={handleChange}
               onBlur={handleBlur}
-              min={new Date().toISOString().slice(0, 10)}
             />
             {errors.number_of_floors && touched.number_of_floors ? (
               <FormErrorMessage>{errors.number_of_floors}.</FormErrorMessage>
