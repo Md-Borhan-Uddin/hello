@@ -185,6 +185,7 @@ function CategoryBrand() {
   }, []);
 
   const categoryEdit = (e) => {
+    categoryHandleReset()
     setIsEdit(true);
     const { value } = e.target;
     setId(value);
@@ -197,6 +198,7 @@ function CategoryBrand() {
   };
 
   const brandEdit = (e) => {
+    brandHandleReset()
     setIsEdit(true);
     const { value } = e.target;
     setId(value);
