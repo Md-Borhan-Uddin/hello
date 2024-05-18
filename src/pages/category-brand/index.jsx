@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { categoryANDBrandSchima } from "../../../Schima";
+import { categorySchima, brandSchima } from "../../../Schima";
 import axios from "axios";
 import { baseURL } from "../../../utility/baseURL";
 import { getUser } from "../../../utility/authentication";
@@ -28,6 +28,7 @@ import {
   getObjects,
 } from "../../../utility/category_brand";
 import RequireAuth from "../../../components/auth/TokenExpaireCheck";
+import baseAxios from "../../../utility/axiosConfig";
 const CustomModal = React.lazy(() =>
   import("../../../components/UserEditModal")
 );
@@ -79,9 +80,10 @@ function CategoryBrand() {
     handleBlur: categoryHandleBlur,
   } = useFormik({
     initialValues: inputdata,
-    validationSchema: categoryANDBrandSchima,
+    validationSchema: categorySchima,
     onSubmit: (values, { setSubmitting }) => {
-      axios
+      console.log("submit call")
+      baseAxios
         .post(baseURL + "/assert-type/", values, {
           headers: headers,
         })
@@ -138,7 +140,7 @@ function CategoryBrand() {
     handleBlur: brandHandleBlur,
   } = useFormik({
     initialValues: brandinputdata,
-    validationSchema: categoryANDBrandSchima,
+    validationSchema: brandSchima,
     onSubmit: (values, { setSubmitting }) => {
       brandHandleReset();
       axios
@@ -467,7 +469,7 @@ function CategoryBrand() {
           className="space-y-3 md:space-y-4"
           onSubmit={categoryHandleSubmit}
         >
-          <FormControl isInvalid={categoryErrors.name}>
+          <FormControl isInvalid={categoryErrors.name && categoryTouched.name}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"

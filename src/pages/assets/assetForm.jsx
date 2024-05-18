@@ -34,7 +34,7 @@ const inputdata = {
     description: "",
     quantity: "",
     purchasing_price: "",
-    purchasing_currency: "",
+    purchasing_currency: "SAR",
     purchasing_date: new Date().toISOString().slice(0, 10),
     floor_name: "",
     room_name: "",
@@ -47,7 +47,7 @@ function AssetForm({isEdit,onClose,data,update}) {
   const toast = useToast();
   const [types, setTypes] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [currency, setCurrency] = useState([]);
+  const [currency, setCurrency] = useState(["SAR", "USA"]);
 
   const { access_token, userType } = getUser();
 
@@ -56,42 +56,7 @@ function AssetForm({isEdit,onClose,data,update}) {
     Authorization: "Bearer " + String(access_token), //the token is a variable which holds the token
   };
 
-  useEffect(() => {
-    const cur = [];
-    const cr = Object.keys(CurrencyList.getAll().af);
-    cr.map((item) => cur.push({ key: item, value: item }));
-    setCurrency(cur);
-    baseAxios
-      .get(`${baseURL}/assert-type/`, { headers: headers })
-      .then((res) => {
-        setTypes(res.data);
-      })
-      .catch((error) => {
-      });
-
-
-      baseAxios
-      .get(`${baseURL}/assert-brand/`, { headers: headers })
-      .then((res) => {
-        setBrands(res.data);
-      })
-      .catch((error) => {
-      });
-    
-
-    baseAxios
-      .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
-      .then((res) => {
-        setRealestate(res.data.results);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      if(isEdit){
-        addValue(data)
-      }
-  }, []);
+  
 
   
 
@@ -213,6 +178,47 @@ function AssetForm({isEdit,onClose,data,update}) {
     handleReset();
   };
 
+  const assetTypeChange = (e)=>{
+    setFieldValue("type", e.target.value)
+    
+    baseAxios
+    .get(`${baseURL}/assert-brand/?type=${e.target.value}`, { headers: headers })
+    .then((res) => {
+      console.log(res.data)
+      setBrands(res.data);
+    })
+    .catch((error) => {
+    });
+  }
+
+  useEffect(() => {
+    // const cur = [];
+    // const cr = Object.keys(CurrencyList.getAll().af);
+    // cr.map((item) => cur.push({ key: item, value: item }));
+    // setCurrency(cur);
+    // setFieldValue("type", )
+    baseAxios
+      .get(`${baseURL}/assert-type/`, { headers: headers })
+      .then((res) => {
+        setTypes(res.data);
+      })
+      .catch((error) => {
+      });
+    baseAxios
+      .get(`${baseURL}/realestate/${userType}/`, { headers: headers })
+      .then((res) => {
+        setRealestate(res.data.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      if(isEdit){
+        addValue(data)
+      }
+  }, []);
+
+
   return (
     <form onSubmit={handleSubmit}>
       <Box mb={2}>
@@ -256,6 +262,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               type="text"
               placeholder="Asset name"
               onChange={handleChange}
+              onBlur={handleBlur}
               name="name"
               value={values.name}
               autoComplete="off"
@@ -275,6 +282,7 @@ function AssetForm({isEdit,onClose,data,update}) {
             <Input
               placeholder="Image"
               name="photo"
+              onBlur={handleBlur}
               onChange={(event) => {
                 setFieldValue("photo", event.target.files[0]);
               }}
@@ -302,7 +310,8 @@ function AssetForm({isEdit,onClose,data,update}) {
               placeholder="Asset Type"
               name="type"
               value={values.type}
-              onChange={handleChange}
+              onChange={assetTypeChange}
+              onBlur={handleBlur}
             >
               {types.map((item, i) => (
                 <option key={i} value={item.id}>
@@ -327,6 +336,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="brand"
               value={values.brand}
               onChange={handleChange}
+              onBlur={handleBlur}
             >
               {brands.map((item, i) => (
                 <option key={i} value={item.id}>
@@ -358,6 +368,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="model"
               value={values.model}
               autoComplete="off"
+              onBlur={handleBlur}
             />
             {errors.model && touched.model ? (
               <FormErrorMessage>{errors.model}</FormErrorMessage>
@@ -378,6 +389,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               name="description"
               value={values.description}
+              onBlur={handleBlur}
             ></Textarea>
             {errors.description && touched.description ? (
               <FormErrorMessage>{errors.description}</FormErrorMessage>
@@ -401,6 +413,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="quantity"
               value={values.quantity}
               onChange={handleChange}
+              onBlur={handleBlur}
             >
               {months(10).map((item, i) => (
                 <option key={i} value={item.value}>
@@ -429,6 +442,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               value={values.purchasing_price}
               onChange={handleChange}
               autoComplete="off"
+              onBlur={handleBlur}
             />
             {errors.purchasing_price && touched.purchasing_price ? (
               <FormErrorMessage>{errors.purchasing_price}</FormErrorMessage>
@@ -454,12 +468,14 @@ function AssetForm({isEdit,onClose,data,update}) {
             <Select
               placeholder="purchasing currency"
               name="purchasing_currency"
-              value={values.purchasing_currency}
+              // value={values.purchasing_currency}
               onChange={handleChange}
+              defaultValue={values.purchasing_currency}
+              onBlur={handleBlur}
             >
               {currency.map((item, i) => (
-                <option key={i} value={item.value}>
-                  {item.key}
+                <option key={i} value={item}>
+                  {item}
                 </option>
               ))}
             </Select>
@@ -483,6 +499,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               onChange={handleChange}
               value={values.purchasing_date}
               name="purchasing_date"
+              onBlur={handleBlur}
               min={new Date().toISOString().slice(0, 10)}
             />
 
@@ -510,6 +527,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="floor_name"
               value={values.floor_name}
               autoComplete="off"
+              onBlur={handleBlur}
             />
             {errors.floor_name && touched.floor_name ? (
               <FormErrorMessage>{errors.floor_name}</FormErrorMessage>
@@ -530,6 +548,7 @@ function AssetForm({isEdit,onClose,data,update}) {
               name="room_name"
               value={values.room_name}
               autoComplete="off"
+              onBlur={handleBlur}
             />
             {errors.room_name && touched.room_name ? (
               <FormErrorMessage>{errors.room_name}</FormErrorMessage>
@@ -549,6 +568,7 @@ function AssetForm({isEdit,onClose,data,update}) {
             }}
             accept=".jpg , .jpeg , .jfif , .pjpeg , .pjp , .gif , .png"
             type="file"
+            onBlur={handleBlur}
           />
           {errors.assert_file && touched.assert_file ? (
             <FormErrorMessage>{errors.assert_file}.</FormErrorMessage>

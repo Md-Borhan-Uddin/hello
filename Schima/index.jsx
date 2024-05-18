@@ -193,7 +193,12 @@ export const propertyEditSchima = Yup.object({
 
 
 
-export const categoryANDBrandSchima = Yup.object({
+export const categorySchima = Yup.object({
+  name:Yup.string().max(20).required('Must Fill Name Field'),
+  is_active: Yup.bool().optional()
+})
+
+export const brandSchima = Yup.object({
   name:Yup.string().max(20).required('Must Fill Name Field'),
   category: Yup.number().required(),
   is_active: Yup.bool().optional()
@@ -295,7 +300,7 @@ export const assetsSchema = Yup.object({
   purchasing_price: Yup.number().optional(),
   purchasing_currency: Yup.string().optional(),
   purchasing_date: Yup.date().optional(),
-  floor_name: Yup.string().max(100).required('Select Floor Name Or Number'),
+  floor_name: Yup.string().max(2, "Max Length 2 digit").required('Select Floor Name Or Number'),
   room_name:Yup.string().max(100).required('Select Room Name Or Number'),
   assert_file: Yup.mixed().optional().test(
     'filetype',

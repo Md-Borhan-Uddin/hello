@@ -67,6 +67,7 @@ const AddState = () => {
             onClose={onClose}
             isOpen={isOpen}
             btnText={"Add Real Estate"}
+            fromTitle="Add Real Estate"
           >
             <RealestateForm
               isEdit={isEdit}

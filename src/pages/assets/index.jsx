@@ -138,6 +138,7 @@ function Assets() {
             onClose={onClose}
             isOpen={isOpen}
             btnText={"Add Asset"}
+            fromTitle="Add Asset"
           >
             <AssetForm
               isEdit={isEdit}

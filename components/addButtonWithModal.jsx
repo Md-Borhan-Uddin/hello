@@ -4,7 +4,7 @@ import { getUser } from "../utility/authentication";
 import React from "react";
 import baseAxios  from "../utility/axiosConfig";
 
-function AddButtonWithModal({ btnText, children, onOpen, onClose, isOpen }) {
+function AddButtonWithModal({ btnText,fromTitle, children, onOpen, onClose, isOpen }) {
   const { userType } = getUser();
   const toast = useToast();
 
@@ -50,7 +50,7 @@ function AddButtonWithModal({ btnText, children, onOpen, onClose, isOpen }) {
         maxW="70%"
         onClose={onClose}
         isOpen={isOpen}
-        title="Add Real Estate"
+        title={fromTitle}
       >
         {children}
       </CustomModal>
